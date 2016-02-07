@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My First React Example</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+	<script src="https://fb.me/react-0.14.6.js"></script>
+	<script src="https://fb.me/react-dom-0.14.6.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.25.1/react-bootstrap.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.22/require.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../CSS/index.css">
+</head>
+  <body>
+
+	  
+    <script type="text/babel">
+var Photo = React.createClass({
+  render: function() {
+    var ReactDOM = require(['react-dom']);	  
+    var Input = ReactBootstrap.Input;
+	var DropdownButton = ReactBootstrap.DropdownButton;
+	var MenuItem = ReactBootstrap.MenuItem;
+	var ButtonInput = ReactBootstrap.ButtonInput;
+	
+	
+	
+    return (
+	<div>
+		
+		<img src='https://raw.githubusercontent.com/jodeleeuw/jsPsych/master/jspsych-logo-readme.jpg' id="jspsych-image" responsive/>
+			<form action="index-2.html" method="GET" id="experiment-form">
+			    <Input type="text" label="Experiment name" id="experiment-name" placeholder="Give a name for your experiment" labelClassName="col-xs-4 label-align"  wrapperClassName="col-xs-4"/>
+    			<ButtonInput type="submit" bsSize="medium" value="Next"  onclick="passValue()" wrapperClassName="col-xs-4 submit-align"/>
+			</form>
+	</div>)
+  }
+});
+
+ReactDOM.render(<Photo />, document.body);
+
+    </script>
+  </body>
+</html>

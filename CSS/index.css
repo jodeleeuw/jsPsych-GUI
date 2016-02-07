@@ -1,0 +1,20 @@
+body {
+	text-align:center;
+	background-color: #fffff0;
+}
+
+#jspsych-image {
+
+}
+
+#experiment-name {
+	width: 400px;
+}
+
+.label-align {
+	text-align: right;
+}
+
+.submit-align {
+	text-align: left;
+}

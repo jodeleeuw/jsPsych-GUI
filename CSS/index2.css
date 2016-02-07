@@ -1,0 +1,48 @@
+body {
+	text-align:center;
+	background-color: #fffff0;
+}
+
+.form-align{
+	text-align: center;
+}
+
+div {
+	display: inline;
+}
+
+#left-side {
+	width: 300px;
+	height: 500px;
+	float: left;
+	position: relative;
+	border: 2px solid;	
+	display: inline-block;
+}
+
+#button-panel{
+	line-height: 150%;
+	bottom: -150px;
+	left:0px;
+	position: absolute;
+}
+
+#tree {
+	height: 200px;
+	text-align: left;
+}
+
+#settings-button {
+	float: right;
+	position: absolute;
+	right: 35px;
+	top: 5px;
+}
+
+#main {
+	
+}
+
+.select-file {
+	text-align: center;
+}
