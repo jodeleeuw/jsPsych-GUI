@@ -1,9 +1,10 @@
 body {
-  font-family: "Helvetica Neue";
+
 }
 
 h3 {
-  color: #BF616A;
+color:#006622;
+font-size:35px;
 }
 
 .togglable {
@@ -13,7 +14,7 @@ h3 {
 
 .togglable-down::after,
 .togglable-up::after {
-  font-size: 8px;
+  font-size: 20px;
   margin-left: 0.5em;
 }
 

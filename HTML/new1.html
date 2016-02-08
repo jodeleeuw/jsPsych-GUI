@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My Second React Example</title>
+	<script src="https://fb.me/react-0.14.6.js"></script>
+	<script src="https://fb.me/react-dom-0.14.6.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.25.1/react-bootstrap.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/react-with-addons.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="../JS/generate.js"></script>
+	<script src="../JS/return_parameters.js"></script>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../CSS/index2.css">
+	<!--<link rel="stylesheet" href="../CSS/index.css">-->
+	<!--<link rel="stylesheet" type="text/css" href="../CSS/tree.css">-->
+	</head>
+<body> 
+<div class="container-fluid">
+	<div class="row">
+		<div id="left-menu" class="col-md-4">
+			<div id="tree">
+			</div>
+
+			<div id="settings-button">
+				<button  type="button" class="btn btn-primary btn-sm" id="settings"> <span class="glyphicon glyphicon-cog"></span></button> 	
+			</div>
+			
+			<div id ="button-panel"> 
+				<button   type="button" class="btn btn-primary btn-sm" id="save">Save</button> 
+				<button   type="button" class="btn btn-primary btn-sm" id="load">Load</button> 
+				<button   type="button" class="btn btn-primary btn-sm" id="generate" onclick="collectDataDynamically('d',text,cont_key)">Generate</button> 
+				<button   type="button" class="btn btn-primary btn-sm" id="preview" onclick="collectDataDynamically('v',text,cont_key)">Preview</button> 
+ 			</div>
+		</div>
+		<div id="main" class="col-md-6">
+		</div>
+	</div>
+</div>
+
+<script>
+function collectDataDynamically() {
+	var argsToPassToJS = [];
+	for (var i = 1; i < arguments.length; i++)
+		if (typeof arguments[i].value === "undefined")
+			argsToPassToJS.push(arguments[i].innerHTML);
+		else
+			argsToPassToJS.push(arguments[i].value);
+	//downloadHtml(argsToPassToJS);
+	if(arguments[0] == 'd')
+		downloadHtml(argsToPassToJS);
+	else
+		viewHtml(argsToPassToJS);
+
+}
+</script>
+<script type="text/babel">
+	var TreeNode = React.createClass({
+		getInitialState: function() {
+			return {
+				visible: true
+			};
+		},
+		render: function() {
+		 
+			var childNodes;
+			var classObj;
+
+			if (this.props.node.childNodes != null) {
+				childNodes = this.props.node.childNodes.map(function(node, index) {
+					return <a href="#" id={node.title}><li key={index}><TreeNode node={node} /></li></a>
+				});
+
+				classObj = {
+					togglable: true,
+					"togglable-down": this.state.visible,
+					"togglable-up": !this.state.visible
+				};
+			}
+
+			var style;
+			if (!this.state.visible) {
+				style = {display: "none"};
+			}
+
+			return (
+			<div>
+				<h3 id="experiment-name" onClick={this.toggle} className={React.addons.classSet(classObj)}>
+					{this.props.node.title}
+				</h3>
+				<ul id="trial-tree">
+					{childNodes}
+				</ul>
+			</div>
+			);
+		},
+		toggle: function() {
+			this.setState({visible: !this.state.visible});
+		}
+	});
+
+	var tree = {
+		title: "My Experiment",
+		childNodes: [
+		{title: "HelloWorldTrial"},{title: "SingleStimTrial"}
+		]
+	};
+
+	React.render(
+	<TreeNode node={tree} />,
+	document.getElementById("tree")
+	);
+	   
+</script>
+
+<script type="text/babel">
+	var importFile= '';
+	var outputFiles= '';
+	importFile = (
+		<input type="file" id="files" name="files[]" class="select-file" multiple />
+	);
+
+	outputFiles = (
+		<output id="list">    
+		</output>
+	);
+
+	function handleFileSelect(evt) {
+	var listoffiles={};
+	var files = evt.target.files; // FileList object
+	var selectOption = document.getElementById("Plugins");
+
+//files is a FileList of File objects. List some properties.
+	var output = [];
+	for (var i = 0, f; f = files[i]; i++) {
+	listoffiles[f.name.substring(8)]=f;
+	console.log(listoffiles[f.name]);
+
+	}
+
+	for(var i=0; i<listoffiles.length;i++) {
+		var opt= listoffiles[i];
+		var element = document.createElement("option");
+		element.text = opt.key;
+		element.value = opt.value;
+		selectOption.appendChild(element);
+	}
+
+	return listoffiles;
+	
+	}
+	$('#settings').click(function() {
+		React.render(importFile, document.getElementById("main"));
+		document.getElementById('files').addEventListener('change', handleFileSelect, true);	
+	});
+
+	var helloWorldDiv = '';
+	var singleStimDiv = '';
+	
+	helloWorldDiv = (
+	<div id="main">
+		<div id="hello">
+		<br></br><br></br>
+			<span id="fields">Trial Type: <select name="Plugins" onChange="returnParameters()" class="dropdown"> 
+										<option value="text">Text</option>
+										</select>
+			</span>
+			<br></br><br></br>
+			<span id="fields">Text : <input type="text" id="text" label="Text :"/>
+			</span>
+			<br></br><br></br>
+			<span id="fields">
+			Continue Key : <input type="text" id="cont_key"/>
+			</span>
+			<br></br><br></br>
+		</div>
+	</div>
+	);
+	   
+	singleStimDiv = (
+	<div id="main">
+		<div id="single">
+		<br/><br/>
+			<span id="fields">Trial Type<select name="Plugins" class="dropdown"> 
+										<option value="text">SingleStim</option>
+										</select>
+			</span>	
+			<br></br><br></br>
+			<span id="fields">
+			Stimulus : <input type="text"/>
+			</span>
+			<br></br><br></br>
+			<span id="fields">
+			Choices : <input type="text"/>
+			</span>
+			<br></br><br></br>
+			<span id="fields">
+			Prompt : <input type="text"/>
+			</span>
+			<br/><br/>
+			<span id="fields">
+			Timing Response : <input type="text"/>
+			</span>
+			<br/><br/>				
+		</div>
+	</div>
+	);
+	$('#HelloWorldTrial').click(function(){
+		React.render(helloWorldDiv,document.getElementById("main"));
+	});
+	
+	$('#SingleStimTrial').click(function(){
+		React.render(singleStimDiv,document.getElementById("main"));
+	});
+</script>
+  
+</body>
+</html>

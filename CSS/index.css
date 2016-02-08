@@ -1,4 +1,9 @@
+@font-face {
+    font-family: "Source Sans Pro";
+    src: url('Source Sans Pro.otf') format('otf');
+}
 body {
+	font-family: "Source Sans Pro";
 	text-align:center;
 	background-color: #fffff0;
 }
@@ -8,11 +13,18 @@ body {
 }
 
 #experiment-name {
-	width: 400px;
+color:#ffffff;
+font-size:18px;
+background:#000;
 }
-
+#trial-tree{
+color:#000000;
+font-size:20px;	
+margin:0;
+}
 .label-align {
-	text-align: right;
+	text-align: center-left;
+
 }
 
 .submit-align {

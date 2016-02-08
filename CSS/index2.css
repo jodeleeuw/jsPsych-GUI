@@ -1,6 +1,6 @@
 body {
 	text-align:center;
-	background-color: #fffff0;
+	background-color: #ffffff;
 }
 
 .form-align{
@@ -11,38 +11,90 @@ div {
 	display: inline;
 }
 
-#left-side {
-	width: 300px;
-	height: 500px;
+#left-menu {
+	min-width: 25%;
+	min-height: 90%%;
+	max-width: 25%;
+	max-height: 90%;
+	height:90%;
 	float: left;
-	position: relative;
-	border: 2px solid;	
+	top:0;
+	left:0;
+	position: absolute;
+	border: 1px;
+	border-style:none solid none none;	
 	display: inline-block;
+    background:#71a8d4;
+	color:#ffffff;
+	font-weight:bold;
+    
 }
 
 #button-panel{
-	line-height: 150%;
-	bottom: -150px;
-	left:0px;
-	position: absolute;
+	min-width: 25%;
+	min-height: 10%;
+	border: 0px solid;	
+	height:10%;
+	float: leftwards;
+	z-index:20;
+	bottom:0;
+	left:0;
+	position: fixed;
+	background:#71a8d4;
+	color:#190066;
 }
 
 #tree {
-	height: 200px;
-	text-align: left;
+	color:#000000;
+	font-size:20px;	
+	margin:0;
+	text-align:left;
 }
+#experiment-name {
+color:#ffffff;
+font-size:15px;
+font-weight:bold;
 
+}
+#trial-tree{
+color:#000000;
+font-size:10px;	
+margin:0;
+}
 #settings-button {
 	float: right;
 	position: absolute;
-	right: 35px;
-	top: 5px;
+	right:3px;
+	top: 3px;
 }
 
 #main {
-	
+	min-width: 75%;
+	min-height: 100%;
+	height:100%;
+	position: absolute;
+	border: 0px solid;	
+	float:right;
+	top:0;
+	right:0;
+    background:	#ffffff;
+	color:#0000ff;
 }
-
+#fields{
+	margin:1%;
+	font-size:25 px;
+	color: #191966;
+	font-weight:bold;
+	text-align:left;
+}
+#js-psych-button{
+	margin:0.5%;
+	font-size:20 px;
+	color: #330032;
+	background-color:#f1f1f1;
+	font-weight:bold;
+	border: 2px outset;
+}
 .select-file {
 	text-align: center;
 }
