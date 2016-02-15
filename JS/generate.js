@@ -1,193 +1,275 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>My Second React Example</title>
-	<script src="https://fb.me/react-0.14.6.js"></script>
-	<script src="https://fb.me/react-dom-0.14.6.js"></script>
-	<link rel="stylesheet" href="../CSS/index.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.25.1/react-bootstrap.js"></script>
-	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/react-with-addons.min.js
-	"></script>
-	<script src="../JS/generate.js"></script>
-	<script src="../JS/return_parameters.js"></script>
-
-	<script>
-	function collectDataDynamically() {
-		var argsToPassToJS = [];
-		for (var i = 1; i < arguments.length; i++)
-			if (typeof arguments[i].value === "undefined")
-				argsToPassToJS.push(arguments[i].innerHTML);
-			else
-				argsToPassToJS.push(arguments[i].value);
-		//downloadHtml(argsToPassToJS);
-		if(arguments[0] == 'd')
-			downloadHtml(argsToPassToJS);
-		else
-			viewHtml(argsToPassToJS);
-
+var saveAs = saveAs || (function(view) {
+	"use strict";
+	// IE <10 is explicitly unsupported
+	if (typeof navigator !== "undefined" && /MSIE [1-9]\./.test(navigator.userAgent)) {
+		return;
 	}
-
-	</script>
-
-	<link rel="stylesheet" type="text/css" href="../CSS/tree.css">
-</head>
-<body>
-	<div id="left-side">
-		<div id="tree" ></div>
-		<div id="settings-button">
-			<button  type="button" class="btn btn-info" id="settings">Settings</button>
-		</div>
-		    <div id ="button-panel">
-			<button  type="button" class="btn btn-info" id="save">Save</button>
-			<button  type="button" class="btn btn-info" id="load">Load</button>
-			<button  type="button" class="btn btn-info" id="generate" onclick="collectDataDynamically('d',text,cont_key)">Generate</button>
-			<button  type="button" class="btn btn-info" id="preview" onclick="collectDataDynamically('v',text,cont_key)">Preview</button>
- </div>
-	</div>
-	<div id="main" ></div>
-
-	<script type="text/babel">
-		var TreeNode = React.createClass({
-			getInitialState: function() {
-				return {
-					visible: true
-				};
-			},
-			render: function() {
-
-				var childNodes;
-				var classObj;
-
-				if (this.props.node.childNodes != null) {
-					childNodes = this.props.node.childNodes.map(function(node, index) {
-						return <a href="#" id={node.title}><li key={index}><TreeNode node={node} /></li></a>
-					});
-
-					classObj = {
-						togglable: true,
-						"togglable-down": this.state.visible,
-						"togglable-up": !this.state.visible
+	var
+		  doc = view.document
+		  // only get URL when necessary in case Blob.js hasn't overridden it yet
+		, get_URL = function() {
+			return view.URL || view.webkitURL || view;
+		}
+		, save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
+		, can_use_save_link = "download" in save_link
+		, click = function(node) {
+			var event = new MouseEvent("click");
+			node.dispatchEvent(event);
+		}
+		, is_safari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
+		, webkit_req_fs = view.webkitRequestFileSystem
+		, req_fs = view.requestFileSystem || webkit_req_fs || view.mozRequestFileSystem
+		, throw_outside = function(ex) {
+			(view.setImmediate || view.setTimeout)(function() {
+				throw ex;
+			}, 0);
+		}
+		, force_saveable_type = "application/octet-stream"
+		, fs_min_size = 0
+		, arbitrary_revoke_timeout = 500 // in ms
+		, revoke = function(file) {
+			var revoker = function() {
+				if (typeof file === "string") { // file is an object URL
+					get_URL().revokeObjectURL(file);
+				} else { // file is a File
+					file.remove();
+				}
+			};
+			if (view.chrome) {
+				revoker();
+			} else {
+				setTimeout(revoker, arbitrary_revoke_timeout);
+			}
+		}
+		, dispatch = function(filesaver, event_types, event) {
+			event_types = [].concat(event_types);
+			var i = event_types.length;
+			while (i--) {
+				var listener = filesaver["on" + event_types[i]];
+				if (typeof listener === "function") {
+					try {
+						listener.call(filesaver, event || filesaver);
+					} catch (ex) {
+						throw_outside(ex);
+					}
+				}
+			}
+		}
+		, auto_bom = function(blob) {
+			// prepend BOM for UTF-8 XML and text/* types (including HTML)
+			if (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
+				return new Blob(["\ufeff", blob], {type: blob.type});
+			}
+			return blob;
+		}
+		, FileSaver = function(blob, name, no_auto_bom) {
+			if (!no_auto_bom) {
+				blob = auto_bom(blob);
+			}
+			// First try a.download, then web filesystem, then object URLs
+			var
+				  filesaver = this
+				, type = blob.type
+				, blob_changed = false
+				, object_url
+				, target_view
+				, dispatch_all = function() {
+					dispatch(filesaver, "writestart progress write writeend".split(" "));
+				}
+				// on any filesys errors revert to saving with object URLs
+				, fs_error = function() {
+					if (target_view && is_safari && typeof FileReader !== "undefined") {
+						// Safari doesn't allow downloading of blob urls
+						var reader = new FileReader();
+						reader.onloadend = function() {
+							var base64Data = reader.result;
+							target_view.location.href = "data:attachment/file" + base64Data.slice(base64Data.search(/[,;]/));
+							filesaver.readyState = filesaver.DONE;
+							dispatch_all();
+						};
+						reader.readAsDataURL(blob);
+						filesaver.readyState = filesaver.INIT;
+						return;
+					}
+					// don't create more object URLs than needed
+					if (blob_changed || !object_url) {
+						object_url = get_URL().createObjectURL(blob);
+					}
+					if (target_view) {
+						target_view.location.href = object_url;
+					} else {
+						var new_tab = view.open(object_url, "_blank");
+						if (new_tab == undefined && is_safari) {
+							//Apple do not allow window.open, see http://bit.ly/1kZffRI
+							view.location.href = object_url
+						}
+					}
+					filesaver.readyState = filesaver.DONE;
+					dispatch_all();
+					revoke(object_url);
+				}
+				, abortable = function(func) {
+					return function() {
+						if (filesaver.readyState !== filesaver.DONE) {
+							return func.apply(this, arguments);
+						}
 					};
 				}
-
-				var style;
-				if (!this.state.visible) {
-					style = {display: "none"};
-				}
-
-				return (
-				<div>
-					<h5 onClick={this.toggle} className={React.addons.classSet(classObj)}>
-						{this.props.node.title}
-					</h5>
-					<ul style={style}>
-						{childNodes}
-					</ul>
-				</div>
-				);
-			},
-			toggle: function() {
-				this.setState({visible: !this.state.visible});
+				, create_if_not_found = {create: true, exclusive: false}
+				, slice
+			;
+			filesaver.readyState = filesaver.INIT;
+			if (!name) {
+				name = "download";
 			}
-		});
-
-		var tree = {
-			title: "Experiment Name",
-			childNodes: [
-			{title: "HelloWorldTrial"},{title: "SingleStimTrial"}
-			]
+			if (can_use_save_link) {
+				object_url = get_URL().createObjectURL(blob);
+				setTimeout(function() {
+					save_link.href = object_url;
+					save_link.download = name;
+					click(save_link);
+					dispatch_all();
+					revoke(object_url);
+					filesaver.readyState = filesaver.DONE;
+				});
+				return;
+			}
+			if (view.chrome && type && type !== force_saveable_type) {
+				slice = blob.slice || blob.webkitSlice;
+				blob = slice.call(blob, 0, blob.size, force_saveable_type);
+				blob_changed = true;
+			}
+			if (webkit_req_fs && name !== "download") {
+				name += ".download";
+			}
+			if (type === force_saveable_type || webkit_req_fs) {
+				target_view = view;
+			}
+			if (!req_fs) {
+				fs_error();
+				return;
+			}
+			fs_min_size += blob.size;
+			req_fs(view.TEMPORARY, fs_min_size, abortable(function(fs) {
+				fs.root.getDirectory("saved", create_if_not_found, abortable(function(dir) {
+					var save = function() {
+						dir.getFile(name, create_if_not_found, abortable(function(file) {
+							file.createWriter(abortable(function(writer) {
+								writer.onwriteend = function(event) {
+									target_view.location.href = file.toURL();
+									filesaver.readyState = filesaver.DONE;
+									dispatch(filesaver, "writeend", event);
+									revoke(file);
+								};
+								writer.onerror = function() {
+									var error = writer.error;
+									if (error.code !== error.ABORT_ERR) {
+										fs_error();
+									}
+								};
+								"writestart progress write abort".split(" ").forEach(function(event) {
+									writer["on" + event] = filesaver["on" + event];
+								});
+								writer.write(blob);
+								filesaver.abort = function() {
+									writer.abort();
+									filesaver.readyState = filesaver.DONE;
+								};
+								filesaver.readyState = filesaver.WRITING;
+							}), fs_error);
+						}), fs_error);
+					};
+					dir.getFile(name, {create: false}, abortable(function(file) {
+						// delete file if it already exists
+						file.remove();
+						save();
+					}), abortable(function(ex) {
+						if (ex.code === ex.NOT_FOUND_ERR) {
+							save();
+						} else {
+							fs_error();
+						}
+					}));
+				}), fs_error);
+			}), fs_error);
+		}
+		, FS_proto = FileSaver.prototype
+		, saveAs = function(blob, name, no_auto_bom) {
+			return new FileSaver(blob, name, no_auto_bom);
+		}
+	;
+	// IE 10+ (native saveAs)
+	if (typeof navigator !== "undefined" && navigator.msSaveOrOpenBlob) {
+		return function(blob, name, no_auto_bom) {
+			if (!no_auto_bom) {
+				blob = auto_bom(blob);
+			}
+			return navigator.msSaveOrOpenBlob(blob, name || "download");
 		};
+	}
 
-		React.render(
-		<TreeNode node={tree} />,
-		document.getElementById("tree")
-		);
+	FS_proto.abort = function() {
+		var filesaver = this;
+		filesaver.readyState = filesaver.DONE;
+		dispatch(filesaver, "abort");
+	};
+	FS_proto.readyState = FS_proto.INIT = 0;
+	FS_proto.WRITING = 1;
+	FS_proto.DONE = 2;
 
-	</script>
-	   <script type="text/babel">
+	FS_proto.error =
+	FS_proto.onwritestart =
+	FS_proto.onprogress =
+	FS_proto.onwrite =
+	FS_proto.onabort =
+	FS_proto.onerror =
+	FS_proto.onwriteend =
+		null;
 
-	</script>
-	<script type="text/babel">
-		var importFile= '';
-		var outputFiles= '';
-		importFile = (
-			<input type="file" id="files" name="files[]" multiple />
-		);
+	return saveAs;
+}(
+	   typeof self !== "undefined" && self
+	|| typeof window !== "undefined" && window
+	|| this.content
+));
+// `self` is undefined in Firefox for Android content script context
+// while `this` is nsIContentFrameMessageManager
+// with an attribute `content` that corresponds to the window
 
-		outputFiles = (
-			<output id="list">
-			</output>
-		);
+if (typeof module !== "undefined" && module.exports) {
+  module.exports.saveAs = saveAs;
+} else if ((typeof define !== "undefined" && define !== null) && (define.amd != null)) {
+  define([], function() {
+    return saveAs;
+  });
+}
 
-		function handleFileSelect(evt) {
-		var listoffiles={};
-    	var files = evt.target.files; // FileList object
-    	var selectOption = document.getElementById("Plugins");
 
-    //files is a FileList of File objects. List some properties.
-    	var output = [];
-	    for (var i = 0, f; f = files[i]; i++) {
-		listoffiles[f.name.substring(8)]=f;
-		console.log(listoffiles[f.name]);
+function initialHtmlTags() {
+	var st = "<!doctype html>\n\n<html>\n\t<head>\n\t\t<title>My experiment</title>\n\t\t<script";
+	st += " src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>\n\t\t<script";
+	st += " src=\"jspsych-5.0.1/jspsych.js\"></script>\n\t\t<script";
+	st += " src=\"jspsych-5.0.1/plugins/jspsych-text.js\"></script>\n\t\t<link";
+	st += " href=\"jspsych-5.0.1/css/jspsych.css\" rel=\"stylesheet\"";
+	st += " type=\"text/css\"></link>\n\t</head>\n\n\t<body>\n";
+	return st;
+}
 
-    	}
+function downloadHtml() {
+	st = initialHtmlTags();
+	for (var i = 0; i < arguments.length; i++)
+		st += "\n\t\t" + arguments[i];
+	st += "\n\n\t</body>\n</html>";
 
-    	for(var i=0; i<listoffiles.length;i++) {
-    		var opt= listoffiles[i];
-    		var element = document.createElement("option");
-    		element.text = opt.key;
-    		element.value = opt.value;
-    		selectOption.appendChild(element);
-    	}
+	var blob = new Blob([st], {type: "text/plain;charset=utf-8"});
+	saveAs(blob, "My_Experiment.html");
+}
 
-	    return listoffiles;
-
-  		}
-  		$('#settings').click(function() {
-  			React.render(importFile, document.getElementById("main"));
-			document.getElementById('files').addEventListener('change', handleFileSelect, true);
-		});
-
-		var helloWorldDiv = '';
-		var singleStimDiv = '';
-
-		helloWorldDiv = (
-		<div id="hello">
-			<span>Trial Type</span><select name="Plugins" onChange="returnParameters()">
-				<option value="text">Text</option>
-			</select>
-			<br></br><br></br>
-
-			Text : <input type="text" id="text"/>
-			Continue Key : <input type="text" id="cont_key"/>
-		</div>
-		);
-
-		singleStimDiv = (
-		<div id="single">
-			<span>Trial Type</span><select name="Plugins">
-				<option value="text">SingleStim</option>
-			</select>
-			<br></br><br></br>
-
-			Stimulus : <input type="text"/> <br/>
-			Choices : <input type="text"/> <br/>
-			Prompt : <input type="text"/> <br/>
-			TimingResponse : <input type="text"/>
-
-		</div>
-		);
-		$('#HelloWorldTrial').click(function(){
-			React.render(helloWorldDiv,document.getElementById("main"));
-		});
-
-		$('#SingleStimTrial').click(function(){
-			React.render(singleStimDiv,document.getElementById("main"));
-		});
-	</script>
-
-</body>
-</html>
+function viewHtml() {
+	st = initialHtmlTags();
+	for (var i = 0; i < arguments.length; i++)
+		st += arguments[i] + ", ";
+	st += "\n\t</body>\n</html>";
+	var newWindow = window.open("", "newWindow", "resizable=yes");
+	newWindow.document.write(st);
+}
