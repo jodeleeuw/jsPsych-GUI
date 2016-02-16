@@ -25,7 +25,7 @@
 			<div id="settings-button">
 				<button  type="button" class="btn btn-primary btn-md" id="settings"> <span class="glyphicon glyphicon-cog"></span></button> 	
 			</div>
-			
+
 			<div id="tree">
 			</div>
 			
@@ -71,7 +71,7 @@ function collectDataDynamically() {
 
 			if (this.props.node.childNodes != null) {
 				childNodes = this.props.node.childNodes.map(function(node, index) {
-					return <a href="#" id={node.title}><li key={index} id={node.title+"1"}><TreeNode node={node} /></li></a>
+					return <a href="#" ><li key={index} id={node.title}><TreeNode node={node} /></li></a>
 				});
 
 				classObj = {
@@ -124,7 +124,6 @@ function collectDataDynamically() {
 	function findExpName() {
 		var urlParams = getParams(document.URL);
 		var tempExpName = urlParams.ExpName[0];
-		console.log("asd");
 		console.log(tempExpName);
 		if (tempExpName == 0)
 			return "My Experiment";
@@ -134,10 +133,10 @@ function collectDataDynamically() {
 	var tree = {
 		title: findExpName(),
 		childNodes: [
-			{title: "HelloWorldTrial"},
-			{title: "SingleStimTrial", 
-				childNodes: [ {title:"Names"},{title:"Images"}]
-			}
+			{title: "HelloWorldTrial", 
+				childNodes: [ {title:"Nested-Timeline-Child-1"},{title:"Nested-Timeline-Child-2"}]
+			},
+			{title: "SingleStimTrial"}
 		]
 	};
 
@@ -152,7 +151,9 @@ function collectDataDynamically() {
 	var importFile= '';
 	var outputFiles= '';
 	importFile = (
-		<input type="file" id="files" name="files[]" class="select-file" multiple />
+		<div className="select-plugin">
+		<span>Select Your Plugin Files : </span><input type="file" id="files" name="files[]" className="select-file" multiple />
+		</div>
 	);
 
 	outputFiles = (
@@ -191,12 +192,14 @@ function collectDataDynamically() {
 
 	var helloWorldDiv = '';
 	var singleStimDiv = '';
+	var child1Div = '';
+	var child2Div = '';
 	
 	helloWorldDiv = (
 	
 		<div id="hello">
 		<br></br><br></br>
-			<span id="fields">Trial Type: <select name="Plugins" onChange="returnParameters()" class="dropdown"> 
+			<span id="fields">Trial Type : <select name="Plugins" onChange="returnParameters()" className="dropdown"> 
 										<option value="text">Text</option>
 										</select>
 			</span>
@@ -215,7 +218,7 @@ function collectDataDynamically() {
 	singleStimDiv = (
 		<div id="single">
 		<br/><br/>
-			<span id="fields">Trial Type<select name="Plugins" class="dropdown"> 
+			<span id="fields">Trial Type : <select name="Plugins" class="dropdown"> 
 										<option value="text">SingleStim</option>
 										</select>
 			</span>	
@@ -238,12 +241,60 @@ function collectDataDynamically() {
 			<br/><br/>				
 		</div>
 	);
+
+	child1Div = (
+	
+		<div id="hello">
+		<br></br><br></br>
+			<span id="fields">Trial Type: <select name="Plugins" onChange="returnParameters()" class="dropdown"> 
+										<option value="text">Text</option>
+										</select>
+			</span>
+			<br></br><br></br>
+			<span id="fields">Text : <input type="text" id="text" label="Text :"/>
+			</span>
+			<br></br><br></br>
+			<span id="fields">
+			Continue Key : <input type="text" id="cont_key"/>
+			</span>
+			<br></br><br></br>
+		</div>
+	
+	);
+
+	child2Div = (
+	
+		<div id="hello">
+		<br></br><br></br>
+			<span id="fields">Trial Type: <select name="Plugins" onChange="returnParameters()" class="dropdown"> 
+										<option value="text">Text</option>
+										</select>
+			</span>
+			<br></br><br></br>
+			<span id="fields">Text : <input type="text" id="text" label="Text :"/>
+			</span>
+			<br></br><br></br>
+			<span id="fields">
+			Continue Key : <input type="text" id="cont_key"/>
+			</span>
+			<br></br><br></br>
+		</div>
+	
+	);
 	$('#HelloWorldTrial').click(function(){
 		React.render(helloWorldDiv,document.getElementById("main"));
 	});
 	
 	$('#SingleStimTrial').click(function(){
 		React.render(singleStimDiv,document.getElementById("main"));
+	});
+
+	$('#Nested-Timeline-Child-1').click(function(){
+		React.render(child1Div,document.getElementById("main"));
+	});
+
+	$('#Nested-Timeline-Child-2').click(function(){
+		React.render(child2Div,document.getElementById("main"));
 	});
 </script>
 

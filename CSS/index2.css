@@ -25,7 +25,6 @@ div {
 
 
 #left-menu {
-	
 	min-width: 25%;
 	min-height: 100%;
 	max-width: 25%;
@@ -43,10 +42,6 @@ div {
 	font-size:25px;
 	background-color:#505050;
 	padding-left:10px;
-	
-	
-
-    
 }
 
 #button-panel{
@@ -93,7 +88,7 @@ margin-left:5px;
 
 #settings-button {
 	float: right;
-	position: absolute;
+	position: relative;
 	right:3px;
 	top: 3px;
 }
@@ -156,4 +151,8 @@ ul.tree-node li.last {
 
 .select-file {
 	text-align: center;
+}
+
+.select-plugin { 
+	padding-left: 20px;
 }

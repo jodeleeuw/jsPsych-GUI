@@ -248,18 +248,22 @@ if (typeof module !== "undefined" && module.exports) {
 function initialHtmlTags() {
 	var st = "<!doctype html>\n\n<html>\n\t<head>\n\t\t<title>My experiment</title>\n\t\t<script";
 	st += " src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>\n\t\t<script";
-	st += " src=\"jspsych-5.0.1/jspsych.js\"></script>\n\t\t<script";
-	st += " src=\"jspsych-5.0.1/plugins/jspsych-text.js\"></script>\n\t\t<link";
-	st += " href=\"jspsych-5.0.1/css/jspsych.css\" rel=\"stylesheet\"";
+	st += " src=\"http://rawgit.com/jodeleeuw/jsPsych/master/jspsych.js\"></script>\n\t\t<script";
+	st += " src=\"http://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-text.js\"></script>\n\t\t<link";
+	st += " href=\"http://rawgit.com/jodeleeuw/jsPsych/master/css/jspsych.css\" rel=\"stylesheet\"";
 	st += " type=\"text/css\"></link>\n\t</head>\n\n\t<body>\n";
 	return st;
 }
 
 function downloadHtml() {
 	st = initialHtmlTags();
-	for (var i = 0; i < arguments.length; i++)
-		st += "\n\t\t" + arguments[i];
-	st += "\n\n\t</body>\n</html>";
+	st += "\t</body>\n\t<script>\n\t\tvar hello_trial = {type: 'text',text:\'";
+	// for (var i = 0; i < arguments.length; i++)
+	// 	st += "\n\t\t" + arguments[i];
+	var arg1 = arguments[0].toString();
+	st += arg1.substring(0, arg1.length-1);
+	st += "\'};\n\t\tjsPsych.init({ timeline: [ hello_trial ] });";
+	st += "\n\t</script>\n</html>";
 
 	var blob = new Blob([st], {type: "text/plain;charset=utf-8"});
 	saveAs(blob, "My_Experiment.html");
@@ -267,8 +271,10 @@ function downloadHtml() {
 
 function viewHtml() {
 	st = initialHtmlTags();
-	for (var i = 0; i < arguments.length; i++)
-		st += arguments[i] + ", ";
+	// for (var i = 0; i < arguments.length; i++)
+	// 	st += arguments[i] + ", ";
+	var arg1 = arguments[0].toString();
+	st += arg1.substring(0, arg1.length-1);
 	st += "\n\t</body>\n</html>";
 	var newWindow = window.open("", "newWindow", "resizable=yes");
 	newWindow.document.write(st);
