@@ -4,9 +4,11 @@
 	<title>My Second React Example</title>
 	<script src="https://fb.me/react-0.14.6.js"></script>
 	<script src="https://fb.me/react-dom-0.14.6.js"></script>
-
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script src="http://rawgit.com/iamdanfox/anno.js/gh-pages/dist/anno.js" type="text/javascript"></script>
+	<script src="http://rawgit.com/iamdanfox/anno.js/gh-pages/bower_components/scrollintoview/jquery.scrollintoview.min.js" type="text/javascript"></script>
+	<link href="http://rawgit.com/iamdanfox/anno.js/gh-pages/dist/anno.css" rel="stylesheet" type="text/css" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.25.1/react-bootstrap.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/react-with-addons.min.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -297,6 +299,42 @@ function collectDataDynamically() {
 		React.render(child2Div,document.getElementById("main"));
 	});
 </script>
+<script type="text/javascript">
+var allowTutorial = false;
 
+	var anno = new Anno([{
+  target  : '#left-menu', // second block of code
+  position: 'right',
+  content : 'This tree structure represents the timeline of the experiment. I\'ve added some simple trials.'
+}, {
+  target  : '#settings-button',
+  position: 'center-bottom',
+  content : "Use this to set timeline parameters and select plugin files to be included.",
+}, {
+  target  : '#save',
+  position: 'top',
+  content : "Save the current state of your experiment"
+}, {
+  target  : '#load',
+  position: 'top',
+  content : 'Load a previously saved file to continue with an experiment'
+}, {
+  target  : '#preview',
+  position: 'top',
+  content : 'See the output of your experiment in the current state'
+},{
+  target  : '#generate',
+  position: 'top',
+  className: 'anno-width-200', // 150,175,200,250 (default 300)
+  content : 'Generate an output file for your experiment and use it anywhere you want!!'
+}])
+
+function tutorial() {
+            anno.show();
+    }
+    if(allowTutorial) {
+    	window.onload = tutorial;
+    }
+</script>
 </body>
 </html>
