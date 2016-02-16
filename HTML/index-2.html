@@ -37,10 +37,11 @@
 </head>
 <body>   
 	<div id="left-menu">
-		<div id="tree" ></div>
-		<div id="settings-button" class="col-md-1">
+		
+		<div id="settings-button" >
 			<button  type="button" class="btn btn-info" id="settings"><span class="glyphicon glyphicon-cog"></span></button> 
 		</div>
+		<div id="tree" ></div>
 		    <div id ="button-panel"> 
 			<button  type="button" class="btn btn-info" id="save">Save</button> 
 			<button  type="button" class="btn btn-info" id="load">Load</button> 
@@ -48,7 +49,8 @@
 			<button  type="button" class="btn btn-info" id="preview" onclick="collectDataDynamically('v',text,cont_key)">Preview</button> 
  			</div>
 	</div>
-	<div id="main" ></div>
+	<div id="main" >
+	</div>
 
 	<script type="text/babel">
 		var TreeNode = React.createClass({

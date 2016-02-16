@@ -2,31 +2,66 @@
     font-family: "Source Sans Pro";
     src: url('Source Sans Pro.otf') format('otf');
 }
-body {
-	font-family: "Source Sans Pro";
-	text-align:center;
-	background-color: #fffff0;
+/* Custom page footer */
+.footer {
+  padding-top: 19px;
+  color: #777;
+  border-top: 1px solid #e5e5e5;
 }
 
+/* Customize container */
+@media (min-width: 768px) {
+  .container {
+    max-width: 730px;
+  }
+}
+.container-narrow > hr {
+  margin: 30px 0;
+}
+html{
+	height:100%;
+	width:100%;
+}
+body {
+	font-family: "Source Sans Pro";
+	font-size:25px;
+	text-align:center; 
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #fff),color-stop(.9, #D4E8C6),color-stop(1, #D4E8C6));
+    height: 100%;
+	width:100%;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+	
+}
 #jspsych-image {
 
 }
-
 #experiment-name {
-color:#ffffff;
-font-size:18px;
-background:#000;
+	color:#000000;
+	font-size:20px;
+	background:#fff;
+	
+	text-align: center;
+	
 }
 #trial-tree{
-color:#000000;
-font-size:20px;	
-margin:0;
+	color:#000000;
+	font-size:20px;	
+	margin:0;
 }
 .label-align {
-	text-align: center-left;
-
+	text-align: center;
+	font-size:20px;	
+	position:right;
+	
 }
 
 .submit-align {
-	text-align: left;
+	text-align: center;
+	font-size:20px;	
+	position:left;
+	
 }
+

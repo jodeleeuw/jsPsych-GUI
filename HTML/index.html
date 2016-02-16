@@ -10,35 +10,30 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.22/require.js"></script>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	<link rel="stylesheet" href="../CSS/index.css">
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet" />
 </head>
   <body>
-
-	  
-    <script type="text/babel">
-var Photo = React.createClass({
-  render: function() {
-    var ReactDOM = require(['react-dom']);	  
-    var Input = ReactBootstrap.Input;
-	var DropdownButton = ReactBootstrap.DropdownButton;
-	var MenuItem = ReactBootstrap.MenuItem;
-	var ButtonInput = ReactBootstrap.ButtonInput;
-	
-	
-	
-    return (
-	<div>
-		
-		<img src='https://raw.githubusercontent.com/jodeleeuw/jsPsych/master/jspsych-logo-readme.jpg' id="jspsych-image" responsive/>
-			<form action="index-2.html" method="GET" id="experiment-form">
-			    <Input type="text" label="Experiment name" id="experiment-name" placeholder="Give a name for your experiment" labelClassName="col-xs-4 label-align"  wrapperClassName="col-xs-4"/>
-    			<ButtonInput type="submit" bsSize="medium" value="Next"  onclick="passValue()" wrapperClassName="col-xs-4 submit-align"/>
+  <div class="container">
+		<br/><br/>
+		<img src='../IMG/jspsych-logo.png' id="jspsych-image" />
+		<br/><br/>
+		<div class="col-lg-12 ">
+			<form class="form-inline" action="new1.html" id="experiment-form" method="GET">
+			<label type="label" class="label-align">Experiment Name:</label>&nbsp; &nbsp;&nbsp;
+			<input type="text" class="form-control" name="ExpName" id="experiment-name" placeholder="My Experiment">&nbsp;&nbsp;&nbsp;
+			<button type="submit" onclick="passValue()" class="btn btn-default submit-align">Next</button>
 			</form>
-	</div>)
-  }
-});
+		</div>
+		<br/><br/>
+        <footer class="footer">
+        <p>
+              <a href="#"><span style="color:grey"><i class="icon-facebook icon-2x"></i> </a> &nbsp;
+			   <a href="#"><span style="color:grey"><i class="icon-twitter icon-2x"></i></a> &nbsp;
+			   <a href="https://github.com/jodeleeuw/jsPsych/"><span style="color:grey"><i class="icon-github icon-2x"></i></a>
+		</p>
+        </footer>
 
-ReactDOM.render(<Photo />, document.body);
+</div>
 
-    </script>
   </body>
 </html>

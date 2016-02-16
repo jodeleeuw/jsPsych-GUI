@@ -20,22 +20,23 @@
 <body> 
 <div class="container-fluid">
 	<div class="row">
-		<div id="left-menu" class="col-md-4">
-			<div id="tree">
-			</div>
-
+		<div id="left-menu">
+			
 			<div id="settings-button">
-				<button  type="button" class="btn btn-primary btn-sm" id="settings"> <span class="glyphicon glyphicon-cog"></span></button> 	
+				<button  type="button" class="btn btn-primary btn-md" id="settings"> <span class="glyphicon glyphicon-cog"></span></button> 	
+			</div>
+			
+			<div id="tree">
 			</div>
 			
 			<div id ="button-panel"> 
-				<button   type="button" class="btn btn-primary btn-sm" id="save">Save</button> 
-				<button   type="button" class="btn btn-primary btn-sm" id="load">Load</button> 
-				<button   type="button" class="btn btn-primary btn-sm" id="generate" onclick="collectDataDynamically('d',text,cont_key)">Generate</button> 
-				<button   type="button" class="btn btn-primary btn-sm" id="preview" onclick="collectDataDynamically('v',text,cont_key)">Preview</button> 
+				<button   type="button" class="btn btn-primary btn-lg" id="save">Save</button> 
+				<button   type="button" class="btn btn-primary btn-lg" id="load">Load</button> 
+				<button   type="button" class="btn btn-primary btn-lg" id="generate" onclick="collectDataDynamically('d',text,cont_key)">Generate</button> 
+				<button   type="button" class="btn btn-primary btn-lg" id="preview" onclick="collectDataDynamically('v',text,cont_key)">Preview</button> 
  			</div>
 		</div>
-		<div id="main" class="col-md-6">
+		<div id="main">
 		</div>
 	</div>
 </div>
@@ -70,7 +71,7 @@ function collectDataDynamically() {
 
 			if (this.props.node.childNodes != null) {
 				childNodes = this.props.node.childNodes.map(function(node, index) {
-					return <a href="#" id={node.title}><li key={index}><TreeNode node={node} /></li></a>
+					return <a href="#" id={node.title}><li key={index} id={node.title+"1"}><TreeNode node={node} /></li></a>
 				});
 
 				classObj = {
@@ -90,7 +91,7 @@ function collectDataDynamically() {
 				<h3 id="experiment-name" onClick={this.toggle} className={React.addons.classSet(classObj)}>
 					{this.props.node.title}
 				</h3>
-				<ul id="trial-tree">
+				<ul id="trial-tree" className="tree-node">
 					{childNodes}
 				</ul>
 			</div>
@@ -101,10 +102,42 @@ function collectDataDynamically() {
 		}
 	});
 
+	function getParams (str) {
+		var queryString = str || window.location.search || '';
+		var keyValPairs = [];
+		var params      = {};
+		queryString     = queryString.replace(/.*?\?/,"");
+
+	   	if (queryString.length) {
+			keyValPairs = queryString.split('&');
+			for (var pairNum in keyValPairs) {
+				var key = keyValPairs[pairNum].split('=')[0];
+				if (!key.length) continue;
+				if (typeof params[key] === 'undefined')
+					params[key] = [];
+				params[key].push(keyValPairs[pairNum].split('=')[1]);
+			}
+		}
+		return params;
+	}
+
+	function findExpName() {
+		var urlParams = getParams(document.URL);
+		var tempExpName = urlParams.ExpName[0];
+		console.log("asd");
+		console.log(tempExpName);
+		if (tempExpName == 0)
+			return "My Experiment";
+		return tempExpName;
+	}
+
 	var tree = {
-		title: "My Experiment",
+		title: findExpName(),
 		childNodes: [
-		{title: "HelloWorldTrial"},{title: "SingleStimTrial"}
+			{title: "HelloWorldTrial"},
+			{title: "SingleStimTrial", 
+				childNodes: [ {title:"Names"},{title:"Images"}]
+			}
 		]
 	};
 
@@ -160,7 +193,7 @@ function collectDataDynamically() {
 	var singleStimDiv = '';
 	
 	helloWorldDiv = (
-	<div id="main">
+	
 		<div id="hello">
 		<br></br><br></br>
 			<span id="fields">Trial Type: <select name="Plugins" onChange="returnParameters()" class="dropdown"> 
@@ -176,11 +209,10 @@ function collectDataDynamically() {
 			</span>
 			<br></br><br></br>
 		</div>
-	</div>
+	
 	);
 	   
 	singleStimDiv = (
-	<div id="main">
 		<div id="single">
 		<br/><br/>
 			<span id="fields">Trial Type<select name="Plugins" class="dropdown"> 
@@ -205,7 +237,6 @@ function collectDataDynamically() {
 			</span>
 			<br/><br/>				
 		</div>
-	</div>
 	);
 	$('#HelloWorldTrial').click(function(){
 		React.render(helloWorldDiv,document.getElementById("main"));
@@ -215,6 +246,6 @@ function collectDataDynamically() {
 		React.render(singleStimDiv,document.getElementById("main"));
 	});
 </script>
-  
+
 </body>
 </html>
