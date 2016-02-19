@@ -16,6 +16,76 @@ jsPsych.plugins['vsl-animate-occlusion'] = (function() {
   var plugin = {};
 
   jsPsych.pluginAPI.registerPreload('vsl-animate-occlusion', 'stimuli', 'image');
+  
+   plugin.parameters = function(){
+   var params = {
+	   
+    stimuli:{
+     type : ['array'],
+     label: 'stimuli',
+     validation_function: function(){ return true; }, //none(temp)
+     //default is undefined
+    },
+	
+    canvas_size: { 
+     type: ['array'],
+     label: 'canvas_size', 
+        validation_function: function() { return true; }, 
+     default: '[400,400]'
+
+    },
+	
+	image_size: { 
+     type: ['array'],
+     label: 'image_size', 
+        validation_function: function() { return true; }, 
+     default: '[100,100]'
+
+    },
+	
+	initial_direction: { 
+     type: ['string'],
+     label: 'initial_direction', 
+        validation_function: function() { return true; }, 
+     default: '"left"'
+
+    },
+	
+	occlude_center: { 
+     type: ['boolean'],
+     label: 'occlude_center', 
+        validation_function: function() { return true; }, 
+     default: 'true'
+
+    },
+	
+	choices: { 
+     type: ['array'],
+     label: 'choices', 
+        validation_function: function() { return true; }, 
+     default: '""'
+
+    },
+	
+	timing_cycle: { 
+     type: ['number'],
+     label: 'timing_cycle', 
+        validation_function: function() { return true; }, 
+     default: '1000'
+
+    },
+	
+	timing_pre_movement: { 
+     type: ['number'],
+     label: 'timing_pre_movement', 
+        validation_function: function() { return true; }, 
+     default: '500'
+
+    }
+	
+   }
+   return params;
+ }
 
   plugin.trial = function(display_element, trial) {
 

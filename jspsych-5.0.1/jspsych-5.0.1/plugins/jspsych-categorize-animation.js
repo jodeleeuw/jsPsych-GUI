@@ -9,7 +9,87 @@
 jsPsych.plugins["categorize-animation"] = (function() {
 
   var plugin = {};
+  plugin.parameters = function(){
+		  var params = {
+			  stimuli:{
+				  type : ['array'],
+				  label: 'Stimuli'
+				  //validation_function: function(){ return true; }, //none(temp)
+				  //default is undefined
+			  },
+			  key_answer: { 
+				  type: ['number'],
+				  label: 'Key Answer', 
+				  //validation_function: function() { return true; }, 
+				  //default is undefined
 
+			  },
+			  choices: { 
+				  type: ['array'],
+				  label: 'Choices', 
+				  //validation_function: function() { return true; }, 
+				  //default is undefined
+
+			  },
+			  text_answer: { 
+				  type: ['string'],
+				  label: 'Text Answer', 
+				  //validation_function: function() { return true; }, 
+				  default: ' '
+
+			  },
+			  correct_text: { 
+				  type: ['string'],
+				  label: 'Correct Text', 
+				  //validation_function: function() { return true; }, 
+				  default: 'Correct.'
+
+			  },
+			  incorrect_text: { 
+				  type: ['string'],
+				  label: 'Incorrect Text', 
+				  //validation_function: function() { return true; }, 
+				  default: 'Wrong.'
+
+			  },
+			  frame_time: { 
+				  type: ['boolean'],
+				  label: 'Frame Time', 
+				  //validation_function: function() { return true; }, 
+				  default: 250
+
+			  },
+			   sequence_reps: { 
+				  type: ['number'],
+				  label: 'Force Correct Button Press', 
+				  //validation_function: function() { return true; }, 
+				  default: 1
+
+			  },
+			   allow_response_before_complete: { 
+				  type: ['boolean'],
+				  label: 'Allow Response Before Complete', 
+				  //validation_function: function() { return true; }, 
+				  default: false
+
+			  },
+			  prompt: { 
+				  type: ['string'],
+				  label: 'Prompt', 
+				  //validation_function: function() { return true; }, 
+				  default: ' '
+
+			  },
+			   timing_feedback_duration: { 
+				  type: ['number'],
+				  label: 'Timing Feedback Duration', 
+				  //validation_function: function() { return true; }, 
+				  default: 2000
+
+			  },
+		  }
+	  return params;
+	}
   jsPsych.pluginAPI.registerPreload('categorize-animation', 'stimuli', 'image');
 
   plugin.trial = function(display_element, trial) {

@@ -9,7 +9,43 @@ documentation: docs.jspsych.org
 jsPsych.plugins.html = (function() {
 
   var plugin = {};
+  plugin.parameters = function(){
+		  var params = {
+			  url:{
+				  type : ['string'],
+				  label: 'URL'
+				  //validation_function: function(){ return true; }, //none(temp)
+				  //default is undefined
+			  },
+			  cont_key: { 
+				  type: ['number'],
+				  label: 'Continue Key', 
+				  //validation_function: function() { return true; }, 
+				  default : null
+			  },
+			  cont_btn: { 
+				  type: ['string'],
+				  label: 'Continue Button', 
+				  //validation_function: function() { return true; }, 
+				  default : 'null'
 
+			  },
+			  check_fn: { 
+				  type: ['function'],
+				  label: 'Sort Area Height', 
+				  //validation_function: function() { return true; }, 
+				  default: function(){ return true; }
+
+			  },
+			  force_refresh: { 
+				  type: ['boolean'],
+				  label: 'Sort Area Width', 
+				  //validation_function: function() { return true; }, 
+				  default: false
+			  }
+		  }
+	  return params;
+	}
   plugin.trial = function(display_element, trial) {
 
     // default parameters

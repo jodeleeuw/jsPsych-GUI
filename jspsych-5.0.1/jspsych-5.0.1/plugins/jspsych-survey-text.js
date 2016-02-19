@@ -1,18 +1,56 @@
-/**
- * jspsych-survey-text
- * a jspsych plugin for free response survey questions
- *
+  /* jspsych-text.js
  * Josh de Leeuw
+ *
+ * This plugin displays text (including HTML formatted strings) during the experiment.
+ * Use it to show instructions, provide performance feedback, etc...
  *
  * documentation: docs.jspsych.org
  *
+ *
  */
 
-
-jsPsych.plugins['survey-text'] = (function() {
+jsPsych.plugins.text = (function() {
 
   var plugin = {};
+  
+  plugin.parameters = function(){
+   var params = {
+	   
+    questions:{
+     type : ['array'],
+     label: 'questions',
+     validation_function: function(){ return true; }, //none(temp)
+     //default is undefined
+    },
+	
+    preamble: { 
+     type: ['string'],
+     label: 'preamble', 
+        validation_function: function() { return true; }, 
+     default: 'empty string'
 
+    },
+	
+    rows: { 
+     type: ['array'],
+     label: 'rows', 
+        validation_function: function() { return true; }, 
+     default: '[1]'
+
+    },
+	
+    columns: { 
+     type: ['array'],
+     label: 'columns', 
+        validation_function: function() { return true; }, 
+     default: '[40]'
+
+    }
+	
+   }
+   return params;
+ }
+  
   plugin.trial = function(display_element, trial) {
 
     trial.preamble = typeof trial.preamble == 'undefined' ? "" : trial.preamble;

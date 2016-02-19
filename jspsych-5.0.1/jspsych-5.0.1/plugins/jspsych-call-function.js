@@ -11,6 +11,23 @@ jsPsych.plugins['call-function'] = (function() {
 
   var plugin = {};
 
+  plugin.parameters = function(){
+	  var params = {
+		  func:{
+			  type : ['function'],
+			  label: 'Function'
+			  //default is undefined
+		  },
+		  timing_post_trial: { 
+			  type: ['number'],
+			  label: 'Timing Post Trial',
+			  default: 0
+
+		  }
+	  }
+	  return params;
+	}
+  
   plugin.trial = function(display_element, trial) {
 
     // one of the only plugins where we override the default experiment level

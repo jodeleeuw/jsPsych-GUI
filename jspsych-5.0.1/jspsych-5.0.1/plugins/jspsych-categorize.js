@@ -9,7 +9,116 @@
 jsPsych.plugins.categorize = (function() {
 
   var plugin = {};
+  
+  plugin.parameters = function(){
+	  var params = {
+		  stimulus:{
+			  type : ['string'],
+			  label: 'Stimulus'
+			  //validation_function: function(){ return true; }, //none(temp)
+			  //default is undefined
+		  },
+		  is_html: { 
+			  type: ['boolean'],
+			  label: 'Is HTML', 
+		      validation_function: function() { return true; }, 
+			  default: false,
 
+		  },
+		  key_answer: { 
+			  type: ['array'],
+			  label: 'Key Answer'
+		      //validation_function: function() { return true; }, 
+			  //default is undefined
+
+		  },
+		  choices: { 
+			  type: ['array'],
+			  label: 'Choices'
+		      //validation_function: function() { return true; }, 
+			  //default is undefined
+
+		  },
+		  text_answer: { 
+			  type: ['array'],
+			  label: 'Text Answer', 
+		      //validation_function: function() { return true; }, 
+			  default: ' '
+
+		  },
+		  correct_text: { 
+			  type: ['string'],
+			  label: 'Correct Text', 
+		      //validation_function: function() { return true; }, 
+			  default: 'Correct.'
+
+		  },
+		  incorrect_text: { 
+			  type: ['string'],
+			  label: 'Incorrect Text', 
+		      //validation_function: function() { return true; }, 
+			  default: 'Wrong.'
+
+		  },
+		  prompt: { 
+			  type: ['string'],
+			  label: 'Prompt', 
+		      //validation_function: function() { return true; }, 
+			  default: ' '
+
+		  },
+		  force_correct_button_press: { 
+			  type: ['boolean'],
+			  label: 'Force Correct Button Press', 
+		      //validation_function: function() { return true; }, 
+			  default: false
+
+		  },
+		   show_stim_with_feedback: { 
+			  type: ['boolean'],
+			  label: 'Show Stim with Feedback', 
+		      //validation_function: function() { return true; }, 
+			  default: true
+
+		  },
+		   show_feedback_on_timeout: { 
+			  type: ['string'],
+			  label: 'Show Feedback on Timeout', 
+		      //validation_function: function() { return true; }, 
+			  default: false
+
+		  },
+		   timeout_message: { 
+			  type: ['string'],
+			  label: 'Timeout Message', 
+		      //validation_function: function() { return true; }, 
+			  default: 'Please respond faster.'
+
+		  },
+		   timing_stim: { 
+			  type: ['number'],
+			  label: 'Timing Stim', 
+		      //validation_function: function() { return true; }, 
+			  default: -1
+
+		  },
+		   timing_feedback_duration: { 
+			  type: ['number'],
+			  label: 'Timing Feedback Duration', 
+		      //validation_function: function() { return true; }, 
+			  default: 2000
+
+		  },
+		  timing_response: { 
+			  type: ['number'],
+			  label: 'Timing Response', 
+		      //validation_function: function() { return true; }, 
+			  default: -1
+
+		  }
+	  }
+	  return params;
+	}
   jsPsych.pluginAPI.registerPreload('animation', 'stimulus', 'image');
 
   plugin.trial = function(display_element, trial) {

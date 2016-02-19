@@ -11,7 +11,52 @@
 jsPsych.plugins["button-response"] = (function() {
 
   var plugin = {};
+  plugin.parameters = function(){
+	  var params = {
+		  stimuli:{
+			  type : ['array','function'],
+			  label: 'Stimulus'
+			  //validation_function: function(){ return true; }, //none(temp)
+			  //default is undefined
+		  },
+		  frame_time: { 
+			  type: ['number','function'],
+			  label: 'Frame Time', 
+		      //validation_function: function() { return true; }, 
+			  default: 250
 
+		  },
+		  frame_isi: { 
+			  type: ['number','function'],
+			  label: 'Frame ISI', 
+		      //validation_function: function() { return true; }, 
+			  default: 0
+
+		  },
+		  sequence_reps: { 
+			  type: ['number','function'],
+			  label: 'Sequence Repetition', 
+		      //validation_function: function() { return true; }, 
+			  default: 1
+
+		  },
+		  choices: { 
+			  type: ['array','function'],
+			  label: 'Choices', 
+		      //validation_function: function() { return true; }, 
+			  default: []
+
+		  },
+		  prompt: { 
+			  type: ['string','number','function'],
+			  label: 'Prompt', 
+		      //validation_function: function() { return true; }, 
+			  default: ' '
+
+		  },
+	  }
+	  return params;
+	}
   plugin.trial = function(display_element, trial) {
 
     // default trial parameters

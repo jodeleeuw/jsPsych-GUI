@@ -13,6 +13,51 @@
 jsPsych.plugins['reconstruction'] = (function() {
 
   var plugin = {};
+  
+   plugin.parameters = function(){
+   var params = {
+	   
+    stim_function:{
+     type : ['function'],
+     label: 'stim_function',
+     validation_function: function(){ return true; }, //none(temp)
+     //default is undefined
+    },
+	
+    starting_value: { 
+     type: ['number'],
+     label: 'starting_value', 
+        validation_function: function() { return true; }, 
+     default: '0.5'
+
+    },
+	
+    step_size: { 
+     type: ['number'],
+     label: 'step_size', 
+        validation_function: function() { return true; }, 
+     default: '0.05'
+
+    },
+	
+    key_increase: { 
+     type: ['key code'],
+     label: 'key_increase', 
+        validation_function: function() { return true; }, 
+     default: 'h'
+
+    },
+	
+    key_decrease: { 
+     type: ['key code'],
+     label: 'key_decrease', 
+        validation_function: function() { return true; }, 
+     default: 'g'
+
+    }
+   }
+   return params;
+ }
 
   plugin.trial = function(display_element, trial) {
 

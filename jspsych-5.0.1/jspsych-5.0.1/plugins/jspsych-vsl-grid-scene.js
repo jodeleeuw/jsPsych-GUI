@@ -16,6 +16,32 @@ jsPsych.plugins['vsl-grid-scene'] = (function() {
   var plugin = {};
 
   jsPsych.pluginAPI.registerPreload('vsl-grid-scene', 'stimuli', 'image');
+  
+   plugin.parameters = function(){
+   var params = {
+    stimuli:{
+     type : ['array'],
+     label: 'stimuli',
+     validation_function: function(){ return true; }, //none(temp)
+     //default is undefined
+    },
+    image_size: { 
+     type: ['array'],
+     label: 'image_size', 
+        validation_function: function() { return true; }, 
+     default: '[100,100]'
+
+    },
+	timing_duration: { 
+     type: ['number'],
+     label: 'timing_duration', 
+        validation_function: function() { return true; }, 
+     default: '[2000]'
+
+    }
+   }
+   return params;
+ }
 
   plugin.trial = function(display_element, trial) {
 

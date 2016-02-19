@@ -21,6 +21,107 @@ jsPsych.plugins["visual-search-circle"] = (function() {
   jsPsych.pluginAPI.registerPreload('visual-search-circle', 'target', 'image');
   jsPsych.pluginAPI.registerPreload('visual-search-circle', 'foil', 'image');
   jsPsych.pluginAPI.registerPreload('visual-search-circle', 'fixation_image', 'image');
+  
+   plugin.parameters = function(){
+   var params = {
+	   
+    target_present:{
+     type : ['boolean'],
+     label: 'target_present',
+     validation_function: function(){ return true; }, //none(temp)
+     //default is undefined
+    },
+	
+    set_size: { 
+     type: ['number'],
+     label: 'set_size', 
+        validation_function: function() { return true; }, 
+	//default is undefined
+
+    },
+	
+    target: { 
+     type: ['string'],
+     label: 'target', 
+        validation_function: function() { return true; }, 
+	//default is undefined
+
+    },
+	
+    foil: { 
+     type: ['string'],
+     label: 'foil', 
+        validation_function: function() { return true; }, 
+	//default is undefined
+    
+    },
+	
+    fixation_image: { 
+     type: ['string'],
+     label: 'fixation_image', 
+        validation_function: function() { return true; }, 
+	//default is undefined
+
+    },
+	
+    target_size: { 
+     type: ['array'],
+     label: 'target_size', 
+        validation_function: function() { return true; }, 
+     default: '[50,50]'
+
+    },
+	
+    fixation_size: { 
+     type: ['array'],
+     label: 'fixation_size', 
+        validation_function: function() { return true; }, 
+     default: '[16,16]'
+
+    },
+	
+    circle_diameter: { 
+     type: ['number'],
+     label: 'circle_diameter', 
+        validation_function: function() { return true; }, 
+     default: '250'
+
+    },
+	
+    target_present_key: { 
+     type: ['number'],
+     label: 'target_present_key', 
+        validation_function: function() { return true; }, 
+     default: '74'
+
+    },
+	
+    target_absent_key: { 
+     type: ['number'],
+     label: 'target_absent_key', 
+        validation_function: function() { return true; }, 
+     default: '70'
+
+    },
+	
+    timing_max_search: { 
+     type: ['number'],
+     label: 'timing_max_search', 
+        validation_function: function() { return true; }, 
+     default: '-1'
+
+    },
+	
+    timing_fixation: { 
+     type: ['number'],
+     label: 'timing_fixation', 
+        validation_function: function() { return true; }, 
+     default: '1000'
+
+    }
+   }
+   return params;
+ }
 
   plugin.create = function(params) {
 

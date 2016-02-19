@@ -15,6 +15,53 @@ jsPsych.plugins["single-audio"] = (function() {
   var context = new AudioContext();
 
   jsPsych.pluginAPI.registerPreload('single-audio', 'stimulus', 'audio');
+  
+   plugin.parameters = function(){
+   var params = {
+    
+	stimulus:{
+     type : ['array'],
+     label: 'stimulus',
+     validation_function: function(){ return true; }, //none(temp)
+     //default is undefined
+    },
+	
+	
+	choices: { 
+     type: ['array'],
+     label: 'choices', 
+        validation_function: function() { return true; }, 
+     default: '[]'
+
+    },
+	
+	prompt: { 
+     type: ['string'],
+     label: 'prompt', 
+        validation_function: function() { return true; }, 
+     default: '""'
+
+    },
+	
+    timing_response: { 
+     type: ['number'],
+     label: 'timing_response', 
+        validation_function: function() { return true; }, 
+     default: '-1'
+
+    },
+	
+    response_ends_trial: { 
+     type: ['boolean'],
+     label: 'response_ends_trial', 
+        validation_function: function() { return true; }, 
+     default: 'true'
+
+    }
+	
+   }
+   return params;
+ }
 
   plugin.trial = function(display_element, trial) {
 

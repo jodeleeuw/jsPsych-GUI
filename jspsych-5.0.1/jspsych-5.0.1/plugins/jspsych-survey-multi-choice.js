@@ -12,6 +12,50 @@
 jsPsych.plugins['survey-multi-choice'] = (function() {
 
   var plugin = {};
+  
+   plugin.parameters = function(){
+   var params = {
+	   
+    questions:{
+     type : ['array'],
+     label: 'questions',
+     validation_function: function(){ return true; }, //none(temp)
+     //default is undefined
+    },
+	   
+    options:{
+     type : ['array'],
+     label: 'options',
+     validation_function: function(){ return true; }, //none(temp)
+     //default is undefined
+    },
+	
+    required: { 
+     type: ['array'],
+     label: 'required', 
+        validation_function: function() { return true; }, 
+     default: 'null'
+
+    },
+	
+    horizontal: { 
+     type: ['boolean'],
+     label: 'horizontal', 
+        validation_function: function() { return true; }, 
+     default: 'false'
+
+    },
+	
+    preamble: { 
+     type: ['array'],
+     label: 'preamble', 
+        validation_function: function() { return true; }, 
+     default: 'empty string'
+
+    }
+   }
+   return params;
+ }
 
   plugin.trial = function(display_element, trial) {
 

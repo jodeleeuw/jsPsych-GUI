@@ -12,7 +12,25 @@
 jsPsych.plugins.text = (function() {
 
   var plugin = {};
+  
+  plugin.parameters = function(){
+	  var params = {
+		  text:{
+			  type : ['string','function'],
+			  label: 'Text',
+			  validation_function: function(){ return true; }, //none(temp)
+			  //default is undefined
+		  },
+		  cont_key: { 
+			  type: ['string','number','function'],
+			  label: 'Continue Key', 
+		      validation_function: function() { return true; }, 
+			  default: 'space'
 
+		  }
+	  }
+	  return params;
+	}
   plugin.trial = function(display_element, trial) {
 
     trial.cont_key = trial.cont_key || [];

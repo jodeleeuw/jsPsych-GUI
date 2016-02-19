@@ -14,6 +14,68 @@ jsPsych.plugins["single-stim"] = (function() {
   var plugin = {};
 
   jsPsych.pluginAPI.registerPreload('single-stim', 'stimulus', 'image');
+  
+     plugin.parameters = function(){
+   var params = {
+    
+	stimuli:{
+     type : ['array'],
+     label: 'stimuli',
+     validation_function: function(){ return true; }, //none(temp)
+     //default is undefined
+    },
+	
+	is_html: { 
+     type: ['boolean'],
+     label: 'is_html', 
+        validation_function: function() { return true; }, 
+     default: 'false'
+
+    },
+	
+	choices: { 
+     type: ['array'],
+     label: 'choices', 
+        validation_function: function() { return true; }, 
+     default: '[]'
+
+    },
+	
+	prompt: { 
+     type: ['string'],
+     label: 'prompt', 
+        validation_function: function() { return true; }, 
+     default: '""'
+
+    },
+	
+	timing_stim: { 
+     type: ['number'],
+     label: 'timing_stim', 
+        validation_function: function() { return true; }, 
+     default: '-1'
+
+    },
+	
+    timing_response: { 
+     type: ['number'],
+     label: 'timing_response', 
+        validation_function: function() { return true; }, 
+     default: '-1'
+
+    },
+	
+    response_ends_trial: { 
+     type: ['boolean'],
+     label: 'response_ends_trial', 
+        validation_function: function() { return true; }, 
+     default: 'true'
+
+    }
+	
+   }
+   return params;
+ }
 
   plugin.trial = function(display_element, trial) {
 

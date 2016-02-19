@@ -13,6 +13,84 @@ jsPsych.plugins['same-different'] = (function() {
   var plugin = {};
 
   jsPsych.pluginAPI.registerPreload('same-different', 'stimuli', 'image');
+  
+  plugin.parameters = function(){
+   var params = {
+    
+	stimuli:{
+     type : ['array'],
+     label: 'stimuli',
+     validation_function: function(){ return true; }, //none(temp)
+     //default is undefined
+    },
+	
+	is_html: { 
+     type: ['boolean'],
+     label: 'is_html', 
+        validation_function: function() { return true; }, 
+     default: 'false'
+
+    },
+	
+	answer: { 
+     type: ['string'],
+     label: 'answer', 
+        validation_function: function() { return true; }, 
+    //default is undefined
+
+    },
+	
+	same_key: { 
+     type: ['number','string'],
+     label: 'same_key', 
+        validation_function: function() { return true; }, 
+     default: 'Q'
+
+    },
+	
+	different_key: { 
+     type: ['number','string'],
+     label: 'different_key', 
+        validation_function: function() { return true; }, 
+     default: 'P'
+
+    },
+	
+    timing_first_stim: { 
+     type: ['numeric'],
+     label: 'timing_first_stim', 
+        validation_function: function() { return true; }, 
+     default: '1000'
+
+    },
+	
+	timing_gap: { 
+     type: ['number'],
+     label: 'timing_gap', 
+        validation_function: function() { return true; }, 
+     default: '500'
+
+    },
+	
+    timing_second_stim: { 
+     type: ['numeric'],
+     label: 'timing_second_stim', 
+        validation_function: function() { return true; }, 
+     default: '1000'
+
+    },
+	
+	prompt: { 
+     type: ['string'],
+     label: 'prompt', 
+        validation_function: function() { return true; }, 
+     default: '""'
+
+    }
+	
+   }
+   return params;
+ }
 
   plugin.trial = function(display_element, trial) {
 

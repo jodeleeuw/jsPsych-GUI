@@ -13,7 +13,55 @@
 jsPsych.plugins["multi-stim-multi-response"] = (function() {
 
   var plugin = {};
+  plugin.parameters = function(){
+		  var params = {
+			  stimuli:{
+				  type : ['array'],
+				  label: 'Stimuli'
+				  //validation_function: function(){ return true; }, //none(temp)
+				  //default is undefined
+			  },
+			  is_html: { 
+				  type: ['boolean'],
+				  label: 'Is HTML', 
+				  //validation_function: function() { return true; }, 
+				  default : false
+			  },
+			  choices: { 
+				  type: ['array'],
+				  label: 'Choices'
+				  //validation_function: function() { return true; }, 
+				  //default is undefined
 
+			  },
+			  prompt: { 
+				  type: ['string'],
+				  label: 'Prompt', 
+				  //validation_function: function() { return true; }, 
+				  default: ' '
+
+			  },
+			  timing_stim: { 
+				  type: ['array'],
+				  label: 'Timing Stim', 
+				  //validation_function: function() { return true; }, 
+				  default: [1000,1000,1000]
+			  },
+			  timing_response: { 
+				  type: ['number'],
+				  label: 'Timing Response', 
+				  //validation_function: function() { return true; }, 
+				  default: -1
+			  },
+			  response_ends_trial: { 
+				  type: ['boolean'],
+				  label: 'Response Ends Trials', 
+				  //validation_function: function() { return true; }, 
+				  default: true
+			  }
+		  }
+	  return params;
+	}
   jsPsych.pluginAPI.registerPreload('multi-stim-multi-response', 'stimuli', 'image');
 
   plugin.trial = function(display_element, trial) {
