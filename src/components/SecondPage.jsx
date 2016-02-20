@@ -10,8 +10,9 @@ var SecondPage = React.createClass({
     }
   },
 
-  setCurrentTrial: function() {
-    this.setState({currentTrial: "Single"});
+  setCurrentTrial: function(trialValue) {
+    console.log("In second Page : "+trialValue);
+    this.setState({currentTrial: trialValue});
   },
     
   /*testClick: function(e) {
@@ -53,15 +54,17 @@ var Tree = React.createClass({
       }
     },
 
-  // setCurrentTrial: function(e) {
-  //   this.props.setCurrentTrial("Hello");
-  // },
+  setCurrentTrial: function(value1) {
+    // console.log(value1.value);
+    console.log(value1);
+    this.props.setCurrentTrial(value1);
+  },
 
   render: function() {
       return(
         <div id = "treestructure">
-          <h4><a href="#" onClick={this.props.setCurrentTrial}>Hello</a></h4>
-          <h4><a href="#" onClick={this.props.setCurrentTrial}>Single</a></h4>          
+          <h4><a href="#" value="Hello" onClick={this.setCurrentTrial.bind(this,"Hello")}>Hello</a></h4>
+          <h4><a href="#" value="Single" onClick={this.setCurrentTrial.bind(this,"Single")}>Single</a></h4>          
         </div>
       );
   }
