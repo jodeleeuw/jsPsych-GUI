@@ -11,14 +11,14 @@ var FirstPage = React.createClass({
   
         }
   },
-    
+
   render: function(){
     return(
       <div className="col-sm-4 col-sm-offset-4">
         <div className="panel panel-default">
             <div className="panel-body">
                 <form onSubmit= {this.handleSubmit}>
-                    <input onChange={this.onChange} value={this.props.fieldValues.name} />       
+                    <input onChange={this.onChange} value={this.props.fieldValues.name} />
                     <button id="addbutton" className="btn btn-primary disabled" onClick={this.nextStep}>Add</button>
                 </form>
             </div>
@@ -27,7 +27,7 @@ var FirstPage = React.createClass({
     );
 
   },
-    
+
   nextStep: function(e) {
     e.preventDefault()
 
