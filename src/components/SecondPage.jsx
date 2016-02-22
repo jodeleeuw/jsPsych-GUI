@@ -12,7 +12,11 @@ var SecondPage = React.createClass({
       currentTrial : "Hello",
       testValue : 5,
       // TestTrialData : [{label:"Text1",text:"Hey...this is in Text1",cont_key:"f"},{label:"Text2",text:"Hey...this is in Text2",cont_key:"e"}]
-      TestTrialData : [{label:"hello_trial", text:"Hey...this is in Text1",cont_key:"f"}]
+      TestTrialData : [
+        {label:"hello_trial", type:"text",text:"Hey...this is in Text1",cont_key:"f"},
+        {label:"instructions",type:"instructions", pages:'[\'Welcome\',\'Press key\']',show_clickable_nav:"true", allow_keys:"false"},
+        {label:"test",type:"single-stim",is_html:"true",choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}
+      ]
     }
   },
 
@@ -25,6 +29,7 @@ var SecondPage = React.createClass({
   },*/
 
   initialLines: function() {
+    console.log("ini");
     var st = "<!doctype html>\n\n<html>\n\t<head>\n\t\t<title>My experiment</title>\n\t\t<script";
     st += " src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>\n\t\t<script";
     st += " src=\"jspsych-5.0.1/jspsych.js\"></script>\n\t\t<script";
@@ -35,25 +40,90 @@ var SecondPage = React.createClass({
     return st;
   },
 
-   generate_hello_trial: function() {
-    st = this.initialLines();
-    st += "\t</head>\n\n\t<body>\n";
+  generateHelloTrial: function() {
+   TestTrialData : [{label:"hello_trial",type:"text", text:"Hey...this is in Text1",cont_key:"f"}]
+   var hel = this.state.TestTrialData[0];
+   console.log(hel);
+   var hel_keys = Object.keys(this.state.TestTrialData[0]);
 
-    TestTrialData : [{label:"hello_trial", text:"Hey...this is in Text1",cont_key:"f"}]
-    var hel = this.state.TestTrialData[0];
-    console.log(hel);
-    var hel_keys = Object.keys(this.state.TestTrialData[0]);
+   st = "\t\tvar " + hel[hel_keys[0]] + " = {\n";
+   st += "\t\t\ttype: '" + hel[hel_keys[1]] + "',\n";
+   st += "\t\t\t" + hel_keys[2] + ": '" + hel[hel_keys[2]] + "',\n";
+   st += "\t\t\t" + hel_keys[3] + ": '" + hel[hel_keys[3]] + "'\n";
+   st += "\t\t}\n\n";
 
-    var sopen = "\n\t<script>\n";
-    var sclose = "\n\t</script>\n";
+   return st;
+ },
 
-    st += sopen;
-    st += "\t\tvar " + hel[hel_keys[0]] + " = {\n";
-    st += "\t\t\ttype: '" + hel_keys[1] + "',\n";
-    st += "\t\t\t" + hel_keys[1] + ": '" + hel[hel_keys[1]] + "',\n";
-    st += "\t\t\t" + hel_keys[2] + ": '" + hel[hel_keys[2]] + "',\n";
-    st += "\t\t}\n\n";
+ generateInstructions: function() {
 
+  TestTrialData : [{label:"instructions",type:"instructions", pages:"['\<p\>Welcome. Press next to view the instructions.\</p\>','\<p\>You will see a set of characters. Press Y if the characters form an English word. Press N if they do not.\</p\>\<p\>Press next to begin.\</p\>']",show_clickable_nav:"true", allow_keys:"false"}]
+  var instr = this.state.TestTrialData[1];
+  console.log(instr);
+  var instr_keys = Object.keys(this.state.TestTrialData[1]);
+
+
+  st = "\t\tvar " + instr[instr_keys[0]] + " = {\n";
+  st += "\t\t\ttype: '" + instr[instr_keys[1]]+ "',\n";
+  st += "\t\t\t" + instr_keys[2] + ": " + instr[instr_keys[2]] + ",\n";
+  st += "\t\t\t" + instr_keys[3] + ": '" + instr[instr_keys[3]] + "',\n";
+  st += "\t\t\t" + instr_keys[4] + ": '" + instr[instr_keys[4]] + "'\n";
+  st += "\t\t}\n\n";
+
+  return st;
+},
+
+ generateSingleStim: function() {
+
+  //doubt about timeline here
+  TestTrialData : [{label:"test",type:"single-stim",is_html:"true",choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}]
+  var sing = this.state.TestTrialData[2];
+  console.log(sing);
+  var sing_keys = Object.keys(this.state.TestTrialData[2]);
+
+
+  //change this
+  //read file here  
+  st = "var word_data = [\n";
+  st += "\t{word: \"cove\", word_type: \"low\"},\n";
+  st += "\t{word: \"turf\", word_type: \"low\"},\n";
+  st += "\t{word: \"twig\", word_type: \"low\"},\n";
+  st += "\t{word: \"chair\", word_type: \"high\"},\n";
+  st += "\t{word: \"dark\", word_type: \"high\"},\n";
+  st += "\t{word: \"food\", word_type: \"high\"},\n";
+  st += "\t{word: \"cowe\", word_type: \"non\"},\n";
+  st += "\t{word: \"turv\", word_type: \"non\"},\n";
+  st += "\t{word: \"twif\", word_type: \"non\"},\n";
+  st += "\t{word: \"thair\", word_type: \"non\"},\n";
+  st += "\t{word: \"zark\", word_type: \"non\"},\n";
+  st += "\t{word: \"rood\", word_type: \"non\"}]\n";
+
+
+  st +="lex_trials = \[\];\n";
+
+  //change this
+  //hardcoded here
+  st += "for(var i=0; i<word_data.length; i++){\n";
+  st += "\tlex_trials.push({\n";
+  st += "\t\t stimulus: '<p class=\"center-content very-large\">'+ word_data[i].word +'</p>',\n";
+  st += "\t\t data: {word_type: word_data[i].word_type}\n";
+  st += "\t});\n}\n";
+  
+
+  st += "\t\tvar " + sing[sing_keys[0]] + " = {\n";
+  st += "\t\t\ttype: '" + sing[sing_keys[1]] + "',\n";
+  st += "\t\t\t" + sing_keys[2] + ": " + sing[sing_keys[2]] + ",\n";
+  st += "\t\t\t" + sing_keys[3] + ": " + sing[sing_keys[3]] + ",\n";
+  st += "\t\t\t" + sing_keys[4] + ": " + sing[sing_keys[4]] + ",\n";
+  st += "\t\t\t" + sing_keys[5] + ": " + sing[sing_keys[5]] + "\n";
+  st += "\t\t}\n\n";
+
+  return st;
+},
+
+  importPlugins: function() {
+    st = "<script src=\"jspsych-5.0.1/plugins/jspsych-single-stim.js\"></script>\n";
+    st += "<script src=\"jspsych-5.0.1/plugins/jspsych-instructions.js\"></script>\n";
     return st;
   },
 
@@ -292,9 +362,6 @@ var SecondPage = React.createClass({
       	|| typeof window !== "undefined" && window
       	|| this.content
       ));
-      // `self` is undefined in Firefox for Android content script context
-      // while `this` is nsIContentFrameMessageManager
-      // with an attribute `content` that corresponds to the window
 
       if (typeof module !== "undefined" && module.exports) {
         module.exports.saveAs = saveAs;
@@ -303,16 +370,47 @@ var SecondPage = React.createClass({
           return saveAs;
         });
       }
-
-      st = this.generate_hello_trial();
-      st += "\t\tjsPsych.init({\n";
+      st = this.initialLines();
+      st += this.importPlugins();
+      st += "\t</head>\n\n\t<body>\n";
 
       var hel = this.state.TestTrialData[0];
-      console.log(hel);
       var hel_keys = Object.keys(this.state.TestTrialData[0]);
-      st += "\t\t\ttimeline: [ " + hel[hel_keys[0]] + " ]\n\t\t})";
 
-      var sclose = "\n\t</script>\n";
+      var instr = this.state.TestTrialData[1];
+      var instr_keys = Object.keys(this.state.TestTrialData[1]);
+
+      var sing = this.state.TestTrialData[2];
+      var sing_keys = Object.keys(this.state.TestTrialData[2]);
+
+      var sopen = "\n\t<script>\n";
+      var sclose = "\n\t</script>";
+
+      //change this
+      st +="<div id=\"jspsych-target\"></div>";
+
+      st += sopen;
+
+      st += "\tvar timeline = [];\n\n";
+
+      st += this.generateHelloTrial();
+      st += "\ttimeline.push(" + hel[hel_keys[0]] +");\n\n";
+
+      st += this.generateInstructions();
+      st += "\ttimeline.push(" + instr[instr_keys[0]] +");\n\n";
+
+      st += this.generateSingleStim();
+      st += "\ttimeline.push(" + sing[sing_keys[0]] +");\n\n";
+
+
+      st += "\t\tjsPsych.init({\n";
+      st += "\t\t\ttimeline: timeline,\n";
+      //write stuff
+      st += "\t\t\tdisplay_element: $('#jspsych-target'),\n";
+      st += "\t\t\ton_finish: function(){\n";
+      st += "\t\t\t\tjsPsych.data.displayData();\n\t\t\t}\n";
+      st += "\t\t})\n"
+
       st += sclose;
       st += "\n\n\t</body>\n</html>";
       var blob = new Blob([st], {type: "text/plain;charset=utf-8"});
