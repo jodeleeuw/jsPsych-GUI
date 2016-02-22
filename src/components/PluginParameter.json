@@ -75,5 +75,48 @@
 
 		    }
 		]
+	},
+	{
+		name:"Instructions",
+		parameters : [
+			{	  name: "pages",
+				  type : ['array'],
+				  label: 'Pages'
+				  //validation_function: function(){ return true; }, //none(temp)
+				  //default is undefined
+			  },
+			{	  name: "key_forward",
+				  type: ['key code'],
+				  label: 'Key Forward', 
+				  //validation_function: function() { return true; }, 
+				  default : 'rightarrow'
+			  },
+			{     name: "key_backward", 
+				  type: ['key code'],
+				  label: 'Key Backward', 
+				  //validation_function: function() { return true; }, 
+				  default : 'leftarrow'
+
+			  },
+			{	  name: "allow_backward", 
+				  type: ['boolean'],
+				  label: 'Allow Backward', 
+				  //validation_function: function() { return true; }, 
+				  default: true
+
+			  },
+			{	  name: "allow_keys", 
+				  type: ['boolean'],
+				  label: 'Allow Keys', 
+				  //validation_function: function() { return true; }, 
+				  default: true
+			  },
+			{ 	  name : "show_clickable_nav",
+				  type: ['boolean'],
+				  label: 'Show Clickable Navigation', 
+				  //validation_function: function() { return true; }, 
+				  default: false
+			  }
+		]
 	}
 ]

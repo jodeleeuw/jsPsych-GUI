@@ -10,20 +10,31 @@ var SecondPage = React.createClass({
     return {
       currentTrial : "Hello",
       testValue : 5,
-      // TestTrialData : [{label:"Text1",text:"Hey...this is in Text1",cont_key:"f"},{label:"Text2",text:"Hey...this is in Text2",cont_key:"e"}]
+      TreeData : [{label:"treeData"}],
+      SettingsData : [],
+      CurrentTrialData : [],
       TestTrialData : [
-        {label:"hello_trial", type:"text",text:"Hey...this is in Text1",cont_key:"f"},
-        {label:"instructions",type:"instructions", pages:'[\'Welcome\',\'Press key\']',show_clickable_nav:"true", allow_keys:"false"},
-        {label:"test",type:"single-stim",is_html:"true",choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}
+        {label:"hello_trial", type:"text", parameters:{text:"Hey...this is in Text1",cont_key:"f"}},
+        {label:"instructions",type:"instructions", parameters:{ pages:'[\'Welcome\',\'Press key\']',show_clickable_nav:"true", allow_keys:"false"}},
+        {label:"test",type:"single-stim", parameters:{is_html:"true", choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}}
       ]
     }
   },
 
-  setCurrentTrial: function(trialValue) {
-    this.setState({currentTrial: trialValue});
+  setCurrentTrial: function(trialValue, treeData) {
+    console.log(trialValue);
+    for(obj in this.state.TestTrialData) {
+      if(this.state.TestTrialData[obj].label === trialValue){
+        // this.state.CurrentTrialData = this.state.TestTrialData[obj];
+        this.setState({currentTrial: trialValue, CurrentTrialData: this.state.TestTrialData[obj]});
+        break;
+      }
+    }
+    console.log(this.state.CurrentTrialData);
+    
   },
 
-
+ 
   initialLines: function() {
     console.log("ini");
     var st = "<!doctype html>\n\n<html>\n\t<head>\n\t\t<title>My experiment</title>\n\t\t<script";
@@ -79,7 +90,7 @@ var SecondPage = React.createClass({
 
 
   //change this
-  //read file here
+  //read file here  
   st = "var word_data = [\n";
   st += "\t{word: \"cove\", word_type: \"low\"},\n";
   st += "\t{word: \"turf\", word_type: \"low\"},\n";
@@ -104,7 +115,7 @@ var SecondPage = React.createClass({
   st += "\t\t stimulus: '<p class=\"center-content very-large\">'+ word_data[i].word +'</p>',\n";
   st += "\t\t data: {word_type: word_data[i].word_type}\n";
   st += "\t});\n}\n";
-
+  
 
   st += "\t\tvar " + sing[sing_keys[0]] + " = {\n";
   st += "\t\t\ttype: '" + sing[sing_keys[1]] + "',\n";
@@ -177,7 +188,7 @@ var SecondPage = React.createClass({
             <div id = "leftside">
               <div id = "tree">
                 <ul>
-                  <Tree setCurrentTrial = {this.setCurrentTrial}/>
+                  <Tree setCurrentTrial = {this.setCurrentTrial} TreeData = {this.state.TreeData}/>
                 </ul>
               </div>
               <div id="buttonpanel" className="buttonAlign btn-group" role="group" aria-label="...">
@@ -189,7 +200,7 @@ var SecondPage = React.createClass({
             </div>
 
             <div id = "rightside">
-              <Trial  currentTrial={this.state.currentTrial}/>
+              <Trial CurrentTrialData={this.state.CurrentTrialData}/>
             </div>
           </div>
         );
@@ -206,20 +217,21 @@ var Tree = React.createClass({
     },
 
   setCurrentTrial: function(value1) {
-    // console.log(value1.value);
-    this.props.setCurrentTrial(value1);
+    console.log(this.props.TreeData);
+    var modifiedTreeData = this.props.TreeData.push({label:"TreeData2"});
+    this.props.setCurrentTrial(value1,this.props.TreeData);
   },
 
   render: function() {
       return(
         <div id = "treestructure">
-          <h4><a href="#" value="Hello" onClick={this.setCurrentTrial.bind(this,"Hello")}>Hello</a></h4>
-          <h4><a href="#" value="Single" onClick={this.setCurrentTrial.bind(this,"Single")}>Single</a></h4>
+          <h4><a href="#" value="Hello" onClick={this.setCurrentTrial.bind(this,"hello_trial")}>Hello</a></h4>
+          <h4><a href="#" value="Single" onClick={this.setCurrentTrial.bind(this,"instructions")}>Single</a></h4>
         </div>
       );
   }
 });
-// <span>{this.state.TreeObject[0].name}</span>
+
 var Trial = React.createClass({
     getInitialState: function() {
       return {
@@ -231,12 +243,6 @@ var Trial = React.createClass({
        propertyName: ""
        }
     },
-    // returnData : function() {
-    //   // var dict = [];
-    //   // dict.push({key: this.TrialData.name, value: "R"});
-    //   // return dict;
-    //   return 2;
-    // },
     getIndex : function() {
       for(obj in this.state.TrialData) {
         if(this.state.TrialData[obj].name === this.props.currentTrial) {
@@ -261,9 +267,11 @@ var Trial = React.createClass({
     render:function(){
       return(
         <div>
+        {this.props.CurrentTrialData.label}
         <span id="fields"><select onChange={this.handleChange}>
           <option value="Hello">Hello</option>
           <option value="Single">Single</option>
+          <option value="Instructions">Instructions</option>
         </select></span>
           <span><ReactJson value={ this.state.PluginLabels } settings={ this.state.settings }/></span>
         </div>
