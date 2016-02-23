@@ -28,8 +28,8 @@ var SecondPage = React.createClass({
     console.log(this.state.TestTrialData);
     this.state.notInTrialData = true;
     for(obj in this.state.TestTrialData) {
-      if(this.state.TestTrialData[obj].label === trialValue){       
-        this.state.CurrentTrialData = this.state.TestTrialData[obj]; 
+      if(this.state.TestTrialData[obj].label === trialValue){
+        this.state.CurrentTrialData = this.state.TestTrialData[obj];
         this.state.notInTrialData = false;
         break;
       }
@@ -40,7 +40,7 @@ var SecondPage = React.createClass({
       this.state.TestTrialData.push(this.state.CurrentTrialData);
     }
     this.setState({CurrentTrialData: this.state.CurrentTrialData, showTrialData:true});
-    
+
   },
 
   saveModifiedTrialData: function(trialName, trialType, modifiedTrialParameters) {
@@ -56,7 +56,7 @@ var SecondPage = React.createClass({
     console.log(this.state.TestTrialData);
     // this.setState({TestTrialData: this.state.TestTrialData});
   },
- 
+
   initialLines: function() {
     console.log("ini");
     var st = "<!doctype html>\n\n<html>\n\t<head>\n\t\t<title>My experiment</title>\n\t\t<script";
@@ -70,16 +70,16 @@ var SecondPage = React.createClass({
   },
 
   generateHelloTrial: function() {
-   
+
    var hel = this.state.TestTrialData[0];
    console.log(hel);
    var hel_keys = Object.keys(this.state.TestTrialData[0]);
-    
+
    st = "\t\tvar " + hel[hel_keys[0]] + " = {\n";
    st += "\t\t\ttype: '" + hel[hel_keys[1]] + "',\n";
 
    for(parameter_Values in this.state.TestTrialData[0].parameters) {
-    st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[0].parameters[parameter_Values] + "',\n"; 
+    st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[0].parameters[parameter_Values] + "',\n";
    }
    st += "\t\t}\n\n";
 
@@ -95,7 +95,7 @@ var SecondPage = React.createClass({
   st = "\t\tvar " + instr[instr_keys[0]] + " = {\n";
   st += "\t\t\ttype: '" + instr[instr_keys[1]]+ "',\n";
   for(parameter_Values in this.state.TestTrialData[1].parameters) {
-    st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[1].parameters[parameter_Values] + "',\n"; 
+    st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[1].parameters[parameter_Values] + "',\n";
   }
   st += "\t\t}\n\n";
 
@@ -112,7 +112,7 @@ var SecondPage = React.createClass({
 
 
   //change this
-  //read file here  
+  //read file here
   st = "var word_data = [\n";
   st += "\t{word: \"cove\", word_type: \"low\"},\n";
   st += "\t{word: \"turf\", word_type: \"low\"},\n";
@@ -137,12 +137,12 @@ var SecondPage = React.createClass({
   st += "\t\t stimulus: '<p class=\"center-content very-large\">'+ word_data[i].word +'</p>',\n";
   st += "\t\t data: {word_type: word_data[i].word_type}\n";
   st += "\t});\n}\n";
-  
+
 
   st += "\t\tvar " + sing[sing_keys[0]] + " = {\n";
   st += "\t\t\ttype: '" + sing[sing_keys[1]] + "',\n";
   for(parameter_Values in this.state.TestTrialData[2].parameters) {
-    st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[2].parameters[parameter_Values] + "',\n"; 
+    st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[2].parameters[parameter_Values] + "',\n";
   }
   st += "\t\t}\n\n";
 
@@ -155,7 +155,7 @@ var SecondPage = React.createClass({
     return st;
   },
 
-    handleGenerate : function(e) {
+    make_html: function() {
       console.log(this.state.TestTrialData);
       st = this.initialLines();
       st += this.importPlugins();
@@ -200,6 +200,20 @@ var SecondPage = React.createClass({
 
       st += sclose;
       st += "\n\n\t</body>\n</html>";
+
+      return st;
+    },
+
+    handlePreview : function(e) {
+      console.log('Preview');
+      st = this.make_html();
+      var newWindow = window.open("", "newWindow", "resizable=yes");
+	    newWindow.document.write(st);
+    },
+
+    handleGenerate : function(e) {
+      console.log('Generate');
+      st = this.make_html();
       var blob = new Blob([st], {type: "text/plain;charset=utf-8"});
     	SaveAs.saveAs(blob, "My_Experiment.html");
     },
@@ -216,7 +230,7 @@ var SecondPage = React.createClass({
               <div id="buttonpanel">
               <button id="loadbutton" >Load</button>
                 <button id="savebutton" >Save</button>
-                <button id="previewbutton" >Preview</button>
+                <button id="previewbutton" onClick={this.handlePreview}>Preview</button>
                 <button id="generatebutton" onClick={this.handleGenerate}>Generate</button>
               </div>
             </div>
@@ -284,17 +298,17 @@ var Trial = React.createClass({
           this.state.setData = this.state.labels;
           this.state.selectedTrialType = e.target.value;
           this.setState({setData : this.state.setData});
-          console.log(this.state.selectedTrialType);  
+          console.log(this.state.selectedTrialType);
           } else {
             console.log("in handle change...else");
             this.state.setData = this.props.CurrentTrialData.parameters;
             this.setState({setData : this.state.setData});
-          }  
+          }
       } else {
         this.state.setData = {};
         this.setState({setData : this.state.setData});
       }
-      
+
 
     },
     showData : function() {
@@ -314,7 +328,7 @@ var Trial = React.createClass({
                 <span><ReactJson value={ this.state.setData } settings={ this.state.settings } ref="json"/></span>
                 <button onClick={ this.onSave }>Save</button>
                 </div>
-          ); 
+          );
           } else {
             console.log("In show data...else");
             this.handleChange.bind(this,this.props.CurrentTrialData.type);
@@ -330,7 +344,7 @@ var Trial = React.createClass({
 
                 <button onClick={ this.onSave }>Save</button>
                 </div>
-          ); 
+          );
           }
         }
     },
