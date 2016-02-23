@@ -1,16 +1,16 @@
 [
 	{
-		name : "Hello",
+		name : "Text",
 		parameters : [
 		  {	  name : "text",
 			  type : ['string','function'],
-			  label: 'Text',
+			  label: 'text',
 			  // validation_function: function(){ return true; }, //none(temp)
 			  //default is undefined
 		  },
 		  {	  name : "cont_key", 
 			  type: ['string','number','function'],
-			  label: 'Continue Key', 
+			  label: 'cont_key', 
 		      // validation_function: function() { return true; }, 
 			  default: 'space'
 

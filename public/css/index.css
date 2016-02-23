@@ -2,3 +2,66 @@
     position: absolute;
     bottom: 0;
 }
+
+#leftside {
+	min-width: 25%;
+	min-height: 100%;
+	max-width: 25%;
+	max-height: 100%;
+	height:100%;
+	float: left;
+	top:0;
+	left:0;
+	position: absolute;
+	border: 1px;
+	border-style:none solid none none;	
+	display: inline-block;
+	color:#fff;
+	font-weight:bold;
+	font-size:20px;
+	background-color:#505050;
+	padding-left:10px;
+    
+}
+
+#rightside {
+	min-width: 75%;
+	min-height: 100%;
+	height:100%;
+	position: absolute;
+	border: 0px solid;	
+	float:right;
+	top:0;
+	right:0;
+    background:	#ffffff;
+	color:#0000ff;
+}
+
+#fields{
+	margin:1%;
+	font-size:25 px;
+	color: #191966;
+	font-weight:bold;
+	text-align:left;
+}
+
+.togglable {
+  color: #D78770;
+  cursor: pointer;
+}
+
+.togglable-down::after,
+.togglable-up::after {
+  font-size: 8px;
+  margin-left: 0.5em;
+}
+
+.togglable-down::after {
+  content: "▼";
+  display: inline-block;
+}
+
+.togglable-up::after {
+  content: "▶";
+  display: inline-block;
+}

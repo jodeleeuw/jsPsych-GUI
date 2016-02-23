@@ -4,6 +4,7 @@ var ReactJson = require('react-json');
 var PluginParameter = require('./PluginParameter.json');
 var pluginparameter = PluginParameter;
 var SaveAs = require('./saveAs.jsx');
+var Reactaddons = require('react-addons');
 
 var SecondPage = React.createClass({
   getInitialState: function() {
@@ -13,27 +14,48 @@ var SecondPage = React.createClass({
       TreeData : [{label:"treeData"}],
       SettingsData : [],
       CurrentTrialData : [],
+      notInTrialData : true,
+      showTrialData : false,
       TestTrialData : [
-        {label:"hello_trial", type:"text", parameters:{text:"Hey...this is in Text1",cont_key:"f"}},
-        {label:"instructions",type:"instructions", parameters:{ pages:'[\'Welcome\',\'Press key\']',show_clickable_nav:"true", allow_keys:"false"}},
-        {label:"test",type:"single-stim", parameters:{is_html:"true", choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}}
+        // {label:"hello", type:"text", parameters:{text:"Hey...this is in Text1",cont_key:"f"}},
+        // {label:"instructions",type:"instructions", parameters:{ pages:'[\'Welcome\',\'Press key\']',show_clickable_nav:"true", allow_keys:"false"}},
+        // {label:"test",type:"single-stim", parameters:{is_html:"true", choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}}
       ]
     }
   },
 
   setCurrentTrial: function(trialValue, treeData) {
-    console.log(trialValue);
+    console.log(this.state.TestTrialData);
+    this.state.notInTrialData = true;
     for(obj in this.state.TestTrialData) {
-      if(this.state.TestTrialData[obj].label === trialValue){
-        // this.state.CurrentTrialData = this.state.TestTrialData[obj];
-        this.setState({currentTrial: trialValue, CurrentTrialData: this.state.TestTrialData[obj]});
+      if(this.state.TestTrialData[obj].label === trialValue){       
+        this.state.CurrentTrialData = this.state.TestTrialData[obj]; 
+        this.state.notInTrialData = false;
         break;
       }
     }
-    console.log(this.state.CurrentTrialData);
+
+    if(this.state.notInTrialData) {
+      this.state.CurrentTrialData = {label:trialValue,type:"", parameters:{}};
+      this.state.TestTrialData.push(this.state.CurrentTrialData);
+    }
+    this.setState({CurrentTrialData: this.state.CurrentTrialData, showTrialData:true});
     
   },
 
+  saveModifiedTrialData: function(trialName, trialType, modifiedTrialParameters) {
+    console.log("In save..."+trialType);
+    console.log(modifiedTrialParameters);
+    for(obj in this.state.TestTrialData) {
+        if(this.state.TestTrialData[obj].label === trialName) {
+          this.state.TestTrialData[obj].type = trialType;
+          this.state.TestTrialData[obj].parameters = modifiedTrialParameters;
+          break;
+        }
+    }
+    console.log(this.state.TestTrialData);
+    // this.setState({TestTrialData: this.state.TestTrialData});
+  },
  
   initialLines: function() {
     console.log("ini");
@@ -62,7 +84,7 @@ var SecondPage = React.createClass({
    return st;
  },
 
- generateInstructions: function() {
+  generateInstructions: function() {
 
   TestTrialData : [{label:"instructions",type:"instructions", pages:"['\<p\>Welcome. Press next to view the instructions.\</p\>','\<p\>You will see a set of characters. Press Y if the characters form an English word. Press N if they do not.\</p\>\<p\>Press next to begin.\</p\>']",show_clickable_nav:"true", allow_keys:"false"}]
   var instr = this.state.TestTrialData[1];
@@ -200,7 +222,7 @@ var SecondPage = React.createClass({
             </div>
 
             <div id = "rightside">
-              <Trial CurrentTrialData={this.state.CurrentTrialData}/>
+              <Trial CurrentTrialData={this.state.CurrentTrialData} showTrialData={this.state.showTrialData} saveModifiedTrialData={this.saveModifiedTrialData}/>
             </div>
           </div>
         );
@@ -217,16 +239,16 @@ var Tree = React.createClass({
     },
 
   setCurrentTrial: function(value1) {
-    console.log(this.props.TreeData);
-    var modifiedTreeData = this.props.TreeData.push({label:"TreeData2"});
+    // console.log(this.props.TreeData);
+    // var modifiedTreeData = this.props.TreeData.push({label:"TreeData2"});
     this.props.setCurrentTrial(value1,this.props.TreeData);
   },
 
   render: function() {
       return(
         <div id = "treestructure">
-          <h4><a href="#" value="Hello" onClick={this.setCurrentTrial.bind(this,"hello_trial")}>Hello</a></h4>
-          <h4><a href="#" value="Single" onClick={this.setCurrentTrial.bind(this,"instructions")}>Single</a></h4>
+          <h4><a href="#" value="Trial1" onClick={this.setCurrentTrial.bind(this,"Trial1")}>Trial1</a></h4>
+          <h4><a href="#" value="Trial2" onClick={this.setCurrentTrial.bind(this,"Trial2")}>Trial2</a></h4>
         </div>
       );
   }
@@ -236,44 +258,93 @@ var Trial = React.createClass({
     getInitialState: function() {
       return {
        currentTrial : "Hello",
-       TrialData : [{name:"Hello",text:"In Hello Trial"},{name:"Single",text:"In Single Stim Trial"}],
+       TrialData : this.props.CurrentTrialData,
        PluginData : pluginparameter,
        PluginLabels : {},
+       setFormBuilderData : "",
        settings : { form: true,  fields: { } },
-       propertyName: ""
+       propertyName: "",
+       onTrialClick : false,
+       setData : {},
+       selectedTrialType : ""
        }
     },
-    getIndex : function() {
-      for(obj in this.state.TrialData) {
-        if(this.state.TrialData[obj].name === this.props.currentTrial) {
-          return obj;
-        }
-      }
-    },
     handleChange : function(e) {
-      console.log("In handle change for "+e.target.value);
       this.state.labels = new Object();
-      for(obj in this.state.PluginData) {
-        if(this.state.PluginData[obj].name === e.target.value) {
-          for(obj2 in this.state.PluginData[obj].parameters) {
-              this.state.labels[this.state.PluginData[obj].parameters[obj2].label] = "";
+      if(e.target.value != "Select a trial type...") {
+          if(this.props.CurrentTrialData.type === "" || this.props.CurrentTrialData.type!=e.target.value) {
+            for(obj in this.state.PluginData) {
+            if(this.state.PluginData[obj].name === e.target.value) {
+              for(obj2 in this.state.PluginData[obj].parameters) {
+                  this.state.labels[this.state.PluginData[obj].parameters[obj2].label] = "";
+              }
+            }
           }
-        }
+          this.state.setData = this.state.labels;
+          this.state.selectedTrialType = e.target.value;
+          this.setState({setData : this.state.setData});
+          console.log(this.state.selectedTrialType);  
+          } else {
+            console.log("in handle change...else");
+            this.state.setData = this.props.CurrentTrialData.parameters;
+            this.setState({setData : this.state.setData});
+          }  
+      } else {
+        this.state.setData = {};
+        this.setState({setData : this.state.setData});
       }
-      this.setState({PluginLabels : this.state.labels});
-      console.log(this.state.PluginLabels);
+      
 
     },
+    showData : function() {
+      console.log(this.props.showTrialData);
+        if(this.props.showTrialData) {
+          console.log("In show data");
+          console.log(this.state.setData);
+          if(this.props.CurrentTrialData.type === "") {
+             return (
+              <div>
+                <span id="fields"><select onChange={this.handleChange}>
+                  <option value="Select a trial type...">Select a trial type</option>
+                  <option value="Text">Text</option>
+                  <option value="Single">Single</option>
+                  <option value="Instructions">Instructions</option>
+                </select></span>
+                <span><ReactJson value={ this.state.setData } settings={ this.state.settings } ref="json"/></span>
+                <button onClick={ this.onSave }>Save</button>
+                </div>
+          ); 
+          } else {
+            console.log("In show data...else");
+            this.handleChange.bind(this,this.props.CurrentTrialData.type);
+             return (
+              <div>
+                <span id="fields"><select onChange={this.handleChange}>
+                  <option value="Select a trial type...">Select a trial type</option>
+                  <option value="Text">Text</option>
+                  <option value="Single">Single</option>
+                  <option value="Instructions">Instructions</option>
+                </select></span>
+                <span><ReactJson value={ this.state.setData  } settings={ this.state.settings } ref="json"/></span>
+                <button onClick={ this.onSave }>Save</button>
+                </div>
+          ); 
+          }
+        }
+    },
+    onSave: function( e ){
+    var val = this.refs.json.getValue();
+    console.log(this.state.selectedTrialType);
+    for(obj in val) {
+      console.log(val[obj]);
+    }
+    console.log(this.props.CurrentTrialData.label);
+    this.props.saveModifiedTrialData(this.props.CurrentTrialData.label,this.state.selectedTrialType,val);
+  },
     render:function(){
       return(
         <div>
-        {this.props.CurrentTrialData.label}
-        <span id="fields"><select onChange={this.handleChange}>
-          <option value="Hello">Hello</option>
-          <option value="Single">Single</option>
-          <option value="Instructions">Instructions</option>
-        </select></span>
-          <span><ReactJson value={ this.state.PluginLabels } settings={ this.state.settings }/></span>
+        {this.showData()}
         </div>
       );
     }
