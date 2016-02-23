@@ -65,3 +65,37 @@
   content: "▶";
   display: inline-block;
 }
+
+#buttonpanel{
+	position:absolute;
+	bottom:0;
+}
+#previewbutton{
+    color:#334455;
+	background:#66CDAA;
+	font-size: 20px;
+	padding:2px;
+	margin:2px;
+
+}
+#savebutton{
+    color:#334455;
+	background:#66CDAA;
+	font-size: 20px;
+	padding:2px;
+	margin:2px;
+}
+#loadbutton{
+    color:#334455;
+	background:#66CDAA;
+	font-size: 20px;
+	padding:2px;
+	margin:2px;
+}
+#generatebutton{
+    color:#334455;
+	background:#66CDAA;
+	font-size: 20px;
+	padding:2px;
+	margin:2px;
+}

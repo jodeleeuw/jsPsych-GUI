@@ -11,7 +11,7 @@ var SecondPage = React.createClass({
     return {
       currentTrial : "Hello",
       testValue : 5,
-      TreeData : [{label:"treeData"}],
+      TreeData : [{label:"Trial1"},{label:"Trial2"}],
       SettingsData : [],
       CurrentTrialData : [],
       notInTrialData : true,
@@ -61,24 +61,26 @@ var SecondPage = React.createClass({
     console.log("ini");
     var st = "<!doctype html>\n\n<html>\n\t<head>\n\t\t<title>My experiment</title>\n\t\t<script";
     st += " src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>\n\t\t<script";
-    st += " src=\"jspsych-5.0.1/jspsych.js\"></script>\n\t\t<script";
+    st += " src=\"https://rawgit.com/jodeleeuw/jsPsych/master/jspsych.js\"></script>\n\t\t<script";
     //add whatever plugins u need
-    st += " src=\"jspsych-5.0.1/plugins/jspsych-text.js\"></script>\n\t\t<link";
-    st += " href=\"jspsych-5.0.1/css/jspsych.css\" rel=\"stylesheet\"";
+    st += " src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-text.js\"></script>\n\t\t<link";
+    st += " href=\"https://rawgit.com/jodeleeuw/jsPsych/master/css/jspsych.css\" rel=\"stylesheet\"";
     st += " type=\"text/css\"></link>\n";
     return st;
   },
 
   generateHelloTrial: function() {
-   TestTrialData : [{label:"hello_trial",type:"text", text:"Hey...this is in Text1",cont_key:"f"}]
+   
    var hel = this.state.TestTrialData[0];
    console.log(hel);
    var hel_keys = Object.keys(this.state.TestTrialData[0]);
-
+    
    st = "\t\tvar " + hel[hel_keys[0]] + " = {\n";
    st += "\t\t\ttype: '" + hel[hel_keys[1]] + "',\n";
-   st += "\t\t\t" + hel_keys[2] + ": '" + hel[hel_keys[2]] + "',\n";
-   st += "\t\t\t" + hel_keys[3] + ": '" + hel[hel_keys[3]] + "'\n";
+
+   for(parameter_Values in this.state.TestTrialData[0].parameters) {
+    st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[0].parameters[parameter_Values] + "',\n"; 
+   }
    st += "\t\t}\n\n";
 
    return st;
@@ -90,13 +92,11 @@ var SecondPage = React.createClass({
   var instr = this.state.TestTrialData[1];
   console.log(instr);
   var instr_keys = Object.keys(this.state.TestTrialData[1]);
-
-
   st = "\t\tvar " + instr[instr_keys[0]] + " = {\n";
   st += "\t\t\ttype: '" + instr[instr_keys[1]]+ "',\n";
-  st += "\t\t\t" + instr_keys[2] + ": " + instr[instr_keys[2]] + ",\n";
-  st += "\t\t\t" + instr_keys[3] + ": '" + instr[instr_keys[3]] + "',\n";
-  st += "\t\t\t" + instr_keys[4] + ": '" + instr[instr_keys[4]] + "'\n";
+  for(parameter_Values in this.state.TestTrialData[1].parameters) {
+    st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[1].parameters[parameter_Values] + "',\n"; 
+  }
   st += "\t\t}\n\n";
 
   return st;
@@ -141,22 +141,22 @@ var SecondPage = React.createClass({
 
   st += "\t\tvar " + sing[sing_keys[0]] + " = {\n";
   st += "\t\t\ttype: '" + sing[sing_keys[1]] + "',\n";
-  st += "\t\t\t" + sing_keys[2] + ": " + sing[sing_keys[2]] + ",\n";
-  st += "\t\t\t" + sing_keys[3] + ": " + sing[sing_keys[3]] + ",\n";
-  st += "\t\t\t" + sing_keys[4] + ": " + sing[sing_keys[4]] + ",\n";
-  st += "\t\t\t" + sing_keys[5] + ": " + sing[sing_keys[5]] + "\n";
+  for(parameter_Values in this.state.TestTrialData[2].parameters) {
+    st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[2].parameters[parameter_Values] + "',\n"; 
+  }
   st += "\t\t}\n\n";
 
   return st;
 },
 
   importPlugins: function() {
-    st = "<script src=\"jspsych-5.0.1/plugins/jspsych-single-stim.js\"></script>\n";
-    st += "<script src=\"jspsych-5.0.1/plugins/jspsych-instructions.js\"></script>\n";
+    st = "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-single-stim.js\"></script>\n";
+    st += "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-instructions.js\"></script>\n";
     return st;
   },
 
     handleGenerate : function(e) {
+      console.log(this.state.TestTrialData);
       st = this.initialLines();
       st += this.importPlugins();
       st += "\t</head>\n\n\t<body>\n";
@@ -213,11 +213,11 @@ var SecondPage = React.createClass({
                   <Tree setCurrentTrial = {this.setCurrentTrial} TreeData = {this.state.TreeData}/>
                 </ul>
               </div>
-              <div id="buttonpanel" className="buttonAlign btn-group" role="group" aria-label="...">
-              <button id="loadbutton" className="btn btn-primary">Load</button>
-                <button id="savebutton" className="btn btn-primary">Save</button>
-                <button id="previewbutton" className="btn btn-primary">Preview</button>
-                <button id="generatebutton" className="btn btn-primary" onClick={this.handleGenerate}>Generate</button>
+              <div id="buttonpanel">
+              <button id="loadbutton" >Load</button>
+                <button id="savebutton" >Save</button>
+                <button id="previewbutton" >Preview</button>
+                <button id="generatebutton" onClick={this.handleGenerate}>Generate</button>
               </div>
             </div>
 
@@ -247,8 +247,9 @@ var Tree = React.createClass({
   render: function() {
       return(
         <div id = "treestructure">
-          <h4><a href="#" value="Trial1" onClick={this.setCurrentTrial.bind(this,"Trial1")}>Trial1</a></h4>
-          <h4><a href="#" value="Trial2" onClick={this.setCurrentTrial.bind(this,"Trial2")}>Trial2</a></h4>
+          <h4><a href="#" value="Trial1" onClick={this.setCurrentTrial.bind(this,"TextTrial")}>TextTrial</a></h4>
+          <h4><a href="#" value="Trial2" onClick={this.setCurrentTrial.bind(this,"InstructionsTrial")}>InstructionsTrial</a></h4>
+          <h4><a href="#" value="Trial3" onClick={this.setCurrentTrial.bind(this,"SingleStimTrial")}>SingleStimTrial</a></h4>
         </div>
       );
   }
@@ -306,9 +307,9 @@ var Trial = React.createClass({
               <div>
                 <span id="fields"><select onChange={this.handleChange}>
                   <option value="Select a trial type...">Select a trial type</option>
-                  <option value="Text">Text</option>
-                  <option value="Single">Single</option>
-                  <option value="Instructions">Instructions</option>
+                  <option value="text">Text</option>
+                  <option value="single-stim">Single</option>
+                  <option value="instructions">Instructions</option>
                 </select></span>
                 <span><ReactJson value={ this.state.setData } settings={ this.state.settings } ref="json"/></span>
                 <button onClick={ this.onSave }>Save</button>
@@ -321,11 +322,12 @@ var Trial = React.createClass({
               <div>
                 <span id="fields"><select onChange={this.handleChange}>
                   <option value="Select a trial type...">Select a trial type</option>
-                  <option value="Text">Text</option>
-                  <option value="Single">Single</option>
-                  <option value="Instructions">Instructions</option>
+                  <option value="text">Text</option>
+                  <option value="single-stim">Single</option>
+                  <option value="instructions">Instructions</option>
                 </select></span>
                 <span><ReactJson value={ this.state.setData  } settings={ this.state.settings } ref="json"/></span>
+
                 <button onClick={ this.onSave }>Save</button>
                 </div>
           ); 

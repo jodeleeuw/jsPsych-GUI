@@ -1,0 +1,83 @@
+﻿<!doctype html>
+
+<html>
+	<head>
+		<title>My experiment</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="jspsych-5.0.1/jspsych.js"></script>
+		<script src="jspsych-5.0.1/plugins/jspsych-text.js"></script>
+		<link href="jspsych-5.0.1/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+<script src="jspsych-5.0.1/plugins/jspsych-single-stim.js"></script>
+<script src="jspsych-5.0.1/plugins/jspsych-instructions.js"></script>
+	</head>
+
+	<body>
+<div id="jspsych-target"></div>
+	<script>
+	var timeline = [];
+
+		var TextTrial = {
+			type: 'text',
+			text: 'asd',
+			cont_key: 'd',
+		}
+
+	timeline.push(TextTrial);
+
+		var InstructionsTrial = {
+			type: 'instructions',
+			pages: '',
+			key_forward: '',
+			key_backward: '',
+			allow_backward: '',
+			allow_keys: '',
+			show_clickable_nav: '',
+		}
+
+	timeline.push(InstructionsTrial);
+
+var word_data = [
+	{word: "cove", word_type: "low"},
+	{word: "turf", word_type: "low"},
+	{word: "twig", word_type: "low"},
+	{word: "chair", word_type: "high"},
+	{word: "dark", word_type: "high"},
+	{word: "food", word_type: "high"},
+	{word: "cowe", word_type: "non"},
+	{word: "turv", word_type: "non"},
+	{word: "twif", word_type: "non"},
+	{word: "thair", word_type: "non"},
+	{word: "zark", word_type: "non"},
+	{word: "rood", word_type: "non"}]
+lex_trials = [];
+for(var i=0; i<word_data.length; i++){
+	lex_trials.push({
+		 stimulus: '<p class="center-content very-large">'+ word_data[i].word +'</p>',
+		 data: {word_type: word_data[i].word_type}
+	});
+}
+		var SingleStimTrial = {
+			type: 'single-stim',
+			stimuli: '',
+			is_html: '',
+			choices: '',
+			prompt: '',
+			timing_stim: '',
+			timing_response: '',
+			response_ends_trial: '',
+		}
+
+	timeline.push(SingleStimTrial);
+
+		jsPsych.init({
+			timeline: timeline,
+			display_element: $('#jspsych-target'),
+			on_finish: function(){
+				jsPsych.data.displayData();
+			}
+		})
+
+	</script>
+
+	</body>
+</html>

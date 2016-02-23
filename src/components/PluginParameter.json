@@ -1,6 +1,6 @@
 [
 	{
-		name : "Text",
+		name : "text",
 		parameters : [
 		  {	  name : "text",
 			  type : ['string','function'],
@@ -18,7 +18,7 @@
 		]
 	},
 	{
-		name :"Single",
+		name :"single-stim",
 		parameters : [
 			{name: "stimuli",
 		     type : ['array'],
@@ -77,43 +77,43 @@
 		]
 	},
 	{
-		name:"Instructions",
+		name:"instructions",
 		parameters : [
 			{	  name: "pages",
 				  type : ['array'],
-				  label: 'Pages'
+				  label: 'pages'
 				  //validation_function: function(){ return true; }, //none(temp)
 				  //default is undefined
 			  },
 			{	  name: "key_forward",
 				  type: ['key code'],
-				  label: 'Key Forward', 
+				  label: 'key_forward', 
 				  //validation_function: function() { return true; }, 
 				  default : 'rightarrow'
 			  },
 			{     name: "key_backward", 
 				  type: ['key code'],
-				  label: 'Key Backward', 
+				  label: 'key_backward', 
 				  //validation_function: function() { return true; }, 
 				  default : 'leftarrow'
 
 			  },
 			{	  name: "allow_backward", 
 				  type: ['boolean'],
-				  label: 'Allow Backward', 
+				  label: 'allow_backward', 
 				  //validation_function: function() { return true; }, 
 				  default: true
 
 			  },
 			{	  name: "allow_keys", 
 				  type: ['boolean'],
-				  label: 'Allow Keys', 
+				  label: 'allow_keys', 
 				  //validation_function: function() { return true; }, 
 				  default: true
 			  },
 			{ 	  name : "show_clickable_nav",
 				  type: ['boolean'],
-				  label: 'Show Clickable Navigation', 
+				  label: 'show_clickable_nav', 
 				  //validation_function: function() { return true; }, 
 				  default: false
 			  }
