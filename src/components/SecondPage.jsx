@@ -228,10 +228,10 @@ var SecondPage = React.createClass({
                 </ul>
               </div>
               <div id="buttonpanel">
-              <button id="loadbutton" >Load</button>
-                <button id="savebutton" >Save</button>
-                <button id="previewbutton" onClick={this.handlePreview}>Preview</button>
-                <button id="generatebutton" onClick={this.handleGenerate}>Generate</button>
+              <button id="loadbutton" className="btn btn-primary btn-md outline">Load</button>
+                <button id="savebutton" className="btn btn-primary btn-md outline" >Save</button>
+                <button id="previewbutton" className="btn btn-primary btn-md outline" onClick={this.handlePreview}>Preview</button>
+                <button id="generatebutton"  className="btn btn-primary btn-md outline" onClick={this.handleGenerate}>Generate</button>
               </div>
             </div>
 
@@ -326,7 +326,7 @@ var Trial = React.createClass({
                   <option value="instructions">Instructions</option>
                 </select></span>
                 <span><ReactJson value={ this.state.setData } settings={ this.state.settings } ref="json"/></span>
-                <button onClick={ this.onSave }>Save</button>
+                <button className="btn btn-primary btn-md outline" onClick={ this.onSave }>Save Data</button>
                 </div>
           );
           } else {

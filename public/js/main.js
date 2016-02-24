@@ -33170,7 +33170,7 @@ var SecondPage = React.createClass({
     var sing_keys = Object.keys(this.state.TestTrialData[2]);
 
     //change this
-    //read file here 
+    //read file here
     st = "var word_data = [\n";
     st += "\t{word: \"cove\", word_type: \"low\"},\n";
     st += "\t{word: \"turf\", word_type: \"low\"},\n";
@@ -33211,7 +33211,7 @@ var SecondPage = React.createClass({
     return st;
   },
 
-  handleGenerate: function (e) {
+  make_html: function () {
     console.log(this.state.TestTrialData);
     st = this.initialLines();
     st += this.importPlugins();
@@ -33255,6 +33255,20 @@ var SecondPage = React.createClass({
 
     st += sclose;
     st += "\n\n\t</body>\n</html>";
+
+    return st;
+  },
+
+  handlePreview: function (e) {
+    console.log('Preview');
+    st = this.make_html();
+    var newWindow = window.open("", "newWindow", "resizable=yes");
+    newWindow.document.write(st);
+  },
+
+  handleGenerate: function (e) {
+    console.log('Generate');
+    st = this.make_html();
     var blob = new Blob([st], { type: "text/plain;charset=utf-8" });
     SaveAs.saveAs(blob, "My_Experiment.html");
   },
@@ -33280,22 +33294,22 @@ var SecondPage = React.createClass({
           { id: 'buttonpanel' },
           React.createElement(
             'button',
-            { id: 'loadbutton' },
+            { id: 'loadbutton', className: 'btn btn-primary btn-md outline' },
             'Load'
           ),
           React.createElement(
             'button',
-            { id: 'savebutton' },
+            { id: 'savebutton', className: 'btn btn-primary btn-md outline' },
             'Save'
           ),
           React.createElement(
             'button',
-            { id: 'previewbutton' },
+            { id: 'previewbutton', className: 'btn btn-primary btn-md outline', onClick: this.handlePreview },
             'Preview'
           ),
           React.createElement(
             'button',
-            { id: 'generatebutton', onClick: this.handleGenerate },
+            { id: 'generatebutton', className: 'btn btn-primary btn-md outline', onClick: this.handleGenerate },
             'Generate'
           )
         )
@@ -33447,8 +33461,8 @@ var Trial = React.createClass({
           ),
           React.createElement(
             'button',
-            { onClick: this.onSave },
-            'Save'
+            { className: 'btn btn-primary btn-md outline', onClick: this.onSave },
+            'Save Data'
           )
         );
       } else {
