@@ -1,0 +1,39 @@
+/* Create a block desing instead the default inline one for json editor */
+/*labels*/
+.jsonName {
+	display: block;
+	position: relative;
+	font-style: normal;
+  color:#131313;
+  font-weight:bold;
+}
+
+.jsonName a {
+	position: absolute;
+	left: 0;
+	right: 0;
+	width: 10px;
+	
+	color:#131313;
+  	font-weight:bold;
+}
+
+.jsonName span {
+	margin:auto;
+}
+
+.objectProperty > .jsonValue,
+.objectProperty > .jsonName,
+.arrayProperty > .jsonValue,
+.arrayProperty > .jsonName {
+	display: inline;
+}
+
+.jsonChildren {
+	margin-left: 10px;
+	padding-left: 10px;
+}
+
+.jsonError > .jsonValue .jsonErrorMsg {
+	display: block;
+}

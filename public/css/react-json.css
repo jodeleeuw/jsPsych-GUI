@@ -1,0 +1,130 @@
+
+/* JSON Editor */
+.jsonEditor > .jsonObject {
+  margin:auto;
+  width:100%;
+}
+
+.jsonEditor * {
+	vertical-align: center;
+  margin:auto;
+}
+/*textbox*/
+.jsonChildren {
+  margin:auto;
+  font-weight: normal;
+  border: 0px solid;
+  border-color: #f00;
+  color:#000;
+  padding-top: 2%;
+  padding-bottom:5%;
+  width:60%;
+  display:block;
+  /*background-color:#b4b0b4;*/
+
+}
+.jsonCompound.open > .jsonChildren {
+  display: block;
+  position:relative;
+}
+.jsonFieldAdder {
+  margin:auto;
+  display:inline;
+}
+.jsonFieldAdder select {
+  margin:auto;
+}
+.compoundToggle:before {
+  content: '▸';
+  color: #333;
+  line-height: 1em;
+  margin:auto;
+}
+.open > .compoundToggle:before {
+  content: '▾';
+}
+
+.jsonName {
+  /*font-style: italic;*/
+  text-align: left;
+  color:#131313;
+  width:100%;
+  padding-top:1%;
+  padding-bottom:1%;
+  border:0px solid;
+  border-color:#131313;
+  display:inline;
+}
+
+.jsonValue {
+  margin:auto;
+  width:90%;
+  border-left:2px solid;
+  border-right:2px solid;
+  border-top:8px solid;
+  border-bottom: 9px solid;
+  border-color:#97c999;
+  display:inline;
+
+}
+
+.jsonValue > input,
+.jsonValue > textarea,
+.jsonValue > select {
+	margin:auto;
+  border:5px solid;
+  border-color:#131313;
+  width:90%;
+  display:inline;
+}
+
+
+.jsonRemove, .jsonFixed {
+  visibility: hidden;
+  margin:auto;
+  text-decoration: none;
+  width: .6em;
+  display: inline-block;
+}
+
+.jsonName:hover > .jsonRemove {
+  visibility: visible;
+}
+pre {
+  background: #eee;
+  border: 1px solid #ddd;
+  padding: 5px;
+  width: 180px;
+  margin: auto;
+}
+
+.compoundToggle, .jsonString{
+  cursor: pointer;
+}
+
+.booleanField * {
+	vertical-align: middle;
+}
+
+.booleanField input {
+	margin-bottom: 0;
+}
+
+.jsonError > .jsonName,
+.jsonError .jsonErrorMsg {
+	color: #f36;
+}
+
+.jsonError .jsonErrorMsg {
+	margin: 0 0 10px 10px;
+	font-size: 0.9em;
+	vertical-align: bottom;
+	display: block;
+}
+
+.jsonError > .jsonValue input,
+.jsonError > .jsonValue select,
+.jsonError > .jsonValue textarea {
+	background-color: #fff8f8;
+}
+
