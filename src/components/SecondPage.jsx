@@ -236,6 +236,7 @@ var SecondPage = React.createClass({
       st = this.make_html();
       zip.file("My_Experiment.html", st);
       //zip.folder(src);
+      
       var content = zip.generate({type:"blob"});
       SaveAs.saveAs(content, "example.zip");
     },
