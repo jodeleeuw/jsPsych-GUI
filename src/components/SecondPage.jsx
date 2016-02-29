@@ -5,6 +5,9 @@ var PluginParameter = require('./PluginParameter.json');
 var pluginparameter = PluginParameter;
 var SaveAs = require('./saveAs.jsx');
 var Reactaddons = require('react-addons');
+//var GenerateZip = require('./generateZip.jsx');
+var AdmZip = require('adm-zip');
+var JSZip = require("jszip");
 
 var SecondPage = React.createClass({
   getInitialState: function() {
@@ -213,9 +216,28 @@ var SecondPage = React.createClass({
 
     handleGenerate : function(e) {
       console.log('Generate');
+      /* older code
       st = this.make_html();
       var blob = new Blob([st], {type: "text/plain;charset=utf-8"});
     	SaveAs.saveAs(blob, "My_Experiment.html");
+      */
+      /*// creating archives
+      var zip = new AdmZip();
+      // add file directly
+      zip.addFile("test.txt", new Buffer("inner content of the file"), "entry comment goes here");
+      // add local file
+      zip.addLocalFile("/home/me/some_picture.png");
+      // get everything as a buffer
+      var willSendthis = zip.toBuffer();
+      // or write everything to disk
+      zip.writeZip("C:\Users\Rohit\Downloads\files.zip");
+      */
+      var zip = new JSZip();
+      st = this.make_html();
+      zip.file("My_Experiment.html", st);
+      //zip.folder(src);
+      var content = zip.generate({type:"blob"});
+      SaveAs.saveAs(content, "example.zip");
     },
 
     render: function(){
