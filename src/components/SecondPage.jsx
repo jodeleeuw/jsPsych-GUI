@@ -236,7 +236,7 @@ var SecondPage = React.createClass({
       st = this.make_html();
       zip.file("My_Experiment.html", st);
       //zip.folder(src);
-      
+
       var content = zip.generate({type:"blob"});
       SaveAs.saveAs(content, "example.zip");
     },
@@ -251,10 +251,10 @@ var SecondPage = React.createClass({
                 </ul>
               </div>
               <div id="buttonpanel">
-              <button id="loadbutton" className="btn btn-primary btn-md outline">Load</button>
-                <button id="savebutton" className="btn btn-primary btn-md outline" >Save</button>
-                <button id="previewbutton" className="btn btn-primary btn-md outline" onClick={this.handlePreview}>Preview</button>
-                <button id="generatebutton"  className="btn btn-primary btn-md outline" onClick={this.handleGenerate}>Generate</button>
+              <button id="loadbutton" className="btn btn-primary btn-md">Load</button>
+                <button id="savebutton" className="btn btn-primary btn-md" >Save</button>
+                <button id="previewbutton" className="btn btn-primary btn-md" onClick={this.handlePreview}>Preview</button>
+                <button id="generatebutton"  className="btn btn-primary btn-md" onClick={this.handleGenerate}>Generate</button>
               </div>
             </div>
 
@@ -286,9 +286,9 @@ var Tree = React.createClass({
         <div>
         <h2>My Experiment</h2>
         <div id = "treestructure">
-          <h4><a href="#" value="Trial1" onClick={this.setCurrentTrial.bind(this,"TextTrial")}>TextTrial</a></h4>
-          <h4><a href="#" value="Trial2" onClick={this.setCurrentTrial.bind(this,"InstructionsTrial")}>InstructionsTrial</a></h4>
-          <h4><a href="#" value="Trial3" onClick={this.setCurrentTrial.bind(this,"SingleStimTrial")}>SingleStimTrial</a></h4>
+          <a href="#" value="Trial1" onClick={this.setCurrentTrial.bind(this,"TextTrial")}>TextTrial</a>
+          <a href="#" value="Trial2" onClick={this.setCurrentTrial.bind(this,"InstructionsTrial")}>InstructionsTrial</a>
+          <a href="#" value="Trial3" onClick={this.setCurrentTrial.bind(this,"SingleStimTrial")}>SingleStimTrial</a>
         </div>
         </div>
       );
