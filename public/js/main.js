@@ -33164,13 +33164,13 @@ var SecondPage = React.createClass({
   generateSingleStim: function () {
 
     //doubt about timeline here
-    TestTrialData: [{ label: "test", type: "single-stim", is_html: "true", choices: "\['y','n'\]", randomize_order: "true", timeline: "lex_trials" }];
-    var sing = this.state.TestTrialData[2];
+    var TestTrialData1 = { label: "SingleStimTrial", type: "single-stim", parameters: { is_html: "true", choices: "\['y','n'\]", randomize_order: "true", timeline: "lex_trials" } };
+    var sing = TestTrialData1;
     console.log(sing);
-    var sing_keys = Object.keys(this.state.TestTrialData[2]);
+    var sing_keys = Object.keys(TestTrialData1);
 
     //change this
-    //read file here 
+    //read file here
     st = "var word_data = [\n";
     st += "\t{word: \"cove\", word_type: \"low\"},\n";
     st += "\t{word: \"turf\", word_type: \"low\"},\n";
@@ -33197,8 +33197,8 @@ var SecondPage = React.createClass({
 
     st += "\t\tvar " + sing[sing_keys[0]] + " = {\n";
     st += "\t\t\ttype: '" + sing[sing_keys[1]] + "',\n";
-    for (parameter_Values in this.state.TestTrialData[2].parameters) {
-      st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[2].parameters[parameter_Values] + "',\n";
+    for (parameter_Values in TestTrialData1.parameters) {
+      st += "\t\t\t" + parameter_Values + ": " + TestTrialData1.parameters[parameter_Values] + ",\n";
     }
     st += "\t\t}\n\n";
 
@@ -33211,7 +33211,7 @@ var SecondPage = React.createClass({
     return st;
   },
 
-  handleGenerate: function (e) {
+  make_html: function () {
     console.log(this.state.TestTrialData);
     st = this.initialLines();
     st += this.importPlugins();
@@ -33255,6 +33255,20 @@ var SecondPage = React.createClass({
 
     st += sclose;
     st += "\n\n\t</body>\n</html>";
+
+    return st;
+  },
+
+  handlePreview: function (e) {
+    console.log('Preview');
+    st = this.make_html();
+    var newWindow = window.open("", "newWindow", "resizable=yes");
+    newWindow.document.write(st);
+  },
+
+  handleGenerate: function (e) {
+    console.log('Generate');
+    st = this.make_html();
     var blob = new Blob([st], { type: "text/plain;charset=utf-8" });
     SaveAs.saveAs(blob, "My_Experiment.html");
   },
@@ -33280,22 +33294,22 @@ var SecondPage = React.createClass({
           { id: 'buttonpanel' },
           React.createElement(
             'button',
-            { id: 'loadbutton' },
+            { id: 'loadbutton', className: 'btn btn-primary btn-md outline' },
             'Load'
           ),
           React.createElement(
             'button',
-            { id: 'savebutton' },
+            { id: 'savebutton', className: 'btn btn-primary btn-md outline' },
             'Save'
           ),
           React.createElement(
             'button',
-            { id: 'previewbutton' },
+            { id: 'previewbutton', className: 'btn btn-primary btn-md outline', onClick: this.handlePreview },
             'Preview'
           ),
           React.createElement(
             'button',
-            { id: 'generatebutton', onClick: this.handleGenerate },
+            { id: 'generatebutton', className: 'btn btn-primary btn-md outline', onClick: this.handleGenerate },
             'Generate'
           )
         )
@@ -33329,32 +33343,41 @@ var Tree = React.createClass({
   render: function () {
     return React.createElement(
       'div',
-      { id: 'treestructure' },
+      null,
       React.createElement(
-        'h4',
+        'h2',
         null,
-        React.createElement(
-          'a',
-          { href: '#', value: 'Trial1', onClick: this.setCurrentTrial.bind(this, "TextTrial") },
-          'TextTrial'
-        )
+        'My Experiment'
       ),
       React.createElement(
-        'h4',
-        null,
+        'div',
+        { id: 'treestructure' },
         React.createElement(
-          'a',
-          { href: '#', value: 'Trial2', onClick: this.setCurrentTrial.bind(this, "InstructionsTrial") },
-          'InstructionsTrial'
-        )
-      ),
-      React.createElement(
-        'h4',
-        null,
+          'h4',
+          null,
+          React.createElement(
+            'a',
+            { href: '#', value: 'Trial1', onClick: this.setCurrentTrial.bind(this, "TextTrial") },
+            'TextTrial'
+          )
+        ),
         React.createElement(
-          'a',
-          { href: '#', value: 'Trial3', onClick: this.setCurrentTrial.bind(this, "SingleStimTrial") },
-          'SingleStimTrial'
+          'h4',
+          null,
+          React.createElement(
+            'a',
+            { href: '#', value: 'Trial2', onClick: this.setCurrentTrial.bind(this, "InstructionsTrial") },
+            'InstructionsTrial'
+          )
+        ),
+        React.createElement(
+          'h4',
+          null,
+          React.createElement(
+            'a',
+            { href: '#', value: 'Trial3', onClick: this.setCurrentTrial.bind(this, "SingleStimTrial") },
+            'SingleStimTrial'
+          )
         )
       )
     );
@@ -33447,8 +33470,8 @@ var Trial = React.createClass({
           ),
           React.createElement(
             'button',
-            { onClick: this.onSave },
-            'Save'
+            { className: 'btn btn-primary btn-md outline', onClick: this.onSave },
+            'Save Data'
           )
         );
       } else {

@@ -108,10 +108,10 @@ var SecondPage = React.createClass({
  generateSingleStim: function() {
 
   //doubt about timeline here
-  TestTrialData : [{label:"test",type:"single-stim",is_html:"true",choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}]
-  var sing = this.state.TestTrialData[2];
+  var TestTrialData1 = {label:"SingleStimTrial",type:"single-stim",parameters:{is_html:"true",choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}};
+  var sing = TestTrialData1;
   console.log(sing);
-  var sing_keys = Object.keys(this.state.TestTrialData[2]);
+  var sing_keys = Object.keys(TestTrialData1);
 
 
   //change this
@@ -144,8 +144,8 @@ var SecondPage = React.createClass({
 
   st += "\t\tvar " + sing[sing_keys[0]] + " = {\n";
   st += "\t\t\ttype: '" + sing[sing_keys[1]] + "',\n";
-  for(parameter_Values in this.state.TestTrialData[2].parameters) {
-    st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[2].parameters[parameter_Values] + "',\n";
+  for(parameter_Values in TestTrialData1.parameters) {
+    st += "\t\t\t" + parameter_Values + ": " + TestTrialData1.parameters[parameter_Values] + ",\n";
   }
   st += "\t\t}\n\n";
 
@@ -250,10 +250,10 @@ var SecondPage = React.createClass({
                 </ul>
               </div>
               <div id="buttonpanel">
-              <button id="loadbutton" >Load</button>
-                <button id="savebutton" >Save</button>
-                <button id="previewbutton" onClick={this.handlePreview}>Preview</button>
-                <button id="generatebutton" onClick={this.handleGenerate}>Generate</button>
+              <button id="loadbutton" className="btn btn-primary btn-md outline">Load</button>
+                <button id="savebutton" className="btn btn-primary btn-md outline" >Save</button>
+                <button id="previewbutton" className="btn btn-primary btn-md outline" onClick={this.handlePreview}>Preview</button>
+                <button id="generatebutton"  className="btn btn-primary btn-md outline" onClick={this.handleGenerate}>Generate</button>
               </div>
             </div>
 
@@ -282,10 +282,13 @@ var Tree = React.createClass({
 
   render: function() {
       return(
+        <div>
+        <h2>My Experiment</h2>
         <div id = "treestructure">
           <h4><a href="#" value="Trial1" onClick={this.setCurrentTrial.bind(this,"TextTrial")}>TextTrial</a></h4>
           <h4><a href="#" value="Trial2" onClick={this.setCurrentTrial.bind(this,"InstructionsTrial")}>InstructionsTrial</a></h4>
           <h4><a href="#" value="Trial3" onClick={this.setCurrentTrial.bind(this,"SingleStimTrial")}>SingleStimTrial</a></h4>
+        </div>
         </div>
       );
   }
@@ -348,7 +351,7 @@ var Trial = React.createClass({
                   <option value="instructions">Instructions</option>
                 </select></span>
                 <span><ReactJson value={ this.state.setData } settings={ this.state.settings } ref="json"/></span>
-                <button onClick={ this.onSave }>Save</button>
+                <button className="btn btn-primary btn-md outline" onClick={ this.onSave }>Save Data</button>
                 </div>
           );
           } else {
