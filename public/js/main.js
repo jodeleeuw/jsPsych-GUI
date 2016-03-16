@@ -52792,14 +52792,16 @@ var Tree = React.createClass({
     };
   },
 
-  setCurrentTrial: function (value1) {
-    // console.log(this.props.TreeData);
-    // var modifiedTreeData = this.props.TreeData.push({label:"TreeData2"});
-    this.props.setCurrentTrial(value1, this.props.TreeData);
+  setCurrentTrial: function (selectedTrial) {
+    console.log(selectedTrial);
+    this.props.setCurrentTrial(selectedTrial, this.props.TreeData);
+  },
+
+  setTreeData: function (newTreeData) {
+    this.setState({ tree: newTreeData });
   },
 
   handleAddChildClick: function (parentId) {
-    // console.log(this.state.count);
     var temp = {
       id: count++,
       childIds: []
@@ -52807,18 +52809,30 @@ var Tree = React.createClass({
     if (this.props.tree !== undefined) {
       this.props.tree.childIds.push(temp);
       this.setState({ tree: this.props.tree });
+      console.log(this.props.tree.childIds);
     } else {
       this.state.tree.childIds.push(temp);
-      // console.log("In handle add child...",this.state.tree);
       this.setState({ tree: this.state.tree });
     }
+  },
+
+  handleRemoveChildClick: function (nodeId) {
+    var removeNode = "";
+    this.props.treeData.childIds.forEach(function (childObj) {
+      if (childObj.id === nodeId) {
+        removeNode = childObj;
+      }
+    });
+    var indexChild = this.props.treeData.childIds.indexOf(removeNode);
+    this.props.treeData.childIds.splice(indexChild, 1);
+    this.props.setTreeData(this.props.treeData);
   },
 
   renderChild: function (child) {
     return React.createElement(
       'li',
       { key: child.id },
-      React.createElement(Tree, { tree: child })
+      React.createElement(Tree, { tree: child, setCurrentTrial: this.props.setCurrentTrial, treeData: this.state.tree, setTreeData: this.setTreeData })
     );
   },
 
@@ -52828,18 +52842,26 @@ var Tree = React.createClass({
       id = this.props.tree.id;
       childIds = this.props.tree.childIds;
     }
-    // console.log("props jayyy",id);
     return React.createElement(
       'div',
       null,
       React.createElement(
         'div',
         null,
-        id === 0 ? "My Experiment" : id,
+        id === 0 ? React.createElement(
+          'a',
+          { href: '#', onClick: this.setCurrentTrial.bind(this, "MyExperiment") },
+          'My Experiment'
+        ) : React.createElement(
+          'a',
+          { href: '#', onClick: this.setCurrentTrial.bind(this, "Trial" + id) },
+          'Trial ',
+          id
+        ),
         ' ',
         id !== 0 ? React.createElement(
           'a',
-          { href: '#', onClick: this.handleRemoveClick,
+          { href: '#', onClick: this.handleRemoveChildClick.bind(this, id),
             style: { color: 'lightgray', textDecoration: 'none' } },
           '×'
         ) : null,
@@ -53022,7 +53044,7 @@ var Trial = React.createClass({
     );
   }
 });
-// <span><ReactJson value={ this.state.TrialData[this.getIndex()] } settings={ this.state.settings }/></span>
+
 module.exports = SecondPage;
 
 },{"./PluginParameter.json":352,"./saveAs.jsx":354,"adm-zip":1,"jszip":70,"react":342,"react-addons":104,"react-dom":197,"react-json":200}],354:[function(require,module,exports){
