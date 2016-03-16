@@ -266,12 +266,15 @@ var SecondPage = React.createClass({
     }
 
 });
-
+var count = 1;
 var Tree = React.createClass({
   getInitialState: function() {
       return {
-        testValue : "",
-        TreeObject : [{name:"Hello",id:1},{name:"Single",id:2}]
+        tree : 
+          {
+            id: 0,
+            childIds: []
+          }
       }
     },
 
@@ -281,20 +284,71 @@ var Tree = React.createClass({
     this.props.setCurrentTrial(value1,this.props.TreeData);
   },
 
+handleAddChildClick: function(parentId) {
+        // console.log(this.state.count);
+    var temp = {
+        id: count++,
+        childIds: []
+    };
+    if(this.props.tree !== undefined) {
+      this.props.tree.childIds.push(temp);  
+      this.setState({tree : this.props.tree});
+    } else {
+      this.state.tree.childIds.push(temp);
+      // console.log("In handle add child...",this.state.tree);
+      this.setState({tree : this.state.tree});  
+    }
+    
+},
+
+  renderChild: function(child) {
+    return (
+      <li key={child.id}>
+        <Tree tree={child} />
+      </li>
+    )
+  },
+
   render: function() {
+    let { id, childIds} = this.state.tree;
+    if(this.props.tree !== undefined) {
+      id = this.props.tree.id;
+      childIds  = this.props.tree.childIds;
+    }
+    // console.log("props jayyy",id);
       return(
         <div>
-        <h2>My Experiment</h2>
-        <div id = "treestructure">
-          <a href="#" value="Trial1" onClick={this.setCurrentTrial.bind(this,"TextTrial")}>TextTrial</a>
-          <a href="#" value="Trial2" onClick={this.setCurrentTrial.bind(this,"InstructionsTrial")}>InstructionsTrial</a>
-          <a href="#" value="Trial3" onClick={this.setCurrentTrial.bind(this,"SingleStimTrial")}>SingleStimTrial</a>
-        </div>
+          <div>
+             {id === 0 ? "My Experiment" : id}
+              {' '}
+              {id !== 0 ?
+                <a href="#" onClick={this.handleRemoveClick}
+                   style={{ color: 'lightgray', textDecoration: 'none' }}>
+                  ×
+                </a> :
+                null
+              }
+              <ul>
+              {childIds.map(this.renderChild)}
+                <li key="add">
+                  <button onClick={this.handleAddChildClick.bind(this,id)}>
+                  +
+                  </button>
+                </li>
+              </ul>
+          </div>
+
+        
         </div>
       );
   }
 });
 
+// <div id = "treestructure">
+//           <a href="#" value="Trial1" onClick={this.setCurrentTrial.bind(this,"TextTrial")}>TextTrial</a>
+//           <a href="#" value="Trial2" onClick={this.setCurrentTrial.bind(this,"InstructionsTrial")}>InstructionsTrial</a>
+//           <a href="#" value="Trial3" onClick={this.setCurrentTrial.bind(this,"SingleStimTrial")}>SingleStimTrial</a>
+//         </div>
 var Trial = React.createClass({
     getInitialState: function() {
       return {
