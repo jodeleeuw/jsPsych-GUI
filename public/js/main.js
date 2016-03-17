@@ -44211,7 +44211,6 @@ var SecondPage = React.createClass({
 
     st += sclose;
     st += "\n\n\t</body>\n</html>";
-
     return st;
   },
 
