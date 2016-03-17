@@ -1,118 +1,135 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict'
+;(function (exports) {
+  'use strict'
 
-exports.toByteArray = toByteArray
-exports.fromByteArray = fromByteArray
-
-var lookup = []
-var revLookup = []
-var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
-
-function init () {
   var i
   var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-  var len = code.length
-
-  for (i = 0; i < len; i++) {
+  var lookup = []
+  for (i = 0; i < code.length; i++) {
     lookup[i] = code[i]
   }
+  var revLookup = []
 
-  for (i = 0; i < len; ++i) {
+  for (i = 0; i < code.length; ++i) {
     revLookup[code.charCodeAt(i)] = i
   }
   revLookup['-'.charCodeAt(0)] = 62
   revLookup['_'.charCodeAt(0)] = 63
-}
 
-init()
+  var Arr = (typeof Uint8Array !== 'undefined')
+    ? Uint8Array
+    : Array
 
-function toByteArray (b64) {
-  var i, j, l, tmp, placeHolders, arr
-  var len = b64.length
-
-  if (len % 4 > 0) {
-    throw new Error('Invalid string. Length must be a multiple of 4')
+  function decode (elt) {
+    var v = revLookup[elt.charCodeAt(0)]
+    return v !== undefined ? v : -1
   }
 
-  // the number of equal signs (place holders)
-  // if there are two placeholders, than the two characters before it
-  // represent one byte
-  // if there is only one, then the three characters before it represent 2 bytes
-  // this is just a cheap hack to not do indexOf twice
-  placeHolders = b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0
+  function b64ToByteArray (b64) {
+    var i, j, l, tmp, placeHolders, arr
 
-  // base64 is 4/3 + up to two characters of the original data
-  arr = new Arr(len * 3 / 4 - placeHolders)
+    if (b64.length % 4 > 0) {
+      throw new Error('Invalid string. Length must be a multiple of 4')
+    }
 
-  // if there are placeholders, only get up to the last complete 4 chars
-  l = placeHolders > 0 ? len - 4 : len
+    // the number of equal signs (place holders)
+    // if there are two placeholders, than the two characters before it
+    // represent one byte
+    // if there is only one, then the three characters before it represent 2 bytes
+    // this is just a cheap hack to not do indexOf twice
+    var len = b64.length
+    placeHolders = b64.charAt(len - 2) === '=' ? 2 : b64.charAt(len - 1) === '=' ? 1 : 0
 
-  var L = 0
+    // base64 is 4/3 + up to two characters of the original data
+    arr = new Arr(b64.length * 3 / 4 - placeHolders)
 
-  for (i = 0, j = 0; i < l; i += 4, j += 3) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)]
-    arr[L++] = (tmp & 0xFF0000) >> 16
-    arr[L++] = (tmp & 0xFF00) >> 8
-    arr[L++] = tmp & 0xFF
+    // if there are placeholders, only get up to the last complete 4 chars
+    l = placeHolders > 0 ? b64.length - 4 : b64.length
+
+    var L = 0
+
+    function push (v) {
+      arr[L++] = v
+    }
+
+    for (i = 0, j = 0; i < l; i += 4, j += 3) {
+      tmp = (decode(b64.charAt(i)) << 18) | (decode(b64.charAt(i + 1)) << 12) | (decode(b64.charAt(i + 2)) << 6) | decode(b64.charAt(i + 3))
+      push((tmp & 0xFF0000) >> 16)
+      push((tmp & 0xFF00) >> 8)
+      push(tmp & 0xFF)
+    }
+
+    if (placeHolders === 2) {
+      tmp = (decode(b64.charAt(i)) << 2) | (decode(b64.charAt(i + 1)) >> 4)
+      push(tmp & 0xFF)
+    } else if (placeHolders === 1) {
+      tmp = (decode(b64.charAt(i)) << 10) | (decode(b64.charAt(i + 1)) << 4) | (decode(b64.charAt(i + 2)) >> 2)
+      push((tmp >> 8) & 0xFF)
+      push(tmp & 0xFF)
+    }
+
+    return arr
   }
 
-  if (placeHolders === 2) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 2) | (revLookup[b64.charCodeAt(i + 1)] >> 4)
-    arr[L++] = tmp & 0xFF
-  } else if (placeHolders === 1) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 10) | (revLookup[b64.charCodeAt(i + 1)] << 4) | (revLookup[b64.charCodeAt(i + 2)] >> 2)
-    arr[L++] = (tmp >> 8) & 0xFF
-    arr[L++] = tmp & 0xFF
+  function encode (num) {
+    return lookup[num]
   }
 
-  return arr
-}
-
-function tripletToBase64 (num) {
-  return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F]
-}
-
-function encodeChunk (uint8, start, end) {
-  var tmp
-  var output = []
-  for (var i = start; i < end; i += 3) {
-    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
-    output.push(tripletToBase64(tmp))
-  }
-  return output.join('')
-}
-
-function fromByteArray (uint8) {
-  var tmp
-  var len = uint8.length
-  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
-  var output = ''
-  var parts = []
-  var maxChunkLength = 16383 // must be multiple of 3
-
-  // go through the array every three bytes, we'll deal with trailing stuff later
-  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
-    parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)))
+  function tripletToBase64 (num) {
+    return encode(num >> 18 & 0x3F) + encode(num >> 12 & 0x3F) + encode(num >> 6 & 0x3F) + encode(num & 0x3F)
   }
 
-  // pad the end with zeros, but make sure to not forget the extra bytes
-  if (extraBytes === 1) {
-    tmp = uint8[len - 1]
-    output += lookup[tmp >> 2]
-    output += lookup[(tmp << 4) & 0x3F]
-    output += '=='
-  } else if (extraBytes === 2) {
-    tmp = (uint8[len - 2] << 8) + (uint8[len - 1])
-    output += lookup[tmp >> 10]
-    output += lookup[(tmp >> 4) & 0x3F]
-    output += lookup[(tmp << 2) & 0x3F]
-    output += '='
+  function encodeChunk (uint8, start, end) {
+    var temp
+    var output = []
+    for (var i = start; i < end; i += 3) {
+      temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
+      output.push(tripletToBase64(temp))
+    }
+    return output.join('')
   }
 
-  parts.push(output)
+  function uint8ToBase64 (uint8) {
+    var i
+    var extraBytes = uint8.length % 3 // if we have 1 byte left, pad 2 bytes
+    var output = ''
+    var parts = []
+    var temp, length
+    var maxChunkLength = 16383 // must be multiple of 3
 
-  return parts.join('')
-}
+    // go through the array every three bytes, we'll deal with trailing stuff later
+
+    for (i = 0, length = uint8.length - extraBytes; i < length; i += maxChunkLength) {
+      parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > length ? length : (i + maxChunkLength)))
+    }
+
+    // pad the end with zeros, but make sure to not forget the extra bytes
+    switch (extraBytes) {
+      case 1:
+        temp = uint8[uint8.length - 1]
+        output += encode(temp >> 2)
+        output += encode((temp << 4) & 0x3F)
+        output += '=='
+        break
+      case 2:
+        temp = (uint8[uint8.length - 2] << 8) + (uint8[uint8.length - 1])
+        output += encode(temp >> 10)
+        output += encode((temp >> 4) & 0x3F)
+        output += encode((temp << 2) & 0x3F)
+        output += '='
+        break
+      default:
+        break
+    }
+
+    parts.push(output)
+
+    return parts.join('')
+  }
+
+  exports.toByteArray = b64ToByteArray
+  exports.fromByteArray = uint8ToBase64
+}(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
 },{}],2:[function(require,module,exports){
 (function (global){
@@ -44005,6 +44022,8 @@ module.exports=[
 	}
 ]
 },{}],319:[function(require,module,exports){
+'use strict';
+
 var React = require('react');
 var ReactDOM = require('react-dom');
 var ReactJson = require('react-json');
@@ -44018,7 +44037,7 @@ var FileInput = require('react-file-input');
 var SecondPage = React.createClass({
   displayName: 'SecondPage',
 
-  getInitialState: function () {
+  getInitialState: function getInitialState() {
     return {
       currentTrial: "Hello",
       testValue: 5,
@@ -44035,7 +44054,7 @@ var SecondPage = React.createClass({
     };
   },
 
-  setCurrentTrial: function (trialValue, treeData) {
+  setCurrentTrial: function setCurrentTrial(trialValue, treeData) {
     console.log(this.state.TestTrialData);
     this.state.notInTrialData = true;
     for (obj in this.state.TestTrialData) {
@@ -44053,7 +44072,7 @@ var SecondPage = React.createClass({
     this.setState({ CurrentTrialData: this.state.CurrentTrialData, showTrialData: true });
   },
 
-  saveModifiedTrialData: function (trialName, trialType, modifiedTrialParameters) {
+  saveModifiedTrialData: function saveModifiedTrialData(trialName, trialType, modifiedTrialParameters) {
     console.log("In save..." + trialType);
     console.log(modifiedTrialParameters);
     for (obj in this.state.TestTrialData) {
@@ -44066,7 +44085,7 @@ var SecondPage = React.createClass({
     console.log(this.state.TestTrialData);
   },
 
-  initialLines: function () {
+  initialLines: function initialLines() {
     console.log("ini");
     var st = "<!doctype html>\n\n<html>\n\t<head>\n\t\t<title>My experiment</title>\n\t\t<script";
     st += " src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>\n\t\t<script";
@@ -44077,7 +44096,7 @@ var SecondPage = React.createClass({
     return st;
   },
 
-  generateHelloTrial: function () {
+  generateHelloTrial: function generateHelloTrial() {
 
     var hel = this.state.TestTrialData[0];
     console.log(hel);
@@ -44094,7 +44113,7 @@ var SecondPage = React.createClass({
     return st;
   },
 
-  generateInstructions: function () {
+  generateInstructions: function generateInstructions() {
     TestTrialData: [{ label: "instructions", type: "instructions", pages: "['\<p\>Welcome. Press next to view the instructions.\</p\>','\<p\>You will see a set of characters. Press Y if the characters form an English word. Press N if they do not.\</p\>\<p\>Press next to begin.\</p\>']", show_clickable_nav: "true", allow_keys: "false" }];
     var instr = this.state.TestTrialData[1];
     console.log(instr);
@@ -44109,7 +44128,7 @@ var SecondPage = React.createClass({
     return st;
   },
 
-  generateSingleStim: function () {
+  generateSingleStim: function generateSingleStim() {
     //doubt about timeline here
     var TestTrialData1 = { label: "SingleStimTrial", type: "single-stim", parameters: { is_html: "true", choices: "\['y','n'\]", randomize_order: "true", timeline: "lex_trials" } };
     var sing = TestTrialData1;
@@ -44150,13 +44169,13 @@ var SecondPage = React.createClass({
     return st;
   },
 
-  importPlugins: function () {
+  importPlugins: function importPlugins() {
     st = "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-single-stim.js\"></script>\n";
     st += "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-instructions.js\"></script>\n";
     return st;
   },
 
-  make_html: function () {
+  make_html: function make_html() {
     console.log(this.state.TestTrialData);
     st = this.initialLines();
     st += this.importPlugins();
@@ -44196,14 +44215,14 @@ var SecondPage = React.createClass({
     return st;
   },
 
-  handlePreview: function (e) {
+  handlePreview: function handlePreview(e) {
     console.log('Preview');
     st = this.make_html();
     var newWindow = window.open("", "newWindow", "resizable=yes");
     newWindow.document.write(st);
   },
 
-  handleGenerate: function (e) {
+  handleGenerate: function handleGenerate(e) {
     console.log('Generate');
     var zip = new JSZip();
     st = this.make_html();
@@ -44212,18 +44231,18 @@ var SecondPage = React.createClass({
     SaveAs.saveAs(content, "example.zip");
   },
 
-  handleSave: function (e) {
+  handleSave: function handleSave(e) {
     console.log('Save Button:');
     var json = JSON.stringify(this.state.TestTrialData);
     var blob = new Blob([json], { type: "application/json" });
     SaveAs.saveAs(blob, "Experiment_data.json");
   },
 
-  setTrialData: function () {
+  setTrialData: function setTrialData() {
     console.log('set: ' + this.state.TestTrialData);
   },
 
-  handleLoad: function (event) {
+  handleLoad: function handleLoad(event) {
     var self = this;
     console.log('Load Button:');
     var file = event.target.files[0];
@@ -44237,7 +44256,7 @@ var SecondPage = React.createClass({
     read.readAsText(file);
   },
 
-  render: function () {
+  render: function render() {
     return React.createElement(
       'div',
       null,
@@ -44291,7 +44310,7 @@ var count = 1;
 var Tree = React.createClass({
   displayName: 'Tree',
 
-  getInitialState: function () {
+  getInitialState: function getInitialState() {
     return {
       tree: {
         id: 0,
@@ -44300,16 +44319,16 @@ var Tree = React.createClass({
     };
   },
 
-  setCurrentTrial: function (selectedTrial) {
+  setCurrentTrial: function setCurrentTrial(selectedTrial) {
     console.log(selectedTrial);
     this.props.setCurrentTrial(selectedTrial, this.props.TreeData);
   },
 
-  setTreeData: function (newTreeData) {
+  setTreeData: function setTreeData(newTreeData) {
     this.setState({ tree: newTreeData });
   },
 
-  handleAddChildClick: function (parentId) {
+  handleAddChildClick: function handleAddChildClick(parentId) {
     var temp = {
       id: count++,
       childIds: []
@@ -44324,7 +44343,7 @@ var Tree = React.createClass({
     }
   },
 
-  handleRemoveChildClick: function (nodeId) {
+  handleRemoveChildClick: function handleRemoveChildClick(nodeId) {
     var removeNode = "";
     this.props.treeData.childIds.forEach(function (childObj) {
       if (childObj.id === nodeId) {
@@ -44336,7 +44355,7 @@ var Tree = React.createClass({
     this.props.setTreeData(this.props.treeData);
   },
 
-  renderChild: function (child) {
+  renderChild: function renderChild(child) {
     return React.createElement(
       'li',
       { key: child.id },
@@ -44344,8 +44363,11 @@ var Tree = React.createClass({
     );
   },
 
-  render: function () {
-    var { id, childIds } = this.state.tree;
+  render: function render() {
+    var _state$tree = this.state.tree;
+    var id = _state$tree.id;
+    var childIds = _state$tree.childIds;
+
     if (this.props.tree !== undefined) {
       id = this.props.tree.id;
       childIds = this.props.tree.childIds;
@@ -44400,7 +44422,7 @@ var Tree = React.createClass({
 var Trial = React.createClass({
   displayName: 'Trial',
 
-  getInitialState: function () {
+  getInitialState: function getInitialState() {
     return {
       currentTrial: "Hello",
       TrialData: this.props.CurrentTrialData,
@@ -44414,7 +44436,7 @@ var Trial = React.createClass({
       selectedTrialType: ""
     };
   },
-  handleChange: function (e) {
+  handleChange: function handleChange(e) {
     this.state.labels = new Object();
     if (e.target.value != "Select a trial type...") {
       if (this.props.CurrentTrialData.type === "" || this.props.CurrentTrialData.type != e.target.value) {
@@ -44439,7 +44461,7 @@ var Trial = React.createClass({
       this.setState({ setData: this.state.setData });
     }
   },
-  showData: function () {
+  showData: function showData() {
     console.log(this.props.showTrialData);
     if (this.props.showTrialData) {
       console.log("In show data");
@@ -44535,7 +44557,7 @@ var Trial = React.createClass({
       }
     }
   },
-  onSave: function (e) {
+  onSave: function onSave(e) {
     var val = this.refs.json.getValue();
     console.log(this.state.selectedTrialType);
     for (obj in val) {
@@ -44544,7 +44566,7 @@ var Trial = React.createClass({
     console.log(this.props.CurrentTrialData.label);
     this.props.saveModifiedTrialData(this.props.CurrentTrialData.label, this.state.selectedTrialType, val);
   },
-  render: function () {
+  render: function render() {
     return React.createElement(
       'div',
       null,
@@ -44556,6 +44578,8 @@ var Trial = React.createClass({
 module.exports = SecondPage;
 
 },{"./PluginParameter.json":318,"./saveAs.jsx":320,"jszip":46,"react":317,"react-addons":78,"react-dom":171,"react-file-input":172,"react-json":175}],320:[function(require,module,exports){
+"use strict";
+
 var saveAs = saveAs || function (view) {
   "use strict";
   // IE <10 is explicitly unsupported
@@ -44566,19 +44590,19 @@ var saveAs = saveAs || function (view) {
   var doc = view.document
   // only get URL when necessary in case Blob.js hasn't overridden it yet
   ,
-      get_URL = function () {
+      get_URL = function get_URL() {
     return view.URL || view.webkitURL || view;
   },
       save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a"),
       can_use_save_link = "download" in save_link,
-      click = function (node) {
+      click = function click(node) {
     var event = new MouseEvent("click");
     node.dispatchEvent(event);
   },
       is_safari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent),
       webkit_req_fs = view.webkitRequestFileSystem,
       req_fs = view.requestFileSystem || webkit_req_fs || view.mozRequestFileSystem,
-      throw_outside = function (ex) {
+      throw_outside = function throw_outside(ex) {
     (view.setImmediate || view.setTimeout)(function () {
       throw ex;
     }, 0);
@@ -44587,8 +44611,8 @@ var saveAs = saveAs || function (view) {
       fs_min_size = 0,
       arbitrary_revoke_timeout = 500 // in ms
   ,
-      revoke = function (file) {
-    var revoker = function () {
+      revoke = function revoke(file) {
+    var revoker = function revoker() {
       if (typeof file === "string") {
         // file is an object URL
         get_URL().revokeObjectURL(file);
@@ -44603,7 +44627,7 @@ var saveAs = saveAs || function (view) {
       setTimeout(revoker, arbitrary_revoke_timeout);
     }
   },
-      dispatch = function (filesaver, event_types, event) {
+      dispatch = function dispatch(filesaver, event_types, event) {
     event_types = [].concat(event_types);
     var i = event_types.length;
     while (i--) {
@@ -44617,14 +44641,14 @@ var saveAs = saveAs || function (view) {
       }
     }
   },
-      auto_bom = function (blob) {
+      auto_bom = function auto_bom(blob) {
     // prepend BOM for UTF-8 XML and text/* types (including HTML)
     if (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
-      return new Blob(["\ufeff", blob], { type: blob.type });
+      return new Blob(["﻿", blob], { type: blob.type });
     }
     return blob;
   },
-      FileSaver = function (blob, name, no_auto_bom) {
+      FileSaver = function FileSaver(blob, name, no_auto_bom) {
     if (!no_auto_bom) {
       blob = auto_bom(blob);
     }
@@ -44634,12 +44658,12 @@ var saveAs = saveAs || function (view) {
         blob_changed = false,
         object_url,
         target_view,
-        dispatch_all = function () {
+        dispatch_all = function dispatch_all() {
       dispatch(filesaver, "writestart progress write writeend".split(" "));
     }
     // on any filesys errors revert to saving with object URLs
     ,
-        fs_error = function () {
+        fs_error = function fs_error() {
       if (target_view && is_safari && typeof FileReader !== "undefined") {
         // Safari doesn't allow downloading of blob urls
         var reader = new FileReader();
@@ -44670,7 +44694,7 @@ var saveAs = saveAs || function (view) {
       dispatch_all();
       revoke(object_url);
     },
-        abortable = function (func) {
+        abortable = function abortable(func) {
       return function () {
         if (filesaver.readyState !== filesaver.DONE) {
           return func.apply(this, arguments);
@@ -44713,7 +44737,7 @@ var saveAs = saveAs || function (view) {
     fs_min_size += blob.size;
     req_fs(view.TEMPORARY, fs_min_size, abortable(function (fs) {
       fs.root.getDirectory("saved", create_if_not_found, abortable(function (dir) {
-        var save = function () {
+        var save = function save() {
           dir.getFile(name, create_if_not_found, abortable(function (file) {
             file.createWriter(abortable(function (writer) {
               writer.onwriteend = function (event) {
@@ -44755,7 +44779,7 @@ var saveAs = saveAs || function (view) {
     }), fs_error);
   },
       FS_proto = FileSaver.prototype,
-      saveAs = function (blob, name, no_auto_bom) {
+      saveAs = function saveAs(blob, name, no_auto_bom) {
     return new FileSaver(blob, name, no_auto_bom);
   };
   // IE 10+ (native saveAs)
@@ -44780,7 +44804,7 @@ var saveAs = saveAs || function (view) {
   FS_proto.error = FS_proto.onwritestart = FS_proto.onprogress = FS_proto.onwrite = FS_proto.onabort = FS_proto.onerror = FS_proto.onwriteend = null;
 
   return saveAs;
-}(typeof self !== "undefined" && self || typeof window !== "undefined" && window || this.content);
+}(typeof self !== "undefined" && self || typeof window !== "undefined" && window || undefined.content);
 
 if (typeof module !== "undefined" && module.exports) {
   module.exports.saveAs = saveAs;
@@ -44791,6 +44815,7 @@ if (typeof module !== "undefined" && module.exports) {
 }
 
 },{}],321:[function(require,module,exports){
+'use strict';
 
 var React = require('react');
 var SecondPage = require('./components/SecondPage.jsx');
