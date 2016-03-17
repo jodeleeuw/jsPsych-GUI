@@ -44315,7 +44315,8 @@ var Tree = React.createClass({
       tree: {
         id: 0,
         childIds: []
-      }
+      },
+      inputText: "Trial"
     };
   },
 
@@ -44363,6 +44364,11 @@ var Tree = React.createClass({
     );
   },
 
+  changeTrialName: function changeTrialName(e) {
+    console.log(e.target.value);
+    this.setState({ inputText: e.target.value });
+  },
+
   render: function render() {
     var _state$tree = this.state.tree;
     var id = _state$tree.id;
@@ -44385,8 +44391,7 @@ var Tree = React.createClass({
         ) : React.createElement(
           'a',
           { href: '#', onClick: this.setCurrentTrial.bind(this, "Trial" + id) },
-          'Trial ',
-          id
+          React.createElement('input', { type: 'text', value: this.state.inputText + id, className: 'TrialText', onChange: this.changeTrialName })
         ),
         ' ',
         id !== 0 ? React.createElement(
