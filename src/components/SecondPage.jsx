@@ -263,11 +263,12 @@ var count = 1;
 var Tree = React.createClass({
   getInitialState: function() {
       return {
-        tree :
+        tree : 
           {
             id: 0,
             childIds: []
-          }
+          },
+          inputText:"Trial"
       }
     },
 
@@ -315,6 +316,11 @@ handleRemoveChildClick: function(nodeId) {
     )
   },
 
+  changeTrialName: function(e) {
+    console.log(e.target.value)
+    this.setState({inputText: e.target.value})
+  },
+
   render: function() {
     var {id, childIds} = this.state.tree;
     if(this.props.tree !== undefined) {
@@ -326,7 +332,8 @@ handleRemoveChildClick: function(nodeId) {
           <div>
             { id === 0 ?
               <a href="#" onClick={this.setCurrentTrial.bind(this,"MyExperiment")}>My Experiment</a> :
-              <a href="#" onClick={this.setCurrentTrial.bind(this,"Trial"+id)}>Trial {id}</a>
+              <a href="#" onClick={this.setCurrentTrial.bind(this,"Trial"+id)}>
+                <input type="text" value={this.state.inputText+id} className="TrialText" onChange={this.changeTrialName}/></a>
             }
               {' '}
               {id !== 0 ?

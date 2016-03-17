@@ -134,3 +134,8 @@ a:hover,a:active {
   border-radius:15px; 
   display:inline-block;
 }
+
+.TrialText {
+	border:none;
+	background:none;
+} 
