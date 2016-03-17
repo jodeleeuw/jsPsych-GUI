@@ -5,9 +5,8 @@ var PluginParameter = require('./PluginParameter.json');
 var pluginparameter = PluginParameter;
 var SaveAs = require('./saveAs.jsx');
 var Reactaddons = require('react-addons');
-//var GenerateZip = require('./generateZip.jsx');
-var AdmZip = require('adm-zip');
 var JSZip = require("jszip");
+var FileInput = require('react-file-input');
 
 var SecondPage = React.createClass({
   getInitialState: function() {
@@ -57,7 +56,6 @@ var SecondPage = React.createClass({
         }
     }
     console.log(this.state.TestTrialData);
-    // this.setState({TestTrialData: this.state.TestTrialData});
   },
 
   initialLines: function() {
@@ -65,7 +63,6 @@ var SecondPage = React.createClass({
     var st = "<!doctype html>\n\n<html>\n\t<head>\n\t\t<title>My experiment</title>\n\t\t<script";
     st += " src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>\n\t\t<script";
     st += " src=\"https://rawgit.com/jodeleeuw/jsPsych/master/jspsych.js\"></script>\n\t\t<script";
-    //add whatever plugins u need
     st += " src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-text.js\"></script>\n\t\t<link";
     st += " href=\"https://rawgit.com/jodeleeuw/jsPsych/master/css/jspsych.css\" rel=\"stylesheet\"";
     st += " type=\"text/css\"></link>\n";
@@ -90,32 +87,28 @@ var SecondPage = React.createClass({
  },
 
   generateInstructions: function() {
+    TestTrialData : [{label:"instructions",type:"instructions", pages:"['\<p\>Welcome. Press next to view the instructions.\</p\>','\<p\>You will see a set of characters. Press Y if the characters form an English word. Press N if they do not.\</p\>\<p\>Press next to begin.\</p\>']",show_clickable_nav:"true", allow_keys:"false"}]
+    var instr = this.state.TestTrialData[1];
+    console.log(instr);
+    var instr_keys = Object.keys(this.state.TestTrialData[1]);
+    st = "\t\tvar " + instr[instr_keys[0]] + " = {\n";
+    st += "\t\t\ttype: '" + instr[instr_keys[1]]+ "',\n";
+    for(parameter_Values in this.state.TestTrialData[1].parameters) {
+      st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[1].parameters[parameter_Values] + "',\n";
+    }
+    st += "\t\t}\n\n";
 
-  TestTrialData : [{label:"instructions",type:"instructions", pages:"['\<p\>Welcome. Press next to view the instructions.\</p\>','\<p\>You will see a set of characters. Press Y if the characters form an English word. Press N if they do not.\</p\>\<p\>Press next to begin.\</p\>']",show_clickable_nav:"true", allow_keys:"false"}]
-  var instr = this.state.TestTrialData[1];
-  console.log(instr);
-  var instr_keys = Object.keys(this.state.TestTrialData[1]);
-  st = "\t\tvar " + instr[instr_keys[0]] + " = {\n";
-  st += "\t\t\ttype: '" + instr[instr_keys[1]]+ "',\n";
-  for(parameter_Values in this.state.TestTrialData[1].parameters) {
-    st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[1].parameters[parameter_Values] + "',\n";
-  }
-  st += "\t\t}\n\n";
-
-  return st;
+    return st;
 },
 
  generateSingleStim: function() {
-
   //doubt about timeline here
   var TestTrialData1 = {label:"SingleStimTrial",type:"single-stim",parameters:{is_html:"true",choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}};
   var sing = TestTrialData1;
   console.log(sing);
   var sing_keys = Object.keys(TestTrialData1);
 
-
-  //change this
-  //read file here
+  //read csv here
   st = "var word_data = [\n";
   st += "\t{word: \"cove\", word_type: \"low\"},\n";
   st += "\t{word: \"turf\", word_type: \"low\"},\n";
@@ -130,17 +123,14 @@ var SecondPage = React.createClass({
   st += "\t{word: \"zark\", word_type: \"non\"},\n";
   st += "\t{word: \"rood\", word_type: \"non\"}]\n";
 
-
   st +="lex_trials = \[\];\n";
 
-  //change this
-  //hardcoded here
+  //change this, hardcoded here
   st += "for(var i=0; i<word_data.length; i++){\n";
   st += "\tlex_trials.push({\n";
   st += "\t\t stimulus: '<p class=\"center-content very-large\">'+ word_data[i].word +'</p>',\n";
   st += "\t\t data: {word_type: word_data[i].word_type}\n";
   st += "\t});\n}\n";
-
 
   st += "\t\tvar " + sing[sing_keys[0]] + " = {\n";
   st += "\t\t\ttype: '" + sing[sing_keys[1]] + "',\n";
@@ -166,10 +156,8 @@ var SecondPage = React.createClass({
 
       var hel = this.state.TestTrialData[0];
       var hel_keys = Object.keys(this.state.TestTrialData[0]);
-
       var instr = this.state.TestTrialData[1];
       var instr_keys = Object.keys(this.state.TestTrialData[1]);
-
       var sing = this.state.TestTrialData[2];
       var sing_keys = Object.keys(this.state.TestTrialData[2]);
 
@@ -178,24 +166,17 @@ var SecondPage = React.createClass({
 
       //change this
       st +="<div id=\"jspsych-target\"></div>";
-
       st += sopen;
-
       st += "\tvar timeline = [];\n\n";
-
       st += this.generateHelloTrial();
       st += "\ttimeline.push(" + hel[hel_keys[0]] +");\n\n";
-
       st += this.generateInstructions();
       st += "\ttimeline.push(" + instr[instr_keys[0]] +");\n\n";
-
       st += this.generateSingleStim();
       st += "\ttimeline.push(" + sing[sing_keys[0]] +");\n\n";
 
-
       st += "\t\tjsPsych.init({\n";
       st += "\t\t\ttimeline: timeline,\n";
-      //write stuff
       st += "\t\t\tdisplay_element: $('#jspsych-target'),\n";
       st += "\t\t\ton_finish: function(){\n";
       st += "\t\t\t\tjsPsych.data.displayData();\n\t\t\t}\n";
@@ -216,29 +197,37 @@ var SecondPage = React.createClass({
 
     handleGenerate : function(e) {
       console.log('Generate');
-      /* older code
-      st = this.make_html();
-      var blob = new Blob([st], {type: "text/plain;charset=utf-8"});
-    	SaveAs.saveAs(blob, "My_Experiment.html");
-      */
-      /*// creating archives
-      var zip = new AdmZip();
-      // add file directly
-      zip.addFile("test.txt", new Buffer("inner content of the file"), "entry comment goes here");
-      // add local file
-      zip.addLocalFile("/home/me/some_picture.png");
-      // get everything as a buffer
-      var willSendthis = zip.toBuffer();
-      // or write everything to disk
-      zip.writeZip("C:\Users\Rohit\Downloads\files.zip");
-      */
       var zip = new JSZip();
       st = this.make_html();
       zip.file("My_Experiment.html", st);
-      //zip.folder(src);
-
       var content = zip.generate({type:"blob"});
       SaveAs.saveAs(content, "example.zip");
+    },
+
+    handleSave : function(e) {
+      console.log('Save Button:');
+      var json = JSON.stringify(this.state.TestTrialData);
+      var blob = new Blob([json], {type: "application/json"});
+    	SaveAs.saveAs(blob, "Experiment_data.json");
+
+    },
+
+    setTrialData: function() {
+      console.log('set: ' + this.state.TestTrialData);
+    },
+
+    handleLoad : function(event) {
+      var self = this;
+      console.log('Load Button:');
+      var file = event.target.files[0];
+      var read = new FileReader();
+      read.onload = function(e) {
+        console.log(e.target.result)
+        var jsonFormat = JSON.parse(e.target.result);
+        console.log(jsonFormat[0])
+        self.setState({TestTrialData: jsonFormat});
+      }
+      read.readAsText(file)
     },
 
     render: function(){
@@ -251,10 +240,14 @@ var SecondPage = React.createClass({
                 </ul>
               </div>
               <div id="buttonpanel">
-              <button id="loadbutton" className="btn btn-primary btn-md">Load</button>
-                <button id="savebutton" className="btn btn-primary btn-md" >Save</button>
+                <button id="savebutton" className="btn btn-primary btn-md" onClick={this.handleSave}>Save</button>
                 <button id="previewbutton" className="btn btn-primary btn-md" onClick={this.handlePreview}>Preview</button>
                 <button id="generatebutton"  className="btn btn-primary btn-md" onClick={this.handleGenerate}>Generate</button>
+                <FileInput name="upload_json"
+                   accept=".json"
+                   placeholder="Upload Saved State"
+                   className="inputClass"
+                   onChange={this.handleLoad} />
               </div>
             </div>
 
@@ -270,7 +263,7 @@ var count = 1;
 var Tree = React.createClass({
   getInitialState: function() {
       return {
-        tree : 
+        tree :
           {
             id: 0,
             childIds: []
@@ -293,18 +286,18 @@ handleAddChildClick: function(parentId) {
         childIds: []
     };
     if(this.props.tree !== undefined) {
-      this.props.tree.childIds.push(temp);  
+      this.props.tree.childIds.push(temp);
       this.setState({tree : this.props.tree});
       console.log(this.props.tree.childIds)
     } else {
       this.state.tree.childIds.push(temp);
-      this.setState({tree : this.state.tree});  
+      this.setState({tree : this.state.tree});
     }
 },
 
 handleRemoveChildClick: function(nodeId) {
   var removeNode = ""
-  this.props.treeData.childIds.forEach(function(childObj) { 
+  this.props.treeData.childIds.forEach(function(childObj) {
     if(childObj.id === nodeId) {
       removeNode = childObj;
     }
@@ -323,7 +316,7 @@ handleRemoveChildClick: function(nodeId) {
   },
 
   render: function() {
-    let { id, childIds} = this.state.tree;
+    var {id, childIds} = this.state.tree;
     if(this.props.tree !== undefined) {
       id = this.props.tree.id;
       childIds  = this.props.tree.childIds;
@@ -331,8 +324,8 @@ handleRemoveChildClick: function(nodeId) {
       return(
         <div>
           <div>
-            { id === 0 ? 
-              <a href="#" onClick={this.setCurrentTrial.bind(this,"MyExperiment")}>My Experiment</a> : 
+            { id === 0 ?
+              <a href="#" onClick={this.setCurrentTrial.bind(this,"MyExperiment")}>My Experiment</a> :
               <a href="#" onClick={this.setCurrentTrial.bind(this,"Trial"+id)}>Trial {id}</a>
             }
               {' '}
@@ -353,7 +346,7 @@ handleRemoveChildClick: function(nodeId) {
               </ul>
           </div>
 
-        
+
         </div>
       );
   }

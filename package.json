@@ -18,8 +18,8 @@
     "react-addons": "^0.9.1-deprecated",
     "react-dom": "^0.14.7",
     "react-dropdown": "^0.7.2",
+    "react-file-input": "^0.2.5",
     "react-json": "0.0.1",
-    "react-select": "^1.0.0-beta9",
     "watchify": "^3.7.0"
   }
 }
