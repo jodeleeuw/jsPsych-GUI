@@ -44125,19 +44125,6 @@ var SecondPage = React.createClass({
     return st;
   },
   /*
-  generateInstructions: function() {
-    TestTrialData : [{label:"instructions",type:"instructions", pages:"['\<p\>Welcome. Press next to view the instructions.\</p\>','\<p\>You will see a set of characters. Press Y if the characters form an English word. Press N if they do not.\</p\>\<p\>Press next to begin.\</p\>']",show_clickable_nav:"true", allow_keys:"false"}]
-    var instr = this.state.TestTrialData[1];
-    console.log(instr);
-    var instr_keys = Object.keys(this.state.TestTrialData[1]);
-    var st = "\t\tvar " + instr[instr_keys[0]] + " = {\n";
-    st += "\t\t\ttype: '" + instr[instr_keys[1]]+ "',\n";
-    for(var parameter_Values in this.state.TestTrialData[1].parameters) {
-      st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[1].parameters[parameter_Values] + "',\n";
-    }
-    st += "\t\t}\n\n";
-      return st;
-  },
    generateSingleStim: function() {
   //doubt about timeline here
   var TestTrialData1 = {label:"SingleStimTrial",type:"single-stim",parameters:{is_html:"true",choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}};
@@ -44188,16 +44175,39 @@ var SecondPage = React.createClass({
     st += "<div id=\"jspsych-target\"></div>";
 
     var numberOfTrials = this.state.TestTrialData.length;
+    var self = this;
     var sopen = "\n\t<script>\n";
     var sclose = "\n\t</script>";
     st += sopen;
     st += "\tvar timeline = [];\n\n";
-    for (var trialIndex in this.state.TestTrialData) {
-      var hel = this.state.TestTrialData[trialIndex];
-      var hel_keys = Object.keys(this.state.TestTrialData[trialIndex]);
-      st += this.generateTrial(trialIndex);
-      st += "\ttimeline.push(" + hel[hel_keys[0]] + ");\n\n";
-    }
+
+    console.log(this.state.TreeData);
+
+    var generateTrialOutput = function generateTrialOutput(treeData) {
+      var trialIndex = -1;
+      var name = "Trial" + treeData.id;
+      if (treeData.id !== 0) {
+        for (var obj in self.state.TestTrialData) {
+          if (self.state.TestTrialData[obj].label === name) {
+            trialIndex = obj;
+            break;
+          }
+        }
+        if (trialIndex !== -1) {
+          var hel = self.state.TestTrialData[trialIndex];
+          var hel_keys = Object.keys(self.state.TestTrialData[trialIndex]);
+          st += self.generateTrial(trialIndex);
+          st += "\ttimeline.push(" + hel[hel_keys[0]] + ");\n\n";
+        }
+      }
+
+      for (var childIndex in treeData.childIds) {
+        generateTrialOutput(treeData.childIds[childIndex]);
+      }
+      return true;
+    };
+
+    generateTrialOutput(this.state.TreeData);
 
     st += "\t\tjsPsych.init({\n";
     st += "\t\t\ttimeline: timeline,\n";
