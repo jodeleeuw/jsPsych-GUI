@@ -13,8 +13,12 @@ var SecondPage = React.createClass({
     return {
       currentTrial : "Hello",
       testValue : 5,
-      TreeData : [{label:"Trial1"},{label:"Trial2"}],
+      TreeData : {
+          id: 0,
+          childIds: []
+        },
       SettingsData : [],
+      showSettings: false,
       CurrentTrialData : [],
       notInTrialData : true,
       showTrialData : false,
@@ -27,11 +31,14 @@ var SecondPage = React.createClass({
   },
 
   setCurrentTrial: function(trialValue, treeData) {
-    console.log(this.state.TestTrialData);
     this.state.notInTrialData = true;
-    for(obj in this.state.TestTrialData) {
-      if(this.state.TestTrialData[obj].label === trialValue){
-        this.state.CurrentTrialData = this.state.TestTrialData[obj];
+    if(trialValue === "MyExperiment") {
+      this.setState({showSettings: true})
+    } else {
+
+    for(var index in this.state.TestTrialData) {
+      if(this.state.TestTrialData[index].label === trialValue){
+        this.state.CurrentTrialData = this.state.TestTrialData[index];
         this.state.notInTrialData = false;
         break;
       }
@@ -41,14 +48,19 @@ var SecondPage = React.createClass({
       this.state.CurrentTrialData = {label:trialValue,type:"", parameters:{}};
       this.state.TestTrialData.push(this.state.CurrentTrialData);
     }
-    this.setState({CurrentTrialData: this.state.CurrentTrialData, showTrialData:true});
+    this.setState({CurrentTrialData: this.state.CurrentTrialData, showTrialData:true, TreeData: treeData, showSettings: false});
+    }
+  },
 
+  saveTree: function(treeData) {
+    console.log("In second page...saving tree structure...",treeData)
+    this.setState({TreeData: treeData})
   },
 
   saveModifiedTrialData: function(trialName, trialType, modifiedTrialParameters) {
     console.log("In save..."+trialType);
     console.log(modifiedTrialParameters);
-    for(obj in this.state.TestTrialData) {
+    for(var obj in this.state.TestTrialData) {
         if(this.state.TestTrialData[obj].label === trialName) {
           this.state.TestTrialData[obj].type = trialType;
           this.state.TestTrialData[obj].parameters = modifiedTrialParameters;
@@ -205,7 +217,8 @@ var SecondPage = React.createClass({
 
     handleSave : function(e) {
       console.log('Save Button:');
-      var json = JSON.stringify(this.state.TestTrialData);
+      var newObj = [ this.state.TestTrialData, this.state.TreeData ]
+      var json = JSON.stringify(newObj);
       var blob = new Blob([json], {type: "application/json"});
     	SaveAs.saveAs(blob, "Experiment_data.json");
 
@@ -224,7 +237,7 @@ var SecondPage = React.createClass({
         console.log(e.target.result)
         var jsonFormat = JSON.parse(e.target.result);
         console.log(jsonFormat[0])
-        self.setState({TestTrialData: jsonFormat});
+        self.setState({TestTrialData: jsonFormat[0], TreeData: jsonFormat[1]});
       }
       read.readAsText(file)
     },
@@ -235,7 +248,7 @@ var SecondPage = React.createClass({
             <div id = "leftside">
               <div id = "tree">
                 <ul>
-                  <Tree setCurrentTrial = {this.setCurrentTrial} TreeData = {this.state.TreeData}/>
+                  <Tree setCurrentTrial = {this.setCurrentTrial} TreeData = {this.state.TreeData} saveTree = {this.saveTree}/>
                 </ul>
               </div>
               <div id="buttonpanel">
@@ -251,7 +264,10 @@ var SecondPage = React.createClass({
             </div>
 
             <div id = "rightside">
+              {this.state.showSettings ? 
+                <ShowSettings/> :
               <Trial CurrentTrialData={this.state.CurrentTrialData} showTrialData={this.state.showTrialData} saveModifiedTrialData={this.saveModifiedTrialData}/>
+            }
             </div>
           </div>
         );
@@ -262,55 +278,81 @@ var count = 1;
 var Tree = React.createClass({
   getInitialState: function() {
       return {
-        tree : 
-          {
-            id: 0,
-            childIds: []
-          },
-          inputText:"Trial"
+        tree : {
+          id: 0,
+          childIds: []
+        },
+        inputText:"Trial"
       }
     },
 
   setCurrentTrial: function(selectedTrial) {
     console.log(selectedTrial)
-    this.props.setCurrentTrial(selectedTrial,this.props.TreeData);
+    console.log(this.state.tree.id)
+    console.log("Props tree...",this.props.tree)
+    // if(this.state.tree.id === 1 || this.state.tree.id === 0 ){
+      this.props.setCurrentTrial(selectedTrial,this.props.TreeData);  
+    // } else {
+    //   this.props.setCurrentTrial(selectedTrial,this.props.TreeData);  
+    // }
   },
 
   setTreeData: function(newTreeData) {
+    console.log("In set tree data",newTreeData)
     this.setState({tree: newTreeData});
   },
 
-handleAddChildClick: function(parentId) {
-    var temp = {
-        id: count++,
-        childIds: []
-    };
-    if(this.props.tree !== undefined) {
-      this.props.tree.childIds.push(temp);
-      this.setState({tree : this.props.tree});
-      console.log(this.props.tree.childIds)
-    } else {
-      this.state.tree.childIds.push(temp);
-      this.setState({tree : this.state.tree});
-    }
-},
+  updateTree: function(treeData) {
+      this.props.saveTree(treeData)
+  },
 
-handleRemoveChildClick: function(nodeId) {
-  var removeNode = ""
-  this.props.treeData.childIds.forEach(function(childObj) {
-    if(childObj.id === nodeId) {
-      removeNode = childObj;
-    }
-  });
-  var indexChild = this.props.treeData.childIds.indexOf(removeNode);
-  this.props.treeData.childIds.splice(indexChild, 1)
-  this.props.setTreeData(this.props.treeData)
-},
+  handleAddChildClick: function(parentId) {
+      var temp = {
+          id: count++,
+          childIds: []
+      };
+
+      console.log(parentId)
+
+      //Recursively access full tree object and append child to correct parent
+      //Pass this tree to SecondPage class
+      var addToTree = function(tree, parentId, newNode) {
+          if (tree.id === parentId){
+            tree.childIds.push(newNode)
+            return tree
+          }
+          return null
+      };
+      var newTree = addToTree(this.props.TreeData, parentId, temp)
+      
+      this.updateTree(this.props.TreeData)
+      //Adding to current tree state
+      if(this.props.tree !== undefined) {
+        this.props.tree.childIds.push(temp);
+        this.setState({tree : this.props.tree, TreeData: this.props.TreeData});
+      } else {
+        this.state.tree.childIds.push(temp);
+
+        this.setState({tree : this.state.tree, TreeData: this.props.TreeData});
+      }
+  },
+
+  handleRemoveChildClick: function(nodeId) {
+    var removeNode = ""
+    this.props.treeData.childIds.forEach(function(childObj) {
+      if(childObj.id === nodeId) {
+        removeNode = childObj;
+      }
+    });
+    var indexChild = this.props.treeData.childIds.indexOf(removeNode);
+    this.props.treeData.childIds.splice(indexChild, 1)
+    this.props.setTreeData(this.props.treeData)
+  },
 
   renderChild: function(child) {
     return (
       <li key={child.id}>
-        <Tree tree={child} setCurrentTrial={this.props.setCurrentTrial} treeData={this.state.tree} setTreeData={this.setTreeData}/>
+        <Tree tree={child} setCurrentTrial={this.props.setCurrentTrial} treeData={this.state.tree} setTreeData={this.setTreeData} TreeData={this.props.TreeData} saveTree = {this.props.saveTree}/>
       </li>
     )
   },
@@ -382,9 +424,9 @@ var Trial = React.createClass({
       this.state.labels = new Object();
       if(e.target.value != "Select a trial type...") {
           if(this.props.CurrentTrialData.type === "" || this.props.CurrentTrialData.type!=e.target.value) {
-            for(obj in this.state.PluginData) {
+            for(var obj in this.state.PluginData) {
             if(this.state.PluginData[obj].name === e.target.value) {
-              for(obj2 in this.state.PluginData[obj].parameters) {
+              for(var obj2 in this.state.PluginData[obj].parameters) {
                   this.state.labels[this.state.PluginData[obj].parameters[obj2].label] = "";
               }
             }
@@ -394,7 +436,6 @@ var Trial = React.createClass({
           this.setState({setData : this.state.setData});
           console.log(this.state.selectedTrialType);
           } else {
-            console.log("in handle change...else");
             this.state.setData = this.props.CurrentTrialData.parameters;
             this.setState({setData : this.state.setData});
           }
@@ -406,10 +447,7 @@ var Trial = React.createClass({
 
     },
     showData : function() {
-      console.log(this.props.showTrialData);
         if(this.props.showTrialData) {
-          console.log("In show data");
-          console.log(this.state.setData);
           if(this.props.CurrentTrialData.type === "") {
              return (
               <div>
@@ -445,7 +483,7 @@ var Trial = React.createClass({
     onSave: function( e ){
     var val = this.refs.json.getValue();
     console.log(this.state.selectedTrialType);
-    for(obj in val) {
+    for(var obj in val) {
       console.log(val[obj]);
     }
     console.log(this.props.CurrentTrialData.label);
@@ -459,5 +497,16 @@ var Trial = React.createClass({
       );
     }
 });
+
+var ShowSettings = React.createClass({
+  getInitialState: function() {
+    return{}
+  },
+  render: function() {
+    return(
+      <h2>Settings</h2>
+    )
+  }
+})
 
 module.exports = SecondPage;
