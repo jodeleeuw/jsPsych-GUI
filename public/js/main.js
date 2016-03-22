@@ -44058,7 +44058,7 @@ var SecondPage = React.createClass({
     };
   },
 
-  setCurrentTrial: function setCurrentTrial(trialValue, treeData) {
+  setCurrentTrial: function setCurrentTrial(trialValue) {
     this.state.notInTrialData = true;
     if (trialValue === "MyExperiment") {
       this.setState({ showSettings: true });
@@ -44076,18 +44076,18 @@ var SecondPage = React.createClass({
         this.state.CurrentTrialData = { label: trialValue, type: "", parameters: {} };
         this.state.TestTrialData.push(this.state.CurrentTrialData);
       }
-      this.setState({ CurrentTrialData: this.state.CurrentTrialData, showTrialData: true, TreeData: treeData, showSettings: false });
+      this.setState({ CurrentTrialData: this.state.CurrentTrialData, showTrialData: true, showSettings: false });
     }
   },
 
   saveTree: function saveTree(treeData) {
     console.log("In second page...saving tree structure...", treeData);
-    this.setState({ TreeData: treeData });
+    this.state.TreeData = treeData;
+    this.setState({ TreeData: this.state.TreeData });
   },
 
   saveModifiedTrialData: function saveModifiedTrialData(trialName, trialType, modifiedTrialParameters) {
     console.log("In save..." + trialType);
-    console.log(modifiedTrialParameters);
     for (var obj in this.state.TestTrialData) {
       if (this.state.TestTrialData[obj].label === trialName) {
         this.state.TestTrialData[obj].type = trialType;
@@ -44099,7 +44099,6 @@ var SecondPage = React.createClass({
   },
 
   initialLines: function initialLines() {
-    console.log("ini");
     var st = "<!doctype html>\n\n<html>\n\t<head>\n\t\t<title>My experiment</title>\n\t\t<script";
     st += " src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>\n\t\t<script";
     st += " src=\"https://rawgit.com/jodeleeuw/jsPsych/master/jspsych.js\"></script>\n\t\t<script";
@@ -44109,111 +44108,96 @@ var SecondPage = React.createClass({
     return st;
   },
 
-  generateHelloTrial: function generateHelloTrial() {
+  generateTrial: function generateTrial(trialIndex) {
 
-    var hel = this.state.TestTrialData[0];
+    var hel = this.state.TestTrialData[trialIndex];
     console.log(hel);
-    var hel_keys = Object.keys(this.state.TestTrialData[0]);
+    var hel_keys = Object.keys(this.state.TestTrialData[trialIndex]);
 
-    st = "\t\tvar " + hel[hel_keys[0]] + " = {\n";
+    var st = "\t\tvar " + hel[hel_keys[0]] + " = {\n";
     st += "\t\t\ttype: '" + hel[hel_keys[1]] + "',\n";
 
-    for (parameter_Values in this.state.TestTrialData[0].parameters) {
-      st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[0].parameters[parameter_Values] + "',\n";
+    for (var parameter_Values in this.state.TestTrialData[trialIndex].parameters) {
+      st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[trialIndex].parameters[parameter_Values] + "',\n";
     }
     st += "\t\t}\n\n";
 
     return st;
   },
-
-  generateInstructions: function generateInstructions() {
-    TestTrialData: [{ label: "instructions", type: "instructions", pages: "['\<p\>Welcome. Press next to view the instructions.\</p\>','\<p\>You will see a set of characters. Press Y if the characters form an English word. Press N if they do not.\</p\>\<p\>Press next to begin.\</p\>']", show_clickable_nav: "true", allow_keys: "false" }];
+  /*
+  generateInstructions: function() {
+    TestTrialData : [{label:"instructions",type:"instructions", pages:"['\<p\>Welcome. Press next to view the instructions.\</p\>','\<p\>You will see a set of characters. Press Y if the characters form an English word. Press N if they do not.\</p\>\<p\>Press next to begin.\</p\>']",show_clickable_nav:"true", allow_keys:"false"}]
     var instr = this.state.TestTrialData[1];
     console.log(instr);
     var instr_keys = Object.keys(this.state.TestTrialData[1]);
-    st = "\t\tvar " + instr[instr_keys[0]] + " = {\n";
-    st += "\t\t\ttype: '" + instr[instr_keys[1]] + "',\n";
-    for (parameter_Values in this.state.TestTrialData[1].parameters) {
+    var st = "\t\tvar " + instr[instr_keys[0]] + " = {\n";
+    st += "\t\t\ttype: '" + instr[instr_keys[1]]+ "',\n";
+    for(var parameter_Values in this.state.TestTrialData[1].parameters) {
       st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[1].parameters[parameter_Values] + "',\n";
     }
     st += "\t\t}\n\n";
-
-    return st;
+      return st;
   },
-
-  generateSingleStim: function generateSingleStim() {
-    //doubt about timeline here
-    var TestTrialData1 = { label: "SingleStimTrial", type: "single-stim", parameters: { is_html: "true", choices: "\['y','n'\]", randomize_order: "true", timeline: "lex_trials" } };
-    var sing = TestTrialData1;
-    console.log(sing);
-    var sing_keys = Object.keys(TestTrialData1);
-
+   generateSingleStim: function() {
+  //doubt about timeline here
+  var TestTrialData1 = {label:"SingleStimTrial",type:"single-stim",parameters:{is_html:"true",choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}};
+  var sing = TestTrialData1;
+  console.log(sing);
+  var sing_keys = Object.keys(TestTrialData1);
     //read csv here
-    st = "var word_data = [\n";
-    st += "\t{word: \"cove\", word_type: \"low\"},\n";
-    st += "\t{word: \"turf\", word_type: \"low\"},\n";
-    st += "\t{word: \"twig\", word_type: \"low\"},\n";
-    st += "\t{word: \"chair\", word_type: \"high\"},\n";
-    st += "\t{word: \"dark\", word_type: \"high\"},\n";
-    st += "\t{word: \"food\", word_type: \"high\"},\n";
-    st += "\t{word: \"cowe\", word_type: \"non\"},\n";
-    st += "\t{word: \"turv\", word_type: \"non\"},\n";
-    st += "\t{word: \"twif\", word_type: \"non\"},\n";
-    st += "\t{word: \"thair\", word_type: \"non\"},\n";
-    st += "\t{word: \"zark\", word_type: \"non\"},\n";
-    st += "\t{word: \"rood\", word_type: \"non\"}]\n";
-
-    st += "lex_trials = \[\];\n";
-
+  var st = "var word_data = [\n";
+  st += "\t{word: \"cove\", word_type: \"low\"},\n";
+  st += "\t{word: \"turf\", word_type: \"low\"},\n";
+  st += "\t{word: \"twig\", word_type: \"low\"},\n";
+  st += "\t{word: \"chair\", word_type: \"high\"},\n";
+  st += "\t{word: \"dark\", word_type: \"high\"},\n";
+  st += "\t{word: \"food\", word_type: \"high\"},\n";
+  st += "\t{word: \"cowe\", word_type: \"non\"},\n";
+  st += "\t{word: \"turv\", word_type: \"non\"},\n";
+  st += "\t{word: \"twif\", word_type: \"non\"},\n";
+  st += "\t{word: \"thair\", word_type: \"non\"},\n";
+  st += "\t{word: \"zark\", word_type: \"non\"},\n";
+  st += "\t{word: \"rood\", word_type: \"non\"}]\n";
+    st +="lex_trials = \[\];\n";
     //change this, hardcoded here
-    st += "for(var i=0; i<word_data.length; i++){\n";
-    st += "\tlex_trials.push({\n";
-    st += "\t\t stimulus: '<p class=\"center-content very-large\">'+ word_data[i].word +'</p>',\n";
-    st += "\t\t data: {word_type: word_data[i].word_type}\n";
-    st += "\t});\n}\n";
-
+  st += "for(var i=0; i<word_data.length; i++){\n";
+  st += "\tlex_trials.push({\n";
+  st += "\t\t stimulus: '<p class=\"center-content very-large\">'+ word_data[i].word +'</p>',\n";
+  st += "\t\t data: {word_type: word_data[i].word_type}\n";
+  st += "\t});\n}\n";
     st += "\t\tvar " + sing[sing_keys[0]] + " = {\n";
-    st += "\t\t\ttype: '" + sing[sing_keys[1]] + "',\n";
-    for (parameter_Values in TestTrialData1.parameters) {
-      st += "\t\t\t" + parameter_Values + ": " + TestTrialData1.parameters[parameter_Values] + ",\n";
-    }
-    st += "\t\t}\n\n";
-
+  st += "\t\t\ttype: '" + sing[sing_keys[1]] + "',\n";
+  for(parameter_Values in TestTrialData1.parameters) {
+    st += "\t\t\t" + parameter_Values + ": " + TestTrialData1.parameters[parameter_Values] + ",\n";
+  }
+  st += "\t\t}\n\n";
     return st;
   },
-
+  */
   importPlugins: function importPlugins() {
-    st = "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-single-stim.js\"></script>\n";
-    st += "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-instructions.js\"></script>\n";
+    var st = "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-single-stim.js\"></script>\n";
+    st += "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/pl ugins/jspsych-instructions.js\"></script>\n";
     return st;
   },
 
   make_html: function make_html() {
     console.log(this.state.TestTrialData);
-    st = this.initialLines();
+    var st = this.initialLines();
     st += this.importPlugins();
     st += "\t</head>\n\n\t<body>\n";
+    st += "<div id=\"jspsych-target\"></div>";
 
-    var hel = this.state.TestTrialData[0];
-    var hel_keys = Object.keys(this.state.TestTrialData[0]);
-    var instr = this.state.TestTrialData[1];
-    var instr_keys = Object.keys(this.state.TestTrialData[1]);
-    var sing = this.state.TestTrialData[2];
-    var sing_keys = Object.keys(this.state.TestTrialData[2]);
-
+    var numberOfTrials = this.state.TestTrialData.length;
     var sopen = "\n\t<script>\n";
     var sclose = "\n\t</script>";
-
-    //change this
-    st += "<div id=\"jspsych-target\"></div>";
     st += sopen;
     st += "\tvar timeline = [];\n\n";
-    st += this.generateHelloTrial();
-    st += "\ttimeline.push(" + hel[hel_keys[0]] + ");\n\n";
-    st += this.generateInstructions();
-    st += "\ttimeline.push(" + instr[instr_keys[0]] + ");\n\n";
-    st += this.generateSingleStim();
-    st += "\ttimeline.push(" + sing[sing_keys[0]] + ");\n\n";
+    for (var trialIndex in this.state.TestTrialData) {
+      var hel = this.state.TestTrialData[trialIndex];
+      var hel_keys = Object.keys(this.state.TestTrialData[trialIndex]);
+      st += this.generateTrial(trialIndex);
+      st += "\ttimeline.push(" + hel[hel_keys[0]] + ");\n\n";
+    }
 
     st += "\t\tjsPsych.init({\n";
     st += "\t\t\ttimeline: timeline,\n";
@@ -44229,22 +44213,24 @@ var SecondPage = React.createClass({
 
   handlePreview: function handlePreview(e) {
     console.log('Preview');
-    st = this.make_html();
+    var st = this.make_html();
     var newWindow = window.open("", "newWindow", "resizable=yes");
     newWindow.document.write(st);
+    console.log('Previewed');
   },
 
   handleGenerate: function handleGenerate(e) {
     console.log('Generate');
     var zip = new JSZip();
-    st = this.make_html();
+    var st = this.make_html();
     zip.file("My_Experiment.html", st);
     var content = zip.generate({ type: "blob" });
     SaveAs.saveAs(content, "example.zip");
+    console.log('Generated');
   },
 
   handleSave: function handleSave(e) {
-    console.log('Save Button:');
+    console.log('Save Button:', this.state.TreeData);
     var newObj = [this.state.TestTrialData, this.state.TreeData];
     var json = JSON.stringify(newObj);
     var blob = new Blob([json], { type: "application/json" });
@@ -44336,12 +44322,7 @@ var Tree = React.createClass({
   setCurrentTrial: function setCurrentTrial(selectedTrial) {
     console.log(selectedTrial);
     console.log(this.state.tree.id);
-    console.log("Props tree...", this.props.tree);
-    // if(this.state.tree.id === 1 || this.state.tree.id === 0 ){
-    this.props.setCurrentTrial(selectedTrial, this.props.TreeData);
-    // } else {
-    //   this.props.setCurrentTrial(selectedTrial,this.props.TreeData); 
-    // }
+    this.props.setCurrentTrial(selectedTrial);
   },
 
   setTreeData: function setTreeData(newTreeData) {
@@ -44371,8 +44352,8 @@ var Tree = React.createClass({
       return null;
     };
     var newTree = addToTree(this.props.TreeData, parentId, temp);
-
     this.updateTree(this.props.TreeData);
+
     //Adding to current tree state
     if (this.props.tree !== undefined) {
       this.props.tree.childIds.push(temp);
