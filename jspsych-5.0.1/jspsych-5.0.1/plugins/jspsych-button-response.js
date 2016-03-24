@@ -53,7 +53,7 @@ jsPsych.plugins["button-response"] = (function() {
 		      //validation_function: function() { return true; }, 
 			  default: ' '
 
-		  },
+		  }
 	  }
 	  return params;
 	}

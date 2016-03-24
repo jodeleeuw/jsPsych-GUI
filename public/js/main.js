@@ -43901,7 +43901,7 @@ module.exports = require('./lib/React');
 },{"./lib/React":212}],318:[function(require,module,exports){
 module.exports=[
 	{
-		name : "text",
+		"name" : "text",
 		parameters : [
 		  {	  name : "text",
 			  type : ['string','function'],
@@ -44019,6 +44019,1239 @@ module.exports=[
 				  default: false
 			  }
 		]
+	},
+	{
+		name: "animation",
+		parameters : [
+		  {
+		  	  name : "stimuli",
+			  type : ['array','function'],
+			  label: 'Stimulus'
+			  //validation_function: function(){ return true; }, //none(temp)
+			  //default is undefined
+		  },
+		  {
+		  	  name : "frame_time", 
+			  type: ['number','function'],
+			  label: 'Frame Time', 
+		      //validation_function: function() { return true; }, 
+			  default: 250
+		  },
+		  {	  
+		  	  name : "frame_isi",
+			  type: ['number','function'],
+			  label: 'Frame ISI', 
+		      //validation_function: function() { return true; }, 
+			  default: 0
+
+		  },
+		  {
+		  	  name : "sequence_reps",
+			  type: ['number','function'],
+			  label: 'Sequence Repetition', 
+		      //validation_function: function() { return true; }, 
+			  default: 1
+
+		  },
+		  {
+		  	  name : "choices", 
+			  type: ['array','function'],
+			  label: 'Choices', 
+		      //validation_function: function() { return true; }, 
+			  default: []
+
+		  },
+		  {
+		  	  name : "prompt", 
+			  type: ['string','number','function'],
+			  label: 'Prompt', 
+		      //validation_function: function() { return true; }, 
+			  default: ' '
+
+		  }
+	  ]
+	},
+	{
+		name : "button-response",
+		parameters : [
+		  {
+		  	  name : "stimuli",
+			  type : ['array','function'],
+			  label: 'Stimulus'
+			  //validation_function: function(){ return true; }, //none(temp)
+			  //default is undefined
+		  },
+		  {
+		      name : "frame_time", 
+			  type: ['number','function'],
+			  label: 'Frame Time', 
+		      //validation_function: function() { return true; }, 
+			  default: 250
+
+		  },
+		  {
+		      name : "frame_isi", 
+			  type: ['number','function'],
+			  label: 'Frame ISI', 
+		      //validation_function: function() { return true; }, 
+			  default: 0
+
+		  },
+		  {
+		  	  name : "sequence_reps", 
+			  type: ['number','function'],
+			  label: 'Sequence Repetition', 
+		      //validation_function: function() { return true; }, 
+			  default: 1
+
+		  },
+		  {
+		  	  name : "choices", 
+			  type: ['array','function'],
+			  label: 'Choices', 
+		      //validation_function: function() { return true; }, 
+			  default: []
+
+		  },
+		  {
+		  	  name : "prompt", 
+			  type: ['string','number','function'],
+			  label: 'Prompt', 
+		      //validation_function: function() { return true; }, 
+			  default: ' '
+
+		  }
+	  ]
+	},
+	{
+		name : "call-function",
+		parameters : [
+		  {
+		  	  name : "func",
+			  type : ['function'],
+			  label: 'Function'
+			  //default is undefined
+		  },
+		  {
+		      name : "timing_post_trial", 
+			  type: ['number'],
+			  label: 'Timing Post Trial',
+			  default: 0
+
+		  }
+	  	]
+	},
+	{
+		name : "categorize-animation",
+		parameters : [
+			  {
+			  	  name : "stimuli",
+				  type : ['array'],
+				  label: 'Stimuli'
+				  //validation_function: function(){ return true; }, //none(temp)
+				  //default is undefined
+			  },
+			  {
+			  	  name : "key_answer", 
+				  type: ['number'],
+				  label: 'Key Answer', 
+				  //validation_function: function() { return true; }, 
+				  //default is undefined
+
+			  },
+			  {
+			  	  name : "choices", 
+				  type: ['array'],
+				  label: 'Choices', 
+				  //validation_function: function() { return true; }, 
+				  //default is undefined
+
+			  },
+			  {
+			  	  name : "text_answer", 
+				  type: ['string'],
+				  label: 'Text Answer', 
+				  //validation_function: function() { return true; }, 
+				  default: ' '
+
+			  },
+			  {
+			  	  name : "correct_text", 
+				  type: ['string'],
+				  label: 'Correct Text', 
+				  //validation_function: function() { return true; }, 
+				  default: 'Correct.'
+
+			  },
+			  {
+			  	  name : "incorrect_text", 
+				  type: ['string'],
+				  label: 'Incorrect Text', 
+				  //validation_function: function() { return true; }, 
+				  default: 'Wrong.'
+
+			  },
+			  {
+			  	  name : "frame_time", 
+				  type: ['boolean'],
+				  label: 'Frame Time', 
+				  //validation_function: function() { return true; }, 
+				  default: 250
+
+			  },
+			   {
+			      name : "sequence_reps", 
+				  type: ['number'],
+				  label: 'Force Correct Button Press', 
+				  //validation_function: function() { return true; }, 
+				  default: 1
+
+			  },
+			  {
+			      name : "allow_response_before_complete", 
+				  type: ['boolean'],
+				  label: 'Allow Response Before Complete', 
+				  //validation_function: function() { return true; }, 
+				  default: false
+
+			  },
+			  {
+			      name : "prompt", 
+				  type: ['string'],
+				  label: 'Prompt', 
+				  //validation_function: function() { return true; }, 
+				  default: ' '
+
+			  },
+			  {
+			  	  name : "timing_feedback_duration", 
+				  type: ['number'],
+				  label: 'Timing Feedback Duration', 
+				  //validation_function: function() { return true; }, 
+				  default: 2000
+
+			  }
+		  ]
+	}, 
+	{
+		name : "categorize",
+		parameters : [
+		  {
+		  	  name : "stimulus",
+			  type : ['string'],
+			  label: 'Stimulus'
+			  //validation_function: function(){ return true; }, //none(temp)
+			  //default is undefined
+		  },
+		  {
+		      name : "is_html", 
+			  type: ['boolean'],
+			  label: 'Is HTML', 
+		      validation_function: function() { return true; }, 
+			  default: false,
+
+		  },
+		  {
+		  	  name : "key_answer", 
+			  type: ['array'],
+			  label: 'Key Answer'
+		      //validation_function: function() { return true; }, 
+			  //default is undefined
+
+		  },
+		  {
+		      name : "choices", 
+			  type: ['array'],
+			  label: 'Choices'
+		      //validation_function: function() { return true; }, 
+			  //default is undefined
+
+		  },
+		  {
+		      name : "text_answer", 
+			  type: ['array'],
+			  label: 'Text Answer', 
+		      //validation_function: function() { return true; }, 
+			  default: ' '
+
+		  },
+		  {
+		      name : "correct_text", 
+			  type: ['string'],
+			  label: 'Correct Text', 
+		      //validation_function: function() { return true; }, 
+			  default: 'Correct.'
+
+		  },
+		  {
+		  	  name : "incorrect_text", 
+			  type: ['string'],
+			  label: 'Incorrect Text', 
+		      //validation_function: function() { return true; }, 
+			  default: 'Wrong.'
+
+		  },
+		  {
+		  	  name : "prompt", 
+			  type: ['string'],
+			  label: 'Prompt', 
+		      //validation_function: function() { return true; }, 
+			  default: ' '
+
+		  },
+		  {
+		      name  : "force_correct_button_press", 
+			  type: ['boolean'],
+			  label: 'Force Correct Button Press', 
+		      //validation_function: function() { return true; }, 
+			  default: false
+
+		  },
+		  {
+		      name  : "show_stim_with_feedback", 
+			  type: ['boolean'],
+			  label: 'Show Stim with Feedback', 
+		      //validation_function: function() { return true; }, 
+			  default: true
+
+		  },
+		  {
+		  	  name : "show_feedback_on_timeout", 
+			  type: ['string'],
+			  label: 'Show Feedback on Timeout', 
+		      //validation_function: function() { return true; }, 
+			  default: false
+
+		  },
+		  {
+		      name : "timeout_message", 
+			  type: ['string'],
+			  label: 'Timeout Message', 
+		      //validation_function: function() { return true; }, 
+			  default: 'Please respond faster.'
+
+		  },
+		  {
+		  	  name  :"timing_stim", 
+			  type: ['number'],
+			  label: 'Timing Stim', 
+		      //validation_function: function() { return true; }, 
+			  default: -1
+
+		  },
+		  {
+		      name : "timing_feedback_duration", 
+			  type: ['number'],
+			  label: 'Timing Feedback Duration', 
+		      //validation_function: function() { return true; }, 
+			  default: 2000
+
+		  },
+		  {
+		      name  : "timing_response", 
+			  type: ['number'],
+			  label: 'Timing Response', 
+		      //validation_function: function() { return true; }, 
+			  default: -1
+
+		  }
+	   ]
+	},
+	{
+		name : "free-sort",
+		parameters : [
+			  {
+			  	  name : "stimuli",
+				  type : ['array'],
+				  label: 'Stimuli'
+				  //validation_function: function(){ return true; }, //none(temp)
+				  //default is undefined
+			  },
+			  {
+			      name : "stim_height", 
+				  type: ['number'],
+				  label: 'Stim Height', 
+				  //validation_function: function() { return true; }, 
+				  default : 100
+			  },
+			  {
+			  	  name : "stim_width", 
+				  type: ['number'],
+				  label: 'Stim Width', 
+				  //validation_function: function() { return true; }, 
+				  default : 100
+
+			  },
+			  {
+			      name : "sort_area_height", 
+				  type: ['number'],
+				  label: 'Sort Area Height', 
+				  //validation_function: function() { return true; }, 
+				  default: 800
+
+			  },
+			  {
+			   	  name : "sort_area_width", 
+				  type: ['number'],
+				  label: 'Sort Area Width', 
+				  //validation_function: function() { return true; }, 
+				  default: 800
+
+			  },
+			  {
+			  	  name : "prompt", 
+				  type: ['string'],
+				  label: 'Prompt', 
+				  //validation_function: function() { return true; }, 
+				  default: ' '
+
+			  },
+			  {
+			      name : "prompt_location", 
+				  type: ['string'],
+				  label: 'Prompt Location', 
+				  //validation_function: function() { return true; }, 
+				  default: 'above'
+			  }
+		  ]
+	},
+	{
+		name : "html",
+		parameters : [
+			  {
+			  	  name : "url",
+				  type : ['string'],
+				  label: 'URL'
+				  //validation_function: function(){ return true; }, //none(temp)
+				  //default is undefined
+			  },
+			  {
+			      name : "cont_key", 
+				  type: ['number'],
+				  label: 'Continue Key', 
+				  //validation_function: function() { return true; }, 
+				  default : null
+			  },
+			  {
+			      name : "cont_btn", 
+				  type: ['string'],
+				  label: 'Continue Button', 
+				  //validation_function: function() { return true; }, 
+				  default : 'null'
+
+			  },
+			  {
+			      name : "check_fn", 
+				  type: ['function'],
+				  label: 'Sort Area Height', 
+				  //validation_function: function() { return true; }, 
+				  default: function(){ return true; }
+
+			  },
+			  {
+			      name : "force_refresh", 
+				  type: ['boolean'],
+				  label: 'Sort Area Width', 
+				  //validation_function: function() { return true; }, 
+				  default: false
+			  }
+		  ]
+	}, 
+	{
+		name : "multi-stim-multi-response",
+		parameters : [
+			  {
+			  	  name : "stimuli",
+				  type : ['array'],
+				  label: 'Stimuli'
+				  //validation_function: function(){ return true; }, //none(temp)
+				  //default is undefined
+			  },
+			  {
+			  	  name : "is_html", 
+				  type: ['boolean'],
+				  label: 'Is HTML', 
+				  //validation_function: function() { return true; }, 
+				  default : false
+			  },
+			  {
+			      name : "choices", 
+				  type: ['array'],
+				  label: 'Choices'
+				  //validation_function: function() { return true; }, 
+				  //default is undefined
+
+			  },
+			  {
+			      name : "prompt", 
+				  type: ['string'],
+				  label: 'Prompt', 
+				  //validation_function: function() { return true; }, 
+				  default: ' '
+
+			  },
+			  {
+			  	  name : "timing_stim", 
+				  type: ['array'],
+				  label: 'Timing Stim', 
+				  //validation_function: function() { return true; }, 
+				  default: [1000,1000,1000]
+			  },
+			  {
+			      name : "timing_response", 
+				  type: ['number'],
+				  label: 'Timing Response', 
+				  //validation_function: function() { return true; }, 
+				  default: -1
+			  },
+			  {
+			      name : "response_ends_trial", 
+				  type: ['boolean'],
+				  label: 'Response Ends Trials', 
+				  //validation_function: function() { return true; }, 
+				  default: true
+			  }
+		 ]
+	},
+	{
+		name : "palmer",
+		parameters : [
+			  {
+			  	  name : "configuration",
+				  type : ['array'],
+				  label: 'Configuration'
+				  //validation_function: function(){ return true; }, //none(temp)
+				  //default is undefined
+			  },
+			  {
+			      name : "show_feedback", 
+				  type: ['boolean'],
+				  label: 'Show Feedback', 
+				  //validation_function: function() { return true; }, 
+				  default : false
+			  },
+			  {
+			      name : "grid_spacing", 
+				  type: ['number'],
+				  label: 'Grid Spacing',
+				  //validation_function: function() { return true; }, 
+				  default: 75
+			  },
+			  {
+			      name : "circle_radius", 
+				  type: ['number'],
+				  label: 'Circle Radius', 
+				  //validation_function: function() { return true; }, 
+				  default: 20
+
+			  },
+			  {
+			      name : "square_size", 
+				  type: ['number'],
+				  label: 'Square Size', 
+				  //validation_function: function() { return true; }, 
+				  default: 3
+			  },
+			  {
+			      name : "timing_feedback", 
+				  type: ['number'],
+				  label: 'Timing Response', 
+				  //validation_function: function() { return true; }, 
+				  default: 1000
+			  },
+			  {
+			      name : "prompt", 
+				  type: ['string'],
+				  label: 'Response Ends Trials', 
+				  //validation_function: function() { return true; }, 
+				  default: ' '
+			  }
+		  ]
+	},
+	{
+		name : "reconstruction",
+		parameters : [
+	   
+			    {
+			     name : "stim_function",	
+			     type : ['function'],
+			     label: 'stim_function',
+			     validation_function: function(){ return true; }, //none(temp)
+			     //default is undefined
+			    },
+				
+			    {
+			     name :"starting_value", 
+			     type: ['number'],
+			     label: 'starting_value', 
+			        validation_function: function() { return true; }, 
+			     default: '0.5'
+
+			    },
+				
+			    {
+			     name : "step_size", 
+			     type: ['number'],
+			     label: 'step_size', 
+			        validation_function: function() { return true; }, 
+			     default: '0.05'
+
+			    },
+				
+			    {
+			     name : "key_increase", 
+			     type: ['key code'],
+			     label: 'key_increase', 
+			        validation_function: function() { return true; }, 
+			     default: 'h'
+
+			    },
+				
+			    {
+			     name : "key_decrease", 
+			     type: ['key code'],
+			     label: 'key_decrease', 
+			        validation_function: function() { return true; }, 
+			     default: 'g'
+
+			    }
+		]
+	},
+	{
+		name : "same-different",
+		parameters : [
+    
+				{
+			     name : "stimuli",
+			     type : ['array'],
+			     label: 'stimuli',
+			     validation_function: function(){ return true; }, //none(temp)
+			     //default is undefined
+			    },
+				
+				{
+				 name : "is_html", 
+			     type: ['boolean'],
+			     label: 'is_html', 
+			        validation_function: function() { return true; }, 
+			     default: 'false'
+
+			    },
+				
+				{
+				 name  : "answer", 
+			     type: ['string'],
+			     label: 'answer', 
+			        validation_function: function() { return true; }, 
+			    //default is undefined
+
+			    },
+				
+				{
+				 name  :"same_key", 
+			     type: ['number','string'],
+			     label: 'same_key', 
+			        validation_function: function() { return true; }, 
+			     default: 'Q'
+
+			    },
+				
+				{
+				 name : "different_key", 
+			     type: ['number','string'],
+			     label: 'different_key', 
+			        validation_function: function() { return true; }, 
+			     default: 'P'
+
+			    },
+				
+			    {
+			     name  :"timing_first_stim", 
+			     type: ['numeric'],
+			     label: 'timing_first_stim', 
+			        validation_function: function() { return true; }, 
+			     default: '1000'
+
+			    },
+				
+				{
+				 name  :"timing_gap", 
+			     type: ['number'],
+			     label: 'timing_gap', 
+			        validation_function: function() { return true; }, 
+			     default: '500'
+
+			    },
+				
+			    {
+			     name  : "timing_second_stim", 
+			     type: ['numeric'],
+			     label: 'timing_second_stim', 
+			        validation_function: function() { return true; }, 
+			     default: '1000'
+
+			    },
+				
+				{
+				 name  : "prompt", 
+			     type: ['string'],
+			     label: 'prompt', 
+			        validation_function: function() { return true; }, 
+			     default: '""'
+
+			    }
+				
+		]
+	},
+	{
+		name  : "similarity",
+		parameters : [
+    
+				{
+				 name : "stimuli",
+			     type : ['array'],
+			     label: 'stimuli',
+			     validation_function: function(){ return true; }, //none(temp)
+			     //default is undefined
+			    },
+				
+				{
+				 name : "is_html", 
+			     type: ['boolean'],
+			     label: 'is_html', 
+			        validation_function: function() { return true; }, 
+			     default: 'false'
+
+			    },
+				
+				{
+				 name : "labels", 
+			     type: ['array'],
+			     label: 'labels', 
+			        validation_function: function() { return true; }, 
+			     default: ['Not at all similar', 'Identical']
+
+			    },
+				
+				{
+				 name : "intervals", 
+			     type: ['numeric'],
+			     label: 'intervals', 
+			        validation_function: function() { return true; }, 
+			     default: '100'
+
+			    },
+				
+				{
+				 name : "show_ticks", 
+			     type: ['boolean'],
+			     label: 'show_ticks', 
+			        validation_function: function() { return true; }, 
+			     default: 'false'
+
+			    },
+				
+				{
+				 name  : "show_response", 
+			     type: ['string'],
+			     label: 'show_response', 
+			        validation_function: function() { return true; }, 
+			     default: '"SECOND_STIMULUS"'
+
+			    },
+				
+			    {
+			     name  : "timing_first_stim", 
+			     type: ['numeric'],
+			     label: 'timing_first_stim', 
+			        validation_function: function() { return true; }, 
+			     default: '1000'
+
+			    },
+				
+			    {
+			     name : "timing_second_stim", 
+			     type: ['numeric'],
+			     label: 'timing_second_stim', 
+			        validation_function: function() { return true; }, 
+			     default: '-1'
+
+			    },
+				
+			    {
+			     name  : "timing_image_gap", 
+			     type: ['numeric'],
+			     label: 'timing_image_gap', 
+			        validation_function: function() { return true; }, 
+			     default: '1000'
+
+			    },
+				
+				{
+				 name  :"prompt", 
+			     type: ['string'],
+			     label: 'prompt', 
+			        validation_function: function() { return true; }, 
+			     default: '""'
+
+			    }
+				
+		]
+	},
+	{
+		name : "single-audio",
+		parameters : [
+    
+				{
+				 name : "stimulus",
+			     type : ['array'],
+			     label: 'stimulus',
+			     validation_function: function(){ return true; }, //none(temp)
+			     //default is undefined
+			    },
+				
+				
+				{
+				 name : "choices", 
+			     type: ['array'],
+			     label: 'choices', 
+			        validation_function: function() { return true; }, 
+			     default: '[]'
+
+			    },
+				
+				{
+				 name : "prompt", 
+			     type: ['string'],
+			     label: 'prompt', 
+			        validation_function: function() { return true; }, 
+			     default: '""'
+
+			    },
+				
+			    {
+			     name : "timing_response", 
+			     type: ['number'],
+			     label: 'timing_response', 
+			        validation_function: function() { return true; }, 
+			     default: '-1'
+
+			    },
+				
+			    {
+			     name : "response_ends_trial", 
+			     type: ['boolean'],
+			     label: 'response_ends_trial', 
+			        validation_function: function() { return true; }, 
+			     default: 'true'
+
+			    }
+				
+		]
+	},
+	{
+		name : "survey-likert",
+		parameters : [
+	   
+		    {
+		     name : "questions",
+		     type : ['array'],
+		     label: 'questions',
+		     validation_function: function(){ return true; }, //none(temp)
+		     //default is undefined
+		    },
+			   
+		    {
+		     name : "labels",
+		     type : ['array'],
+		     label: 'labels',
+		     validation_function: function(){ return true; }, //none(temp)
+		     //default is undefined
+		    }
+			
+		]
+	},
+	{
+		name : "survey-multi-choice",
+		 parameters : [
+				   
+			    {
+			     name : "questions",
+			     type : ['array'],
+			     label: 'questions',
+			     validation_function: function(){ return true; }, //none(temp)
+			     //default is undefined
+			    },
+				   
+			    {
+			     name : "options",
+			     type : ['array'],
+			     label: 'options',
+			     validation_function: function(){ return true; }, //none(temp)
+			     //default is undefined
+			    },
+				
+			    {
+			     name : "required", 
+			     type: ['array'],
+			     label: 'required', 
+			        validation_function: function() { return true; }, 
+			     default: 'null'
+
+			    },
+				
+			    {
+			     name : "horizontal", 
+			     type: ['boolean'],
+			     label: 'horizontal', 
+			        validation_function: function() { return true; }, 
+			     default: 'false'
+
+			    },
+				
+			    {
+			     name : "preamble", 
+			     type: ['array'],
+			     label: 'preamble', 
+			        validation_function: function() { return true; }, 
+			     default: 'empty string'
+
+			    }
+	   ]
+	},
+	{
+		name : "survey-text",
+		parameters : [
+			   
+		    {
+		     name : "questions",
+		     type : ['array'],
+		     label: 'questions',
+		     validation_function: function(){ return true; }, //none(temp)
+		     //default is undefined
+		    },
+			
+		    {
+		     name : "preamble", 
+		     type: ['string'],
+		     label: 'preamble', 
+		        validation_function: function() { return true; }, 
+		     default: 'empty string'
+
+		    },
+			
+		    {
+		     name : "rows", 
+		     type: ['array'],
+		     label: 'rows', 
+		        validation_function: function() { return true; }, 
+		     default: '[1]'
+
+		    },
+			
+		    {
+		     name : "columns", 
+		     type: ['array'],
+		     label: 'columns', 
+		        validation_function: function() { return true; }, 
+		     default: '[40]'
+
+		    }
+			
+	   ]
+	},
+	{
+		name : "visual-search-circle",
+		parameters : [
+	   
+		    {
+		     name : "target_present",
+		     type : ['boolean'],
+		     label: 'target_present',
+		     validation_function: function(){ return true; }, //none(temp)
+		     //default is undefined
+		    },
+			
+		    {
+		     name : "set_size", 
+		     type: ['number'],
+		     label: 'set_size', 
+		        validation_function: function() { return true; }, 
+			//default is undefined
+
+		    },
+			
+		    {
+		     name : "target", 
+		     type: ['string'],
+		     label: 'target', 
+		        validation_function: function() { return true; }, 
+			//default is undefined
+
+		    },
+			
+		    {
+		     name : "foil", 
+		     type: ['string'],
+		     label: 'foil', 
+		        validation_function: function() { return true; }, 
+			//default is undefined
+		    
+		    },
+			
+		    {
+		     name : "fixation_image", 
+		     type: ['string'],
+		     label: 'fixation_image', 
+		        validation_function: function() { return true; }, 
+			//default is undefined
+
+		    },
+			
+		    {
+		     name : "target_size", 
+		     type: ['array'],
+		     label: 'target_size', 
+		        validation_function: function() { return true; }, 
+		     default: '[50,50]'
+
+		    },
+			
+		    {
+		     name : "fixation_size", 
+		     type: ['array'],
+		     label: 'fixation_size', 
+		        validation_function: function() { return true; }, 
+		     default: '[16,16]'
+
+		    },
+			
+		    {
+		     name : "circle_diameter", 
+		     type: ['number'],
+		     label: 'circle_diameter', 
+		        validation_function: function() { return true; }, 
+		     default: '250'
+
+		    },
+			
+		    {
+		     name : "target_present_key", 
+		     type: ['number'],
+		     label: 'target_present_key', 
+		        validation_function: function() { return true; }, 
+		     default: '74'
+
+		    },
+			
+		    {
+		     name : "target_absent_key", 
+		     type: ['number'],
+		     label: 'target_absent_key', 
+		        validation_function: function() { return true; }, 
+		     default: '70'
+
+		    },
+			
+		    {
+		     name : "timing_max_search", 
+		     type: ['number'],
+		     label: 'timing_max_search', 
+		        validation_function: function() { return true; }, 
+		     default: '-1'
+
+		    },
+			
+		    {
+		     name : "timing_fixation", 
+		     type: ['number'],
+		     label: 'timing_fixation', 
+		        validation_function: function() { return true; }, 
+		     default: '1000'
+
+		    }
+		]
+	},
+	{
+		name : "vsl-animate-occlusion",
+		parameters : [
+	   
+		    {
+		     name : "stimuli",
+		     type : ['array'],
+		     label: 'stimuli',
+		     validation_function: function(){ return true; }, //none(temp)
+		     //default is undefined
+		    },
+			
+		    {
+		     name : "canvas_size", 
+		     type: ['array'],
+		     label: 'canvas_size', 
+		        validation_function: function() { return true; }, 
+		     default: '[400,400]'
+
+		    },
+			
+			{
+			 name : "image_size", 
+		     type: ['array'],
+		     label: 'image_size', 
+		        validation_function: function() { return true; }, 
+		     default: '[100,100]'
+
+		    },
+			
+			{
+			 name : "initial_direction", 
+		     type: ['string'],
+		     label: 'initial_direction', 
+		        validation_function: function() { return true; }, 
+		     default: '"left"'
+
+		    },
+			
+			{
+			 name : "occlude_center", 
+		     type: ['boolean'],
+		     label: 'occlude_center', 
+		        validation_function: function() { return true; }, 
+		     default: 'true'
+
+		    },
+			
+			{
+			 name : "choices", 
+		     type: ['array'],
+		     label: 'choices', 
+		        validation_function: function() { return true; }, 
+		     default: '""'
+
+		    },
+			
+			{
+			 name : "timing_cycle", 
+		     type: ['number'],
+		     label: 'timing_cycle', 
+		        validation_function: function() { return true; }, 
+		     default: '1000'
+
+		    },
+			
+			{
+			 name : "timing_pre_movement", 
+		     type: ['number'],
+		     label: 'timing_pre_movement', 
+		        validation_function: function() { return true; }, 
+		     default: '500'
+
+		    }
+			
+		]
+	},
+	{
+		name : "vsl-grid-scene",
+		 parameters : [
+		    {
+		     name : "stimuli",
+		     type : ['array'],
+		     label: 'stimuli',
+		     validation_function: function(){ return true; }, //none(temp)
+		     //default is undefined
+		    },
+		    {
+		     name : "image_size", 
+		     type: ['array'],
+		     label: 'image_size', 
+		        validation_function: function() { return true; }, 
+		     default: '[100,100]'
+
+		    },
+			{
+			 name : "timing_duration", 
+		     type: ['number'],
+		     label: 'timing_duration', 
+		        validation_function: function() { return true; }, 
+		     default: '[2000]'
+
+		    }
+	   ]
+	},
+	{
+		name : "xab",
+		parameters : [
+		    {
+		     name : "stimuli",
+		     type : ['array'],
+		     label: 'stimuli',
+		     validation_function: function(){ return true; }, //none(temp)
+		     //default is undefined
+		    },
+		    {
+		     name : "is_html", 
+		     type: ['boolean'],
+		     label: 'is_html', 
+		        validation_function: function() { return true; }, 
+		     default: 'false'
+
+		    },
+			{
+			 name : "left_key", 
+		     type: ['number','string'],
+		     label: 'left_key', 
+		        validation_function: function() { return true; }, 
+		     default: 'Q'
+
+		    },
+			{
+			 name : "right_key", 
+		     type: ['number','string'],
+		     label: 'right_key', 
+		        validation_function: function() { return true; }, 
+		     default: 'P'
+
+		    },
+			{
+			 name : "prompt", 
+		     type: ['string'],
+		     label: 'prompt', 
+		        validation_function: function() { return true; }, 
+		     default: '""'
+
+		    },
+			{
+			 name : "timing_x", 
+		     type: ['number'],
+		     label: 'timing_x', 
+		        validation_function: function() { return true; }, 
+		     default: '1000'
+
+		    },
+			{
+			 name : "timing_xab_gap", 
+		     type: ['number'],
+		     label: 'timing_xab_gap', 
+		        validation_function: function() { return true; }, 
+		     default: '1000'
+
+		    },
+			{
+			 name : "timing_ab", 
+		     type: ['number'],
+		     label: 'timing_ab', 
+		        validation_function: function() { return true; }, 
+		     default: '-1'
+
+		    },
+			{
+			 name : "timing_response", 
+		     type: ['number'],
+		     label: 'timing_response', 
+		        validation_function: function() { return true; }, 
+		     default: '-1'
+
+		    }
+		]
 	}
 ]
 },{}],319:[function(require,module,exports){
@@ -44050,12 +45283,17 @@ var SecondPage = React.createClass({
       CurrentTrialData: [],
       notInTrialData: true,
       showTrialData: false,
+      AllTrialTypes: [],
       TestTrialData: [
         // {label:"hello", type:"text", parameters:{text:"Hey...this is in Text1",cont_key:"f"}},
         // {label:"instructions",type:"instructions", parameters:{ pages:'[\'Welcome\',\'Press key\']',show_clickable_nav:"true", allow_keys:"false"}},
         // {label:"test",type:"single-stim", parameters:{is_html:"true", choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}}
       ]
     };
+  },
+
+  componentWillMount: function componentWillMount() {
+    this.state.AllTrialTypes = [{ trialName: "animation" }, { trialName: "button-response" }, { trialName: "call-function" }, { trialName: "categorize-animation" }, { trialName: "categorize" }, { trialName: "free-sort" }, { trialName: "html" }, { trialName: "instructions" }, { trialName: "multi-stim-multi-response" }, { trialName: "palmer" }, { trialName: "reconstruction" }, { trialName: "same-different" }, { trialName: "similarity" }, { trialName: "single-audio" }, { trialName: "single-stim" }, { trialName: "survey-likert" }, { trialName: "survey-multi-choice" }, { trialName: "survey-text" }, { trialName: "text" }, { trialName: "visual-search-circle" }, { trialName: "vsl-animate-occlusion" }, { trialName: "vsl-grid-scene" }, { trialName: "xab" }];
   },
 
   setCurrentTrial: function setCurrentTrial(trialValue) {
@@ -44099,10 +45337,9 @@ var SecondPage = React.createClass({
   },
 
   initialLines: function initialLines() {
-    var st = "<!doctype html>\n\n<html>\n\t<head>\n\t\t<title>My experiment</title>\n\t\t<script";
+    var st = "<!DOCTYPE html>   \n\t<head>\n\t\t<title>My experiment</title>\n\t\t<script";
     st += " src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>\n\t\t<script";
-    st += " src=\"https://rawgit.com/jodeleeuw/jsPsych/master/jspsych.js\"></script>\n\t\t<script";
-    st += " src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-text.js\"></script>\n\t\t<link";
+    st += " src=\"https://rawgit.com/jodeleeuw/jsPsych/master/jspsych.js\"></script>\n\t\t<link";
     st += " href=\"https://rawgit.com/jodeleeuw/jsPsych/master/css/jspsych.css\" rel=\"stylesheet\"";
     st += " type=\"text/css\"></link>\n";
     return st;
@@ -44124,51 +45361,22 @@ var SecondPage = React.createClass({
 
     return st;
   },
-  /*
-   generateSingleStim: function() {
-  //doubt about timeline here
-  var TestTrialData1 = {label:"SingleStimTrial",type:"single-stim",parameters:{is_html:"true",choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}};
-  var sing = TestTrialData1;
-  console.log(sing);
-  var sing_keys = Object.keys(TestTrialData1);
-    //read csv here
-  var st = "var word_data = [\n";
-  st += "\t{word: \"cove\", word_type: \"low\"},\n";
-  st += "\t{word: \"turf\", word_type: \"low\"},\n";
-  st += "\t{word: \"twig\", word_type: \"low\"},\n";
-  st += "\t{word: \"chair\", word_type: \"high\"},\n";
-  st += "\t{word: \"dark\", word_type: \"high\"},\n";
-  st += "\t{word: \"food\", word_type: \"high\"},\n";
-  st += "\t{word: \"cowe\", word_type: \"non\"},\n";
-  st += "\t{word: \"turv\", word_type: \"non\"},\n";
-  st += "\t{word: \"twif\", word_type: \"non\"},\n";
-  st += "\t{word: \"thair\", word_type: \"non\"},\n";
-  st += "\t{word: \"zark\", word_type: \"non\"},\n";
-  st += "\t{word: \"rood\", word_type: \"non\"}]\n";
-    st +="lex_trials = \[\];\n";
-    //change this, hardcoded here
-  st += "for(var i=0; i<word_data.length; i++){\n";
-  st += "\tlex_trials.push({\n";
-  st += "\t\t stimulus: '<p class=\"center-content very-large\">'+ word_data[i].word +'</p>',\n";
-  st += "\t\t data: {word_type: word_data[i].word_type}\n";
-  st += "\t});\n}\n";
-    st += "\t\tvar " + sing[sing_keys[0]] + " = {\n";
-  st += "\t\t\ttype: '" + sing[sing_keys[1]] + "',\n";
-  for(parameter_Values in TestTrialData1.parameters) {
-    st += "\t\t\t" + parameter_Values + ": " + TestTrialData1.parameters[parameter_Values] + ",\n";
-  }
-  st += "\t\t}\n\n";
-    return st;
-  },
-  */
+
   importPlugins: function importPlugins() {
-    var st = "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-single-stim.js\"></script>\n";
-    st += "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/pl ugins/jspsych-instructions.js\"></script>\n";
+    var allPlugins = [];
+    console.log(this.state.TestTrialData);
+    // var st = "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-single-stim.js\"></script>\n";
+    // st += "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-instructions.js\"></script>\n";
+    var st = "";
+    for (var index in this.state.TestTrialData) {
+      var path = "https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-" + this.state.TestTrialData[index].type + ".js";
+      st += "<script src=\"" + path + "\"></script>\n";
+    }
+
     return st;
   },
 
   make_html: function make_html() {
-    console.log(this.state.TestTrialData);
     var st = this.initialLines();
     st += this.importPlugins();
     st += "\t</head>\n\n\t<body>\n";
@@ -44180,8 +45388,6 @@ var SecondPage = React.createClass({
     var sclose = "\n\t</script>";
     st += sopen;
     st += "\tvar timeline = [];\n\n";
-
-    console.log(this.state.TreeData);
 
     var generateTrialOutput = function generateTrialOutput(treeData) {
       var trialIndex = -1;
@@ -44309,7 +45515,7 @@ var SecondPage = React.createClass({
       React.createElement(
         'div',
         { id: 'rightside' },
-        this.state.showSettings ? React.createElement(ShowSettings, null) : React.createElement(Trial, { CurrentTrialData: this.state.CurrentTrialData, showTrialData: this.state.showTrialData, saveModifiedTrialData: this.saveModifiedTrialData })
+        this.state.showSettings ? React.createElement(ShowSettings, null) : React.createElement(Trial, { CurrentTrialData: this.state.CurrentTrialData, showTrialData: this.state.showTrialData, saveModifiedTrialData: this.saveModifiedTrialData, AllTrialTypes: this.state.AllTrialTypes })
       )
     );
   }
@@ -44497,6 +45703,7 @@ var Trial = React.createClass({
     }
   },
   showData: function showData() {
+    var trialTypes = this.props.AllTrialTypes;
     if (this.props.showTrialData) {
       if (this.props.CurrentTrialData.type === "") {
         return React.createElement(
@@ -44513,21 +45720,13 @@ var Trial = React.createClass({
                 { value: 'Select a trial type...' },
                 'Select a trial type'
               ),
-              React.createElement(
-                'option',
-                { value: 'text' },
-                'Text'
-              ),
-              React.createElement(
-                'option',
-                { value: 'single-stim' },
-                'Single'
-              ),
-              React.createElement(
-                'option',
-                { value: 'instructions' },
-                'Instructions'
-              )
+              trialTypes.map(function (type) {
+                return React.createElement(
+                  'option',
+                  { value: type.trialName, key: type.trialName },
+                  type.trialName
+                );
+              })
             )
           ),
           React.createElement(
@@ -44558,21 +45757,13 @@ var Trial = React.createClass({
                 { value: 'Select a trial type...' },
                 'Select a trial type'
               ),
-              React.createElement(
-                'option',
-                { value: 'text' },
-                'Text'
-              ),
-              React.createElement(
-                'option',
-                { value: 'single-stim' },
-                'Single'
-              ),
-              React.createElement(
-                'option',
-                { value: 'instructions' },
-                'Instructions'
-              )
+              trialTypes.map(function (type) {
+                return React.createElement(
+                  'option',
+                  { value: type.trialName, key: type.trialName },
+                  type.trialName
+                );
+              })
             )
           ),
           React.createElement(
@@ -44582,8 +45773,8 @@ var Trial = React.createClass({
           ),
           React.createElement(
             'button',
-            { onClick: this.onSave },
-            'Save'
+            { className: 'btn btn-primary btn-md outline', onClick: this.onSave },
+            'Save Data'
           )
         );
       }

@@ -22,12 +22,39 @@ var SecondPage = React.createClass({
       CurrentTrialData : [],
       notInTrialData : true,
       showTrialData : false,
+      AllTrialTypes : [],
       TestTrialData : [
         // {label:"hello", type:"text", parameters:{text:"Hey...this is in Text1",cont_key:"f"}},
         // {label:"instructions",type:"instructions", parameters:{ pages:'[\'Welcome\',\'Press key\']',show_clickable_nav:"true", allow_keys:"false"}},
         // {label:"test",type:"single-stim", parameters:{is_html:"true", choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}}
       ]
     }
+  },
+
+  componentWillMount: function() {
+    this.state.AllTrialTypes = [{trialName :"animation"},
+                                {trialName :"button-response"},
+                                {trialName :"call-function"},
+                                {trialName :"categorize-animation"},
+                                {trialName :"categorize"},
+                                {trialName :"free-sort"},
+                                {trialName :"html"},
+                                {trialName :"instructions"},
+                                {trialName :"multi-stim-multi-response"},
+                                {trialName :"palmer"},
+                                {trialName :"reconstruction"},
+                                {trialName :"same-different"},
+                                {trialName :"similarity"},
+                                {trialName :"single-audio"},
+                                {trialName :"single-stim"},
+                                {trialName :"survey-likert"},
+                                {trialName :"survey-multi-choice"},
+                                {trialName :"survey-text"},
+                                {trialName :"text"},
+                                {trialName :"visual-search-circle"},
+                                {trialName :"vsl-animate-occlusion"},
+                                {trialName :"vsl-grid-scene"},
+                                {trialName :"xab"}]
   },
 
   setCurrentTrial: function(trialValue) {
@@ -71,10 +98,9 @@ var SecondPage = React.createClass({
   },
 
   initialLines: function() {
-    var st = "<!doctype html>\n\n<html>\n\t<head>\n\t\t<title>My experiment</title>\n\t\t<script";
+    var st = "<!DOCTYPE html>   \n\t<head>\n\t\t<title>My experiment</title>\n\t\t<script";
     st += " src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>\n\t\t<script";
-    st += " src=\"https://rawgit.com/jodeleeuw/jsPsych/master/jspsych.js\"></script>\n\t\t<script";
-    st += " src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-text.js\"></script>\n\t\t<link";
+    st += " src=\"https://rawgit.com/jodeleeuw/jsPsych/master/jspsych.js\"></script>\n\t\t<link";
     st += " href=\"https://rawgit.com/jodeleeuw/jsPsych/master/css/jspsych.css\" rel=\"stylesheet\"";
     st += " type=\"text/css\"></link>\n";
     return st;
@@ -96,57 +122,22 @@ var SecondPage = React.createClass({
 
    return st;
  },
-  /*
 
- generateSingleStim: function() {
-  //doubt about timeline here
-  var TestTrialData1 = {label:"SingleStimTrial",type:"single-stim",parameters:{is_html:"true",choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}};
-  var sing = TestTrialData1;
-  console.log(sing);
-  var sing_keys = Object.keys(TestTrialData1);
-
-  //read csv here
-  var st = "var word_data = [\n";
-  st += "\t{word: \"cove\", word_type: \"low\"},\n";
-  st += "\t{word: \"turf\", word_type: \"low\"},\n";
-  st += "\t{word: \"twig\", word_type: \"low\"},\n";
-  st += "\t{word: \"chair\", word_type: \"high\"},\n";
-  st += "\t{word: \"dark\", word_type: \"high\"},\n";
-  st += "\t{word: \"food\", word_type: \"high\"},\n";
-  st += "\t{word: \"cowe\", word_type: \"non\"},\n";
-  st += "\t{word: \"turv\", word_type: \"non\"},\n";
-  st += "\t{word: \"twif\", word_type: \"non\"},\n";
-  st += "\t{word: \"thair\", word_type: \"non\"},\n";
-  st += "\t{word: \"zark\", word_type: \"non\"},\n";
-  st += "\t{word: \"rood\", word_type: \"non\"}]\n";
-
-  st +="lex_trials = \[\];\n";
-
-  //change this, hardcoded here
-  st += "for(var i=0; i<word_data.length; i++){\n";
-  st += "\tlex_trials.push({\n";
-  st += "\t\t stimulus: '<p class=\"center-content very-large\">'+ word_data[i].word +'</p>',\n";
-  st += "\t\t data: {word_type: word_data[i].word_type}\n";
-  st += "\t});\n}\n";
-
-  st += "\t\tvar " + sing[sing_keys[0]] + " = {\n";
-  st += "\t\t\ttype: '" + sing[sing_keys[1]] + "',\n";
-  for(parameter_Values in TestTrialData1.parameters) {
-    st += "\t\t\t" + parameter_Values + ": " + TestTrialData1.parameters[parameter_Values] + ",\n";
-  }
-  st += "\t\t}\n\n";
-
-  return st;
-},
-*/
   importPlugins: function() {
-    var st = "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-single-stim.js\"></script>\n";
-    st += "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/pl ugins/jspsych-instructions.js\"></script>\n";
-    return st;
+    var allPlugins = []
+    console.log(this.state.TestTrialData)
+    // var st = "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-single-stim.js\"></script>\n";
+    // st += "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-instructions.js\"></script>\n";
+    var st = ""
+    for(var index in this.state.TestTrialData) {
+      var path = "https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-"+this.state.TestTrialData[index].type+".js"
+      st += "<script src=\""+path+"\"></script>\n"  
+    }
+
+    return st
   },
 
     make_html: function() {
-      console.log(this.state.TestTrialData);
       var st = this.initialLines();
       st += this.importPlugins();
       st += "\t</head>\n\n\t<body>\n";
@@ -158,8 +149,6 @@ var SecondPage = React.createClass({
       var sclose = "\n\t</script>";
       st += sopen;
       st += "\tvar timeline = [];\n\n";
-
-      console.log(this.state.TreeData)
 
       var generateTrialOutput = function(treeData) {
           var trialIndex = -1
@@ -268,7 +257,7 @@ var SecondPage = React.createClass({
             <div id = "rightside">
               {this.state.showSettings ? 
                 <ShowSettings/> :
-              <Trial CurrentTrialData={this.state.CurrentTrialData} showTrialData={this.state.showTrialData} saveModifiedTrialData={this.saveModifiedTrialData}/>
+              <Trial CurrentTrialData={this.state.CurrentTrialData} showTrialData={this.state.showTrialData} saveModifiedTrialData={this.saveModifiedTrialData} AllTrialTypes={this.state.AllTrialTypes}/>
             }
             </div>
           </div>
@@ -444,15 +433,16 @@ var Trial = React.createClass({
 
     },
     showData : function() {
+        var trialTypes = this.props.AllTrialTypes
         if(this.props.showTrialData) {
           if(this.props.CurrentTrialData.type === "") {
              return (
               <div>
                 <span id="fields"><select onChange={this.handleChange}>
                   <option value="Select a trial type...">Select a trial type</option>
-                  <option value="text">Text</option>
-                  <option value="single-stim">Single</option>
-                  <option value="instructions">Instructions</option>
+                    {trialTypes.map(function(type) {
+                      return <option value={type.trialName} key={type.trialName}>{type.trialName}</option>
+                    })}
                 </select></span>
                 <span><ReactJson value={ this.state.setData } settings={ this.state.settings } ref="json"/></span>
                 <button className="btn btn-primary btn-md outline" onClick={ this.onSave }>Save Data</button>
@@ -465,13 +455,12 @@ var Trial = React.createClass({
               <div>
                 <span id="fields"><select onChange={this.handleChange}>
                   <option value="Select a trial type...">Select a trial type</option>
-                  <option value="text">Text</option>
-                  <option value="single-stim">Single</option>
-                  <option value="instructions">Instructions</option>
+                    {trialTypes.map(function(type) {
+                      return <option value={type.trialName} key={type.trialName}>{type.trialName}</option>
+                    })}
                 </select></span>
-                <span><ReactJson value={ this.state.setData  } settings={ this.state.settings } ref="json"/></span>
-
-                <button onClick={ this.onSave }>Save</button>
+                <span><ReactJson value={ this.state.setData } settings={ this.state.settings } ref="json"/></span>
+                <button className="btn btn-primary btn-md outline" onClick={ this.onSave }>Save Data</button>
                 </div>
           );
           }
