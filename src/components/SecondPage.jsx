@@ -152,9 +152,10 @@ var SecondPage = React.createClass({
       var generateTrialOutput = function(treeData) {
           var trialIndex = -1
           var name = "Trial"+treeData.id
+          console.log("In generating trial output...",treeData)
           if(treeData.id !== 0) {
             for(var obj in self.state.TestTrialData) {
-            if(self.state.TestTrialData[obj].label === name) {
+            if(self.state.TestTrialData[obj].label === name && self.state.TestTrialData[obj].type !== "") {
                 trialIndex = obj
                 break
               }
@@ -283,8 +284,7 @@ var Tree = React.createClass({
   },
 
   setTreeData: function(newTreeData) {
-    console.log("In set tree data",newTreeData)
-    this.setState({tree: newTreeData});
+    this.setState({tree: newTreeData });
   },
 
   updateTree: function(treeData) {
@@ -329,10 +329,18 @@ var Tree = React.createClass({
         removeNode = childObj;
       }
     });
-
-    var indexChildFullTree = this.props.TreeData.childIds.indexOf(removeNode)
-    this.props.TreeData.childIds.splice(indexChildFullTree,1)
-
+    var copyTreeData = this.props.TreeData
+    var indexChildFullTree
+    if(copyTreeData.id === 0) {
+     indexChildFullTree = copyTreeData.childIds.indexOf(removeNode)
+     if(indexChildFullTree !== -1) {
+      copyTreeData.childIds.splice(indexChildFullTree,1) 
+     }
+    }
+    this.updateTree(copyTreeData)
+    this.setState({TreeData: copyTreeData})
+     
+    console.log(this.props.treeData)
     var indexChild = this.props.treeData.childIds.indexOf(removeNode);
     this.props.treeData.childIds.splice(indexChild, 1)
     this.props.setTreeData(this.props.treeData)
