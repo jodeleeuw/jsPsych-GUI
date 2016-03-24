@@ -125,13 +125,12 @@ var SecondPage = React.createClass({
 
   importPlugins: function() {
     var allPlugins = []
-    console.log(this.state.TestTrialData)
-    // var st = "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-single-stim.js\"></script>\n";
-    // st += "<script src=\"https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-instructions.js\"></script>\n";
     var st = ""
     for(var index in this.state.TestTrialData) {
-      var path = "https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-"+this.state.TestTrialData[index].type+".js"
-      st += "<script src=\""+path+"\"></script>\n"  
+      if(this.state.TestTrialData[index].type !== ""){
+        var path = "https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-"+this.state.TestTrialData[index].type+".js"
+        st += "<script src=\""+path+"\"></script>\n"  
+      }
     }
 
     return st
@@ -330,6 +329,10 @@ var Tree = React.createClass({
         removeNode = childObj;
       }
     });
+
+    var indexChildFullTree = this.props.TreeData.childIds.indexOf(removeNode)
+    this.props.TreeData.childIds.splice(indexChildFullTree,1)
+
     var indexChild = this.props.treeData.childIds.indexOf(removeNode);
     this.props.treeData.childIds.splice(indexChild, 1)
     this.props.setTreeData(this.props.treeData)
