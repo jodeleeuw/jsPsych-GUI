@@ -45284,11 +45284,7 @@ var SecondPage = React.createClass({
       notInTrialData: true,
       showTrialData: false,
       AllTrialTypes: [],
-      TestTrialData: [
-        // {label:"hello", type:"text", parameters:{text:"Hey...this is in Text1",cont_key:"f"}},
-        // {label:"instructions",type:"instructions", parameters:{ pages:'[\'Welcome\',\'Press key\']',show_clickable_nav:"true", allow_keys:"false"}},
-        // {label:"test",type:"single-stim", parameters:{is_html:"true", choices:"\['y','n'\]",randomize_order:"true",timeline:"lex_trials"}}
-      ]
+      TestTrialData: []
     };
   },
 
@@ -45319,13 +45315,11 @@ var SecondPage = React.createClass({
   },
 
   saveTree: function saveTree(treeData) {
-    console.log("In second page...saving tree structure...", treeData);
     this.state.TreeData = treeData;
     this.setState({ TreeData: this.state.TreeData });
   },
 
   saveModifiedTrialData: function saveModifiedTrialData(trialName, trialType, modifiedTrialParameters) {
-    console.log("In save..." + trialType);
     for (var obj in this.state.TestTrialData) {
       if (this.state.TestTrialData[obj].label === trialName) {
         this.state.TestTrialData[obj].type = trialType;
@@ -45333,7 +45327,6 @@ var SecondPage = React.createClass({
         break;
       }
     }
-    console.log(this.state.TestTrialData);
   },
 
   initialLines: function initialLines() {
@@ -45348,7 +45341,6 @@ var SecondPage = React.createClass({
   generateTrial: function generateTrial(trialIndex) {
 
     var hel = this.state.TestTrialData[trialIndex];
-    console.log(hel);
     var hel_keys = Object.keys(this.state.TestTrialData[trialIndex]);
 
     var st = "\t\tvar " + hel[hel_keys[1]] + " = {\n";
@@ -45426,7 +45418,6 @@ var SecondPage = React.createClass({
   },
 
   handlePreview: function handlePreview(e) {
-    console.log('Preview');
     var st = this.make_html();
     var newWindow = window.open("", "newWindow", "resizable=yes");
     newWindow.document.write(st);
@@ -45434,7 +45425,6 @@ var SecondPage = React.createClass({
   },
 
   handleGenerate: function handleGenerate(e) {
-    console.log('Generate');
     var zip = new JSZip();
     var st = this.make_html();
     zip.file("My_Experiment.html", st);
@@ -45444,33 +45434,24 @@ var SecondPage = React.createClass({
   },
 
   handleSave: function handleSave(e) {
-    console.log('Save Button:', this.state.TreeData);
     var newObj = [this.state.TestTrialData, this.state.TreeData];
     var json = JSON.stringify(newObj);
     var blob = new Blob([json], { type: "application/json" });
     SaveAs.saveAs(blob, "Experiment_data.json");
   },
 
-  setTrialData: function setTrialData() {
-    console.log('set: ' + this.state.TestTrialData);
-  },
-
   handleLoad: function handleLoad(event) {
     var self = this;
-    console.log('Load Button:');
     var file = event.target.files[0];
     var read = new FileReader();
     read.onload = function (e) {
-      console.log(e.target.result);
       var jsonFormat = JSON.parse(e.target.result);
-      console.log(jsonFormat[0]);
       self.setState({ TestTrialData: jsonFormat[0], TreeData: jsonFormat[1] });
     };
     read.readAsText(file);
   },
 
   render: function render() {
-    console.log(this.state.TestTrialData);
     return React.createElement(
       'div',
       null,
@@ -45554,8 +45535,6 @@ var Tree = React.createClass({
       id: count++,
       childIds: []
     };
-
-    console.log(parentId);
 
     //Recursively access full tree object and append child to correct parent
     //Pass this tree to SecondPage class
@@ -45672,11 +45651,6 @@ var Tree = React.createClass({
   }
 });
 
-// <div id = "treestructure">
-//           <a href="#" value="Trial1" onClick={this.setCurrentTrial.bind(this,"TextTrial")}>TextTrial</a>
-//           <a href="#" value="Trial2" onClick={this.setCurrentTrial.bind(this,"InstructionsTrial")}>InstructionsTrial</a>
-//           <a href="#" value="Trial3" onClick={this.setCurrentTrial.bind(this,"SingleStimTrial")}>SingleStimTrial</a>
-//         </div>
 var Trial = React.createClass({
   displayName: 'Trial',
 
@@ -45708,7 +45682,6 @@ var Trial = React.createClass({
         this.state.setData = this.state.labels;
         this.state.selectedTrialType = e.target.value;
         this.setState({ setData: this.state.setData });
-        console.log(this.state.selectedTrialType);
       } else {
         this.state.setData = this.props.CurrentTrialData.parameters;
         this.setState({ setData: this.state.setData });
@@ -45757,7 +45730,6 @@ var Trial = React.createClass({
           )
         );
       } else {
-        console.log("In show data...else");
         this.handleChange.bind(this, this.props.CurrentTrialData.type);
         return React.createElement(
           'div',
@@ -45798,11 +45770,9 @@ var Trial = React.createClass({
   },
   onSave: function onSave(e) {
     var val = this.refs.json.getValue();
-    console.log(this.state.selectedTrialType);
     for (var obj in val) {
       console.log(val[obj]);
     }
-    console.log(this.props.CurrentTrialData.label);
     this.props.saveModifiedTrialData(this.props.CurrentTrialData.label, this.state.selectedTrialType, val);
   },
   render: function render() {
