@@ -45296,14 +45296,14 @@ var SecondPage = React.createClass({
     this.state.AllTrialTypes = [{ trialName: "animation" }, { trialName: "button-response" }, { trialName: "call-function" }, { trialName: "categorize-animation" }, { trialName: "categorize" }, { trialName: "free-sort" }, { trialName: "html" }, { trialName: "instructions" }, { trialName: "multi-stim-multi-response" }, { trialName: "palmer" }, { trialName: "reconstruction" }, { trialName: "same-different" }, { trialName: "similarity" }, { trialName: "single-audio" }, { trialName: "single-stim" }, { trialName: "survey-likert" }, { trialName: "survey-multi-choice" }, { trialName: "survey-text" }, { trialName: "text" }, { trialName: "visual-search-circle" }, { trialName: "vsl-animate-occlusion" }, { trialName: "vsl-grid-scene" }, { trialName: "xab" }];
   },
 
-  setCurrentTrial: function setCurrentTrial(trialValue) {
+  setCurrentTrial: function setCurrentTrial(trialValue, trialId) {
     this.state.notInTrialData = true;
     if (trialValue === "MyExperiment") {
       this.setState({ showSettings: true });
     } else {
-
       for (var index in this.state.TestTrialData) {
-        if (this.state.TestTrialData[index].label === trialValue) {
+        if (this.state.TestTrialData[index].id === trialId) {
+          this.state.TestTrialData[index].label = trialValue;
           this.state.CurrentTrialData = this.state.TestTrialData[index];
           this.state.notInTrialData = false;
           break;
@@ -45311,7 +45311,7 @@ var SecondPage = React.createClass({
       }
 
       if (this.state.notInTrialData) {
-        this.state.CurrentTrialData = { label: trialValue, type: "", parameters: {} };
+        this.state.CurrentTrialData = { id: trialId, label: trialValue, type: "", parameters: {} };
         this.state.TestTrialData.push(this.state.CurrentTrialData);
       }
       this.setState({ CurrentTrialData: this.state.CurrentTrialData, showTrialData: true, showSettings: false });
@@ -45351,8 +45351,8 @@ var SecondPage = React.createClass({
     console.log(hel);
     var hel_keys = Object.keys(this.state.TestTrialData[trialIndex]);
 
-    var st = "\t\tvar " + hel[hel_keys[0]] + " = {\n";
-    st += "\t\t\ttype: '" + hel[hel_keys[1]] + "',\n";
+    var st = "\t\tvar " + hel[hel_keys[1]] + " = {\n";
+    st += "\t\t\ttype: '" + hel[hel_keys[2]] + "',\n";
 
     for (var parameter_Values in this.state.TestTrialData[trialIndex].parameters) {
       st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[trialIndex].parameters[parameter_Values] + "',\n";
@@ -45391,10 +45391,9 @@ var SecondPage = React.createClass({
     var generateTrialOutput = function generateTrialOutput(treeData) {
       var trialIndex = -1;
       var name = "Trial" + treeData.id;
-      console.log("In generating trial output...", treeData);
       if (treeData.id !== 0) {
         for (var obj in self.state.TestTrialData) {
-          if (self.state.TestTrialData[obj].label === name && self.state.TestTrialData[obj].type !== "") {
+          if (self.state.TestTrialData[obj].id === treeData.id && self.state.TestTrialData[obj].type !== "") {
             trialIndex = obj;
             break;
           }
@@ -45403,7 +45402,7 @@ var SecondPage = React.createClass({
           var hel = self.state.TestTrialData[trialIndex];
           var hel_keys = Object.keys(self.state.TestTrialData[trialIndex]);
           st += self.generateTrial(trialIndex);
-          st += "\ttimeline.push(" + hel[hel_keys[0]] + ");\n\n";
+          st += "\ttimeline.push(" + hel[hel_keys[1]] + ");\n\n";
         }
       }
 
@@ -45412,7 +45411,6 @@ var SecondPage = React.createClass({
       }
       return true;
     };
-
     generateTrialOutput(this.state.TreeData);
 
     st += "\t\tjsPsych.init({\n";
@@ -45472,6 +45470,7 @@ var SecondPage = React.createClass({
   },
 
   render: function render() {
+    console.log(this.state.TestTrialData);
     return React.createElement(
       'div',
       null,
@@ -45531,14 +45530,15 @@ var Tree = React.createClass({
         id: 0,
         childIds: []
       },
-      inputText: "Trial"
+      inputText: "Trial",
+      currentId: 0,
+      changed: false
     };
   },
 
   setCurrentTrial: function setCurrentTrial(selectedTrial) {
-    console.log(selectedTrial);
-    console.log(this.state.tree.id);
-    this.props.setCurrentTrial(selectedTrial);
+    this.state.changed = true;
+    this.props.setCurrentTrial(selectedTrial, this.props.tree.id);
   },
 
   setTreeData: function setTreeData(newTreeData) {
@@ -45598,7 +45598,6 @@ var Tree = React.createClass({
     this.updateTree(copyTreeData);
     this.setState({ TreeData: copyTreeData });
 
-    console.log(this.props.treeData);
     var indexChild = this.props.treeData.childIds.indexOf(removeNode);
     this.props.treeData.childIds.splice(indexChild, 1);
     this.props.setTreeData(this.props.treeData);
@@ -45613,8 +45612,9 @@ var Tree = React.createClass({
   },
 
   changeTrialName: function changeTrialName(e) {
-    console.log(e.target.value);
-    this.setState({ inputText: e.target.value });
+    this.state.changed = true;
+    this.setCurrentTrial(e.target.value);
+    this.setState({ inputText: e.target.value, changed: this.state.changed });
   },
 
   render: function render() {
@@ -45626,6 +45626,7 @@ var Tree = React.createClass({
       id = this.props.tree.id;
       childIds = this.props.tree.childIds;
     }
+    this.state.currentId = id;
     return React.createElement(
       'div',
       null,
@@ -45638,8 +45639,12 @@ var Tree = React.createClass({
           'My Experiment'
         ) : React.createElement(
           'a',
-          { href: '#', onClick: this.setCurrentTrial.bind(this, "Trial" + id) },
-          React.createElement('input', { type: 'text', value: this.state.inputText + id, className: 'TrialText', onChange: this.changeTrialName })
+          { href: '#' },
+          React.createElement('input', { type: 'text',
+            value: !this.state.changed ? this.state.inputText = this.state.inputText + id : this.state.inputText,
+            className: 'TrialText',
+            onChange: this.changeTrialName,
+            onClick: this.setCurrentTrial.bind(this, this.state.inputText) })
         ),
         ' ',
         id !== 0 ? React.createElement(
