@@ -23,6 +23,7 @@ var SecondPage = React.createClass({
       notInTrialData : true,
       showTrialData : false,
       AllTrialTypes : [],
+      CheckedTrials : [],
       TestTrialData : []
     }
   },
@@ -72,6 +73,27 @@ var SecondPage = React.createClass({
       this.state.TestTrialData.push(this.state.CurrentTrialData);
     }
     this.setState({CurrentTrialData: this.state.CurrentTrialData, showTrialData:true, showSettings: false});
+    }
+  },
+
+  updateCheckedTrials: function (trialName, checkValue) {
+    var trialIndex = -1
+    var contains = false
+    for(var objIndex in this.state.CheckedTrials) {
+       if(this.state.CheckedTrials[objIndex] === trialName) {
+        trialIndex = objIndex
+        contains= true
+        break
+       } 
+    }
+    if(checkValue === true) {
+      if(trialIndex === -1) {
+        this.state.CheckedTrials.push(trialName)
+      }
+    } else {
+        if(contains === true) {
+            this.state.CheckedTrials.splice(trialIndex,1)
+        }
     }
   },
 
@@ -143,19 +165,30 @@ var SecondPage = React.createClass({
 
       var generateTrialOutput = function(treeData) {
           var trialIndex = -1
-          var name = "Trial"+treeData.id
+          var trialName
           if(treeData.id !== 0) {
             for(var obj in self.state.TestTrialData) {
             if(self.state.TestTrialData[obj].id === treeData.id && self.state.TestTrialData[obj].type !== "") {
                 trialIndex = obj
+                trialName = self.state.TestTrialData[obj].label
                 break
               }
             }
             if(trialIndex !== -1){
-              var hel = self.state.TestTrialData[trialIndex];
-              var hel_keys = Object.keys(self.state.TestTrialData[trialIndex]);
-              st += self.generateTrial(trialIndex);
-              st += "\ttimeline.push(" + hel[hel_keys[1]] +");\n\n";
+              var showTrial = false
+              for(var obj in self.state.CheckedTrials) {
+                if(self.state.CheckedTrials[obj] === trialName) {
+                  showTrial = true
+                  break
+                }
+              }
+
+              if(showTrial){
+                var hel = self.state.TestTrialData[trialIndex];
+                var hel_keys = Object.keys(self.state.TestTrialData[trialIndex]);
+                st += self.generateTrial(trialIndex);
+                st += "\ttimeline.push(" + hel[hel_keys[1]] +");\n\n";
+              } 
             } 
           }
 
@@ -179,10 +212,15 @@ var SecondPage = React.createClass({
     },
 
     handlePreview : function(e) {
-      var st = this.make_html();
-      var newWindow = window.open("", "newWindow", "resizable=yes");
-	    newWindow.document.write(st);
-      console.log('Previewed')
+      if(this.state.CheckedTrials.length > 0) {
+        var st = this.make_html();
+        var newWindow = window.open("", "newWindow", "resizable=yes");
+        newWindow.document.write(st);
+        console.log('Previewed')  
+      } else {
+        alert("Please select a trial...")
+      }
+      
     },
 
     handleGenerate : function(e) {
@@ -219,7 +257,10 @@ var SecondPage = React.createClass({
             <div id = "leftside">
               <div id = "tree">
                 <ul>
-                  <Tree setCurrentTrial = {this.setCurrentTrial} TreeData = {this.state.TreeData} saveTree = {this.saveTree}/>
+                  <Tree updateCheckedTrials={this.updateCheckedTrials} 
+                        setCurrentTrial={this.setCurrentTrial} 
+                        TreeData={this.state.TreeData} 
+                        saveTree={this.saveTree}/>
                 </ul>
               </div>
               <div id="buttonpanel">
@@ -237,7 +278,10 @@ var SecondPage = React.createClass({
             <div id = "rightside">
               {this.state.showSettings ? 
                 <ShowSettings/> :
-              <Trial CurrentTrialData={this.state.CurrentTrialData} showTrialData={this.state.showTrialData} saveModifiedTrialData={this.saveModifiedTrialData} AllTrialTypes={this.state.AllTrialTypes}/>
+              <Trial  CurrentTrialData={this.state.CurrentTrialData}
+                      showTrialData={this.state.showTrialData} 
+                      saveModifiedTrialData={this.saveModifiedTrialData} 
+                      AllTrialTypes={this.state.AllTrialTypes} />
             }
             </div>
           </div>
@@ -327,9 +371,26 @@ var Tree = React.createClass({
   renderChild: function(child) {
     return (
       <li key={child.id}>
-        <Tree tree={child} setCurrentTrial={this.props.setCurrentTrial} treeData={this.state.tree} setTreeData={this.setTreeData} TreeData={this.props.TreeData} saveTree = {this.props.saveTree}/>
+        <Tree tree={child} 
+              setCurrentTrial={this.props.setCurrentTrial} 
+              treeData={this.state.tree} 
+              setTreeData={this.setTreeData} 
+              TreeData={this.props.TreeData} 
+              saveTree={this.props.saveTree}
+              updateCheckedTrials={this.updateCheckedTrials}/>
       </li>
     )
+  },
+
+  updateCheckedTrials: function(trialName, checked) {
+      this.props.updateCheckedTrials(trialName,checked)
+  },
+
+  trialChecked: function(e) {
+    this.state.changed = true
+    var trialName = e.target.value
+    var checked = e.target.checked
+    this.updateCheckedTrials(trialName,checked)
   },
 
   changeTrialName: function(e) {
@@ -351,11 +412,15 @@ var Tree = React.createClass({
             { id === 0 ?
               <a href="#" onClick={this.setCurrentTrial.bind(this,"MyExperiment")}>My Experiment</a> :
               <a href="#" >
-                <input type="text"
+                <input type="checkbox"
                        value={ !this.state.changed ? this.state.inputText = this.state.inputText+id : this.state.inputText}
+                       onChange={ this.trialChecked}/>
+                <input type="text"
+                       value={ this.state.inputText}
                        className="TrialText"
                        onChange={this.changeTrialName}
-                       onClick={this.setCurrentTrial.bind(this,this.state.inputText)}/></a>
+                       onClick={this.setCurrentTrial.bind(this,this.state.inputText)}/>
+              </a>
             }
               {' '}
               {id !== 0 ?

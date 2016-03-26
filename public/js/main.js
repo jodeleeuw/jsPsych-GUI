@@ -45284,6 +45284,7 @@ var SecondPage = React.createClass({
       notInTrialData: true,
       showTrialData: false,
       AllTrialTypes: [],
+      CheckedTrials: [],
       TestTrialData: []
     };
   },
@@ -45311,6 +45312,27 @@ var SecondPage = React.createClass({
         this.state.TestTrialData.push(this.state.CurrentTrialData);
       }
       this.setState({ CurrentTrialData: this.state.CurrentTrialData, showTrialData: true, showSettings: false });
+    }
+  },
+
+  updateCheckedTrials: function updateCheckedTrials(trialName, checkValue) {
+    var trialIndex = -1;
+    var contains = false;
+    for (var objIndex in this.state.CheckedTrials) {
+      if (this.state.CheckedTrials[objIndex] === trialName) {
+        trialIndex = objIndex;
+        contains = true;
+        break;
+      }
+    }
+    if (checkValue === true) {
+      if (trialIndex === -1) {
+        this.state.CheckedTrials.push(trialName);
+      }
+    } else {
+      if (contains === true) {
+        this.state.CheckedTrials.splice(trialIndex, 1);
+      }
     }
   },
 
@@ -45382,19 +45404,30 @@ var SecondPage = React.createClass({
 
     var generateTrialOutput = function generateTrialOutput(treeData) {
       var trialIndex = -1;
-      var name = "Trial" + treeData.id;
+      var trialName;
       if (treeData.id !== 0) {
         for (var obj in self.state.TestTrialData) {
           if (self.state.TestTrialData[obj].id === treeData.id && self.state.TestTrialData[obj].type !== "") {
             trialIndex = obj;
+            trialName = self.state.TestTrialData[obj].label;
             break;
           }
         }
         if (trialIndex !== -1) {
-          var hel = self.state.TestTrialData[trialIndex];
-          var hel_keys = Object.keys(self.state.TestTrialData[trialIndex]);
-          st += self.generateTrial(trialIndex);
-          st += "\ttimeline.push(" + hel[hel_keys[1]] + ");\n\n";
+          var showTrial = false;
+          for (var obj in self.state.CheckedTrials) {
+            if (self.state.CheckedTrials[obj] === trialName) {
+              showTrial = true;
+              break;
+            }
+          }
+
+          if (showTrial) {
+            var hel = self.state.TestTrialData[trialIndex];
+            var hel_keys = Object.keys(self.state.TestTrialData[trialIndex]);
+            st += self.generateTrial(trialIndex);
+            st += "\ttimeline.push(" + hel[hel_keys[1]] + ");\n\n";
+          }
         }
       }
 
@@ -45418,10 +45451,14 @@ var SecondPage = React.createClass({
   },
 
   handlePreview: function handlePreview(e) {
-    var st = this.make_html();
-    var newWindow = window.open("", "newWindow", "resizable=yes");
-    newWindow.document.write(st);
-    console.log('Previewed');
+    if (this.state.CheckedTrials.length > 0) {
+      var st = this.make_html();
+      var newWindow = window.open("", "newWindow", "resizable=yes");
+      newWindow.document.write(st);
+      console.log('Previewed');
+    } else {
+      alert("Please select a trial...");
+    }
   },
 
   handleGenerate: function handleGenerate(e) {
@@ -45464,7 +45501,10 @@ var SecondPage = React.createClass({
           React.createElement(
             'ul',
             null,
-            React.createElement(Tree, { setCurrentTrial: this.setCurrentTrial, TreeData: this.state.TreeData, saveTree: this.saveTree })
+            React.createElement(Tree, { updateCheckedTrials: this.updateCheckedTrials,
+              setCurrentTrial: this.setCurrentTrial,
+              TreeData: this.state.TreeData,
+              saveTree: this.saveTree })
           )
         ),
         React.createElement(
@@ -45495,7 +45535,10 @@ var SecondPage = React.createClass({
       React.createElement(
         'div',
         { id: 'rightside' },
-        this.state.showSettings ? React.createElement(ShowSettings, null) : React.createElement(Trial, { CurrentTrialData: this.state.CurrentTrialData, showTrialData: this.state.showTrialData, saveModifiedTrialData: this.saveModifiedTrialData, AllTrialTypes: this.state.AllTrialTypes })
+        this.state.showSettings ? React.createElement(ShowSettings, null) : React.createElement(Trial, { CurrentTrialData: this.state.CurrentTrialData,
+          showTrialData: this.state.showTrialData,
+          saveModifiedTrialData: this.saveModifiedTrialData,
+          AllTrialTypes: this.state.AllTrialTypes })
       )
     );
   }
@@ -45586,8 +45629,25 @@ var Tree = React.createClass({
     return React.createElement(
       'li',
       { key: child.id },
-      React.createElement(Tree, { tree: child, setCurrentTrial: this.props.setCurrentTrial, treeData: this.state.tree, setTreeData: this.setTreeData, TreeData: this.props.TreeData, saveTree: this.props.saveTree })
+      React.createElement(Tree, { tree: child,
+        setCurrentTrial: this.props.setCurrentTrial,
+        treeData: this.state.tree,
+        setTreeData: this.setTreeData,
+        TreeData: this.props.TreeData,
+        saveTree: this.props.saveTree,
+        updateCheckedTrials: this.updateCheckedTrials })
     );
+  },
+
+  updateCheckedTrials: function updateCheckedTrials(trialName, checked) {
+    this.props.updateCheckedTrials(trialName, checked);
+  },
+
+  trialChecked: function trialChecked(e) {
+    this.state.changed = true;
+    var trialName = e.target.value;
+    var checked = e.target.checked;
+    this.updateCheckedTrials(trialName, checked);
   },
 
   changeTrialName: function changeTrialName(e) {
@@ -45619,8 +45679,11 @@ var Tree = React.createClass({
         ) : React.createElement(
           'a',
           { href: '#' },
-          React.createElement('input', { type: 'text',
+          React.createElement('input', { type: 'checkbox',
             value: !this.state.changed ? this.state.inputText = this.state.inputText + id : this.state.inputText,
+            onChange: this.trialChecked }),
+          React.createElement('input', { type: 'text',
+            value: this.state.inputText,
             className: 'TrialText',
             onChange: this.changeTrialName,
             onClick: this.setCurrentTrial.bind(this, this.state.inputText) })
