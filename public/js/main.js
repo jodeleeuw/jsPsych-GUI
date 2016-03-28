@@ -45511,25 +45511,33 @@ var SecondPage = React.createClass({
           'div',
           { id: 'buttonpanel' },
           React.createElement(
-            'button',
-            { id: 'savebutton', className: 'btn btn-primary btn-md', onClick: this.handleSave },
-            'Save'
+            'div',
+            { className: 'leftButtonPanel' },
+            React.createElement(
+              'button',
+              { id: 'savebutton', className: 'btn btn-primary btn-md', onClick: this.handleSave },
+              'Save'
+            ),
+            React.createElement(
+              'button',
+              { id: 'previewbutton', className: 'btn btn-primary btn-md', onClick: this.handlePreview },
+              'Preview'
+            ),
+            React.createElement(
+              'button',
+              { id: 'generatebutton', className: 'btn btn-primary btn-md', onClick: this.handleGenerate },
+              'Generate'
+            )
           ),
           React.createElement(
-            'button',
-            { id: 'previewbutton', className: 'btn btn-primary btn-md', onClick: this.handlePreview },
-            'Preview'
-          ),
-          React.createElement(
-            'button',
-            { id: 'generatebutton', className: 'btn btn-primary btn-md', onClick: this.handleGenerate },
-            'Generate'
-          ),
-          React.createElement(FileInput, { name: 'upload_json',
-            accept: '.json',
-            placeholder: 'Upload Saved State',
-            className: 'inputClass',
-            onChange: this.handleLoad })
+            'div',
+            { className: 'righttButtonPanel' },
+            React.createElement(FileInput, { name: 'upload_json',
+              accept: '.json',
+              placeholder: 'Upload',
+              className: 'inputClass btn btn-primary btn-md uploadJson',
+              onChange: this.handleLoad })
+          )
         )
       ),
       React.createElement(
@@ -45644,16 +45652,14 @@ var Tree = React.createClass({
   },
 
   trialChecked: function trialChecked(e) {
-    this.state.changed = true;
     var trialName = e.target.value;
     var checked = e.target.checked;
     this.updateCheckedTrials(trialName, checked);
   },
 
   changeTrialName: function changeTrialName(e) {
-    this.state.changed = true;
     this.setCurrentTrial(e.target.value);
-    this.setState({ inputText: e.target.value, changed: this.state.changed });
+    this.setState({ inputText: e.target.value });
   },
 
   render: function render() {
@@ -45711,6 +45717,10 @@ var Tree = React.createClass({
         )
       )
     );
+  },
+
+  componentDidMount: function componentDidMount() {
+    this.state.changed = true;
   }
 });
 

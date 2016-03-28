@@ -264,14 +264,18 @@ var SecondPage = React.createClass({
                 </ul>
               </div>
               <div id="buttonpanel">
+              <div className="leftButtonPanel">
                 <button id="savebutton" className="btn btn-primary btn-md" onClick={this.handleSave}>Save</button>
                 <button id="previewbutton" className="btn btn-primary btn-md" onClick={this.handlePreview}>Preview</button>
                 <button id="generatebutton"  className="btn btn-primary btn-md" onClick={this.handleGenerate}>Generate</button>
+              </div>
+              <div className="righttButtonPanel">
                 <FileInput name="upload_json"
                    accept=".json"
-                   placeholder="Upload Saved State"
-                   className="inputClass"
+                   placeholder="Upload"
+                   className="inputClass btn btn-primary btn-md uploadJson"
                    onChange={this.handleLoad} />
+              </div>
               </div>
             </div>
 
@@ -333,7 +337,7 @@ var Tree = React.createClass({
       };
       var newTree = addToTree(this.props.TreeData, parentId, temp)
       this.updateTree(this.props.TreeData)
-
+      
       //Adding to current tree state
       if(this.props.tree !== undefined) {
         this.props.tree.childIds.push(temp);
@@ -377,7 +381,7 @@ var Tree = React.createClass({
               setTreeData={this.setTreeData} 
               TreeData={this.props.TreeData} 
               saveTree={this.props.saveTree}
-              updateCheckedTrials={this.updateCheckedTrials}/>
+              updateCheckedTrials={this.updateCheckedTrials} />
       </li>
     )
   },
@@ -387,16 +391,14 @@ var Tree = React.createClass({
   },
 
   trialChecked: function(e) {
-    this.state.changed = true
     var trialName = e.target.value
     var checked = e.target.checked
     this.updateCheckedTrials(trialName,checked)
   },
 
   changeTrialName: function(e) {
-    this.state.changed = true
     this.setCurrentTrial(e.target.value)
-    this.setState({inputText: e.target.value, changed: this.state.changed})
+    this.setState({inputText: e.target.value})
   },
 
   render: function() {
@@ -441,6 +443,10 @@ var Tree = React.createClass({
           </div>
         </div>
       );
+  },
+
+  componentDidMount: function() {
+    this.state.changed = true
   }
 });
 
