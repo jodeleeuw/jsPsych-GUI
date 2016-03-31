@@ -7,6 +7,7 @@ var SaveAs = require('./saveAs.jsx');
 var Reactaddons = require('react-addons');
 var JSZip = require("jszip");
 var FileInput = require('react-file-input');
+var ReactDataGrid = require('react-data-grid/addons');
 
 var SecondPage = React.createClass({
   getInitialState: function() {
@@ -95,6 +96,15 @@ var SecondPage = React.createClass({
             this.state.CheckedTrials.splice(trialIndex,1)
         }
     }
+    console.log(this.state.CheckedTrials)
+    console.log(this.state.TestTrialData)
+  },
+
+  removeDeletedCheckedNodes: function() {
+    //Traverse through whole tree and splice trials not present in tree
+    this.state.CheckedTrials.filter(function(trialName) {
+
+    })
   },
 
   saveTree: function(treeData) {
@@ -234,7 +244,7 @@ var SecondPage = React.createClass({
 
     handleSave : function(e) {
       var newObj = [ this.state.TestTrialData, this.state.TreeData ]
-      var json = JSON.stringify(newObj);
+      var json = JSON.stringify(newObj, null, "\t");
       var blob = new Blob([json], {type: "application/json"});
     	SaveAs.saveAs(blob, "Experiment_data.json");
 
@@ -309,7 +319,12 @@ var Tree = React.createClass({
 
   setCurrentTrial: function(selectedTrial) {
     this.state.changed = true
-    this.props.setCurrentTrial(selectedTrial,this.props.tree.id);  
+    if(this.props.tree !== undefined) {
+      this.props.setCurrentTrial(selectedTrial,this.props.tree.id);    
+    } else {
+      this.props.setCurrentTrial(selectedTrial,this.state.tree.id);
+    }
+    
   },
 
   setTreeData: function(newTreeData) {
@@ -541,13 +556,62 @@ var Trial = React.createClass({
 
 var ShowSettings = React.createClass({
   getInitialState: function() {
-    return{}
+    return{
+      load : false,
+      columns : [],
+      rows : [],
+      rowsLength : 0
+    }
   },
+
+  handleTimelineVariables: function(event) {
+      var fileOutput;
+      var self = this;
+      var file = event.target.files[0];
+      Papa.parse(file, {
+      header: true,
+      dynamicTyping: true,
+      complete: function(results) {
+        fileOutput = results;
+        
+        for(var objIndex in fileOutput.meta.fields) {
+          self.state.columns.push({key:fileOutput.meta.fields[objIndex], name: fileOutput.meta.fields[objIndex]})
+        }
+        
+        for(var objIndex in fileOutput.data) {
+          var rowData = {};
+          for(var dataKey in fileOutput.data[objIndex]) {
+            var obj = fileOutput.data[objIndex]
+            rowData[dataKey] = obj[dataKey];  
+          }
+          self.state.rows.push(rowData);
+        }
+        
+        self.setState({columns: self.state.columns, rows: self.state.rows, rowsLength: self.state.rows.length, load: true})
+      }
+      });
+  },
+
+  rowGetter: function(rowIdx) {
+    return this.state.rows[rowIdx]
+  },
+
   render: function() {
     return(
+      <div>
       <h2>Settings</h2>
+      <FileInput name="upload_timeline_variables"
+                   accept=".csv"
+                   placeholder="Upload Timeline Variables"
+                   className="timeline-upload-btn btn btn-primary"
+                   onChange={this.handleTimelineVariables} />
+      { this.state.load ? <ReactDataGrid  columns={this.state.columns}
+                                          rowGetter={this.rowGetter}
+                                          rowsCount={this.state.rows.length}
+                                          minHeight={500} />: "" }
+      </div>
     )
   }
-})
+});
 
 module.exports = SecondPage;

@@ -27,7 +27,7 @@
 	margin:auto;	
 	top:0;
 	right:0;
-    background:	#e3e3e3;
+    
 	color:#000;
 	opacity:1;
 	font-size: 25px;
@@ -145,4 +145,10 @@ a:hover,a:active {
 	position: relative;
 	top: -48px;
 	right: 30px;
+}
+
+.timeline-upload-btn {
+	background: #000000;
+	border-style: 2px solid;
+	border-color: #509957;
 }

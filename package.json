@@ -19,6 +19,7 @@
     "jszip": "^2.5.0",
     "react": "^0.14.7",
     "react-addons": "^0.9.1-deprecated",
+    "react-data-grid": "^0.14.17",
     "react-dom": "^0.14.7",
     "react-dropdown": "^0.7.2",
     "react-file-input": "^0.2.5",
