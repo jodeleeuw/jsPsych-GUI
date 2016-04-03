@@ -1,5 +1,19 @@
+engines:
+  rubocop:
+    enabled: true
+    #checks:
+    # Rubocop/Metrics/ClassLength:
+    #   enabled: false
+  eslint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - javascript
+
 exclude_paths:
-- PapaParse-4.1.2/
-- example/
-- node_modules/
-- jspsych-5.0.1/
+- PapaParse-4.1.2/**/*
+- example/**/*
+- node_modules/**/*
+- jspsych-5.0.1/**/*
