@@ -1,5 +1,5 @@
 exclude_paths:
-PapaParse-4.1.2/
-example/
-node_modules/
-jspsych-5.0.1/
+- PapaParse-4.1.2/
+- example/
+- node_modules/
+- jspsych-5.0.1/
