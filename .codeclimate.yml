@@ -12,8 +12,8 @@ engines:
       languages:
       - javascript
 ratings:
-	paths:
-	- "src/**/*"
+  paths:
+   - "src/**/*"
 exclude_paths:
 - PapaParse-4.1.2/**/*
 - example/**/*
