@@ -606,6 +606,13 @@ var ShowSettings = React.createClass({
     return(
       <div>
       <h2>Settings</h2>
+      <form action="/" 
+            method="post" 
+            encType="multipart/form-data"> 
+        <input type="file" name="upload"/>
+        <input type="submit"/>
+      </form>
+
       <FileInput name="upload_timeline_variables"
                    accept=".csv"
                    placeholder="Upload Timeline Variables"

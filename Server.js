@@ -3,43 +3,36 @@ var formidable = require('formidable');
 var app = express();
 var fs = require('fs');
 var path = require('path');
-var StringDecoder = require('string_decoder').StringDecoder;
 // var jspysch = require('C:\\Users\\Uday\\Desktop\\jsPsych-old\\jsPsych-GUI\\jspsych-5.0.1\\jspsych-5.0.1\\jspsych.js');
 
 app.use(express.static( __dirname));
 
 app.get('/', function (req, res){
-	// console.log("In path...")
-	// var folder_path = path.join( __dirname , 'public/');
-	// console.log(folder_path)
-	// res.sendFile(folder_path);
-	// console.log(__dirname + '/public/');
     res.sendFile( __dirname + '/public/');
 });
 
-app.post('/upload', function (req, res){
+app.post('/', function (req, res){
     var form = new formidable.IncomingForm();
 
     form.parse(req);
 
     form.on('fileBegin', function (name, file){
-        file.path = __dirname + '/uploads/' + file.name;
+        file.path = __dirname + '\\jspsych-5.0.1\\jspsych-5.0.1\\plugins\\' + file.name;
     });
 
     form.on('file', function (name, file){
         console.log('Uploaded ' + file.name);
     });
-
-    res.sendFile(__dirname + '/public/index.html');
+    
+    // res.sendFile(__dirname + '/public/index.html');
 });
+
 
 var all_plugin_parameters = []
 var all_plugin_parameters_index = 0			
 addPluginParameters = function(obj) {
-	// console.log("In add plugin parameters...")
 	all_plugin_parameters[all_plugin_parameters_index] = obj
 	all_plugin_parameters_index += 1
-	// console.log("Added")
 }
 
 app.get('/plugin_data', function (req,res) {
