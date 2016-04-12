@@ -10,57 +10,7 @@
 jsPsych.plugins['free-sort'] = (function() {
 
   var plugin = {};
-  plugin.parameters = function(){
-		  var params = {
-			  stimuli:{
-				  type : ['array'],
-				  label: 'Stimuli'
-				  //validation_function: function(){ return true; }, //none(temp)
-				  //default is undefined
-			  },
-			  stim_height: { 
-				  type: ['number'],
-				  label: 'Stim Height', 
-				  //validation_function: function() { return true; }, 
-				  default : 100
-			  },
-			  stim_width: { 
-				  type: ['number'],
-				  label: 'Stim Width', 
-				  //validation_function: function() { return true; }, 
-				  default : 100
 
-			  },
-			  sort_area_height: { 
-				  type: ['number'],
-				  label: 'Sort Area Height', 
-				  //validation_function: function() { return true; }, 
-				  default: 800
-
-			  },
-			  sort_area_width: { 
-				  type: ['number'],
-				  label: 'Sort Area Width', 
-				  //validation_function: function() { return true; }, 
-				  default: 800
-
-			  },
-			  prompt: { 
-				  type: ['string'],
-				  label: 'Prompt', 
-				  //validation_function: function() { return true; }, 
-				  default: ' '
-
-			  },
-			  prompt_location: { 
-				  type: ['string'],
-				  label: 'Prompt Location', 
-				  //validation_function: function() { return true; }, 
-				  default: 'above'
-			  }
-		  }
-	  return params;
-	}
   jsPsych.pluginAPI.registerPreload('free-sort', 'stimuli', 'image');
 
   plugin.trial = function(display_element, trial) {
@@ -187,3 +137,54 @@ jsPsych.plugins['free-sort'] = (function() {
 
   return plugin;
 })();
+
+plugin_parameters = {
+    "name" : "free-sort",
+    "parameters" : [
+        {
+            "name" : "stimuli",
+          "type" : ["array"],
+          "label": "Stimuli"
+        },
+        {
+            "name" : "stim_height", 
+          "type": ["number"],
+          "label": "Stim Height", 
+          "default" : 100
+        },
+        {
+            "name" : "stim_width", 
+          "type": ["number"],
+          "label": "Stim Width", 
+          "default" : 100
+
+        },
+        {
+            "name" : "sort_area_height", 
+          "type": ["number"],
+          "label": "Sort Area Height", 
+          "default": 800
+
+        },
+        {
+            "name" : "sort_area_width", 
+          "type": ["number"],
+          "label": "Sort Area Width", 
+          "default": 800
+
+        },
+        {
+            "name" : "prompt", 
+          "type": ["string"],
+          "label": "Prompt", 
+          "default": " "
+
+        },
+        {
+            "name" : "prompt_location", 
+          "type": ["string"],
+          "label": "Prompt Location",
+          "default": "above"
+        }
+      ]
+  }

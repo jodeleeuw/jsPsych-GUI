@@ -12,50 +12,6 @@
 jsPsych.plugins['survey-multi-choice'] = (function() {
 
   var plugin = {};
-  
-   plugin.parameters = function(){
-   var params = {
-	   
-    questions:{
-     type : ['array'],
-     label: 'questions',
-     validation_function: function(){ return true; }, //none(temp)
-     //default is undefined
-    },
-	   
-    options:{
-     type : ['array'],
-     label: 'options',
-     validation_function: function(){ return true; }, //none(temp)
-     //default is undefined
-    },
-	
-    required: { 
-     type: ['array'],
-     label: 'required', 
-        validation_function: function() { return true; }, 
-     default: 'null'
-
-    },
-	
-    horizontal: { 
-     type: ['boolean'],
-     label: 'horizontal', 
-        validation_function: function() { return true; }, 
-     default: 'false'
-
-    },
-	
-    preamble: { 
-     type: ['array'],
-     label: 'preamble', 
-        validation_function: function() { return true; }, 
-     default: 'empty string'
-
-    }
-   }
-   return params;
- }
 
   plugin.trial = function(display_element, trial) {
 
@@ -183,3 +139,44 @@ jsPsych.plugins['survey-multi-choice'] = (function() {
 
   return plugin;
 })();
+
+plugin_parameters = {
+    "name" : "survey-multi-choice",
+     "parameters" : [
+           
+          {
+           "name" : "questions",
+           "type" : ["array"],
+           "label": "questions"
+          },
+           
+          {
+           "name" : "options",
+           "type" : ["array"],
+           "label": "options"
+          },
+        
+          {
+           "name" : "required", 
+           "type": ["array"],
+           "label": "required"
+
+          },
+        
+          {
+           "name" : "horizontal", 
+           "type": ["boolean"],
+           "label": "horizontal", 
+           "default": "false"
+
+          },
+        
+          {
+           "name" : "preamble", 
+           "type": ["array"],
+           "label": "preamble", 
+           "default": "empty string"
+
+          }
+     ]
+  }

@@ -13,74 +13,6 @@ jsPsych.plugins.xab = (function() {
   var plugin = {};
 
   jsPsych.pluginAPI.registerPreload('xab', 'stimuli', 'image');
-  
-   plugin.parameters = function(){
-   var params = {
-    stimuli:{
-     type : ['array'],
-     label: 'stimuli',
-     validation_function: function(){ return true; }, //none(temp)
-     //default is undefined
-    },
-    is_html: { 
-     type: ['boolean'],
-     label: 'is_html', 
-        validation_function: function() { return true; }, 
-     default: 'false'
-
-    },
-	left_key: { 
-     type: ['number','string'],
-     label: 'left_key', 
-        validation_function: function() { return true; }, 
-     default: 'Q'
-
-    },
-	right_key: { 
-     type: ['number','string'],
-     label: 'right_key', 
-        validation_function: function() { return true; }, 
-     default: 'P'
-
-    },
-	prompt: { 
-     type: ['string'],
-     label: 'prompt', 
-        validation_function: function() { return true; }, 
-     default: '""'
-
-    },
-	timing_x: { 
-     type: ['number'],
-     label: 'timing_x', 
-        validation_function: function() { return true; }, 
-     default: '1000'
-
-    },
-	timing_xab_gap: { 
-     type: ['number'],
-     label: 'timing_xab_gap', 
-        validation_function: function() { return true; }, 
-     default: '1000'
-
-    },
-	timing_ab: { 
-     type: ['number'],
-     label: 'timing_ab', 
-        validation_function: function() { return true; }, 
-     default: '-1'
-
-    },
-	timing_response: { 
-     type: ['number'],
-     label: 'timing_response', 
-        validation_function: function() { return true; }, 
-     default: '-1'
-
-    }
-   }
-   return params;
- }
 
   plugin.trial = function(display_element, trial) {
 
@@ -257,3 +189,70 @@ jsPsych.plugins.xab = (function() {
 
   return plugin;
 })();
+
+plugin_parameters = {
+    "name" : "xab",
+    "parameters" : [
+        {
+         "name" : "stimuli",
+         "type" : ["array"],
+         "label": "stimuli"
+        },
+        {
+         "name" : "is_html", 
+         "type": ["boolean"],
+         "label": "is_html", 
+         "default": "false"
+
+        },
+      {
+       "name" : "left_key", 
+         "type": ["number","string"],
+         "label": "left_key",
+         "default": "Q"
+
+        },
+      {
+       "name" : "right_key", 
+         "type": ["number","string"],
+         "label": "right_key", 
+         "default": "P"
+
+        },
+      {
+       "name" : "prompt", 
+         "type": ["string"],
+         "label": "prompt", 
+         "default": "\"\""
+
+        },
+      {
+       "name" : "timing_x", 
+         "type": ["number"],
+         "label": "timing_x", 
+         "default": "1000"
+
+        },
+      {
+       "name" : "timing_xab_gap", 
+         "type": ["number"],
+         "label": "timing_xab_gap", 
+         "default": "1000"
+
+        },
+      {
+       "name" : "timing_ab", 
+         "type": ["number"],
+         "label": "timing_ab", 
+         "default": "-1"
+
+        },
+      {
+       "name" : "timing_response", 
+         "type": ["number"],
+         "label": "timing_response", 
+         "default": "-1"
+
+        }
+    ]
+  }

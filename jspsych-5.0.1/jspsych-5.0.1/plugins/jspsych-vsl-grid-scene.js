@@ -16,32 +16,6 @@ jsPsych.plugins['vsl-grid-scene'] = (function() {
   var plugin = {};
 
   jsPsych.pluginAPI.registerPreload('vsl-grid-scene', 'stimuli', 'image');
-  
-   plugin.parameters = function(){
-   var params = {
-    stimuli:{
-     type : ['array'],
-     label: 'stimuli',
-     validation_function: function(){ return true; }, //none(temp)
-     //default is undefined
-    },
-    image_size: { 
-     type: ['array'],
-     label: 'image_size', 
-        validation_function: function() { return true; }, 
-     default: '[100,100]'
-
-    },
-	timing_duration: { 
-     type: ['number'],
-     label: 'timing_duration', 
-        validation_function: function() { return true; }, 
-     default: '[2000]'
-
-    }
-   }
-   return params;
- }
 
   plugin.trial = function(display_element, trial) {
 
@@ -143,3 +117,28 @@ jsPsych.plugins['vsl-grid-scene'] = (function() {
 
   return plugin;
 })();
+
+plugin_parameters = {
+    "name" : "vsl-grid-scene",
+     "parameters" : [
+        {
+         "name" : "stimuli",
+         "type" : ["array"],
+         "label": "stimuli"
+        },
+        {
+         "name" : "image_size", 
+         "type": ["array"],
+         "label": "image_size", 
+         "default": "[100,100]"
+
+        },
+      {
+       "name" : "timing_duration", 
+         "type": ["number"],
+         "label": "timing_duration", 
+         "default": "[2000]"
+
+        }
+     ]
+  }

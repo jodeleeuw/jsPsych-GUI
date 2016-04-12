@@ -1,56 +1,18 @@
-  /* jspsych-text.js
- * Josh de Leeuw
+/**
+ * jspsych-survey-text
+ * a jspsych plugin for free response survey questions
  *
- * This plugin displays text (including HTML formatted strings) during the experiment.
- * Use it to show instructions, provide performance feedback, etc...
+ * Josh de Leeuw
  *
  * documentation: docs.jspsych.org
  *
- *
  */
 
-jsPsych.plugins.text = (function() {
+
+jsPsych.plugins['survey-text'] = (function() {
 
   var plugin = {};
-  
-  plugin.parameters = function(){
-   var params = {
-	   
-    questions:{
-     type : ['array'],
-     label: 'questions',
-     validation_function: function(){ return true; }, //none(temp)
-     //default is undefined
-    },
-	
-    preamble: { 
-     type: ['string'],
-     label: 'preamble', 
-        validation_function: function() { return true; }, 
-     default: 'empty string'
 
-    },
-	
-    rows: { 
-     type: ['array'],
-     label: 'rows', 
-        validation_function: function() { return true; }, 
-     default: '[1]'
-
-    },
-	
-    columns: { 
-     type: ['array'],
-     label: 'columns', 
-        validation_function: function() { return true; }, 
-     default: '[40]'
-
-    }
-	
-   }
-   return params;
- }
-  
   plugin.trial = function(display_element, trial) {
 
     trial.preamble = typeof trial.preamble == 'undefined' ? "" : trial.preamble;
@@ -133,3 +95,40 @@ jsPsych.plugins.text = (function() {
 
   return plugin;
 })();
+
+plugin_parameters = {
+    "name" : "survey-text",
+    "parameters" : [
+         
+        {
+         "name" : "questions",
+         "type" : ["array"],
+         "label": "questions"
+        },
+      
+        {
+         "name" : "preamble", 
+         "type": ["string"],
+         "label": "preamble", 
+         "default": "empty string"
+
+        },
+      
+        {
+         "name" : "rows", 
+         "type": ["array"],
+         "label": "rows", 
+         "default": "[1]"
+
+        },
+      
+        {
+         "name" : "columns", 
+         "type": ["array"],
+         "label": "columns", 
+         "default": "[40]"
+
+        }
+      
+     ]
+  }

@@ -20,55 +20,7 @@ jsPsych.plugins.palmer = (function() {
 
   var plugin = {};
 
-  plugin.parameters = function(){
-		  var params = {
-			  configuration:{
-				  type : ['array'],
-				  label: 'Configuration'
-				  //validation_function: function(){ return true; }, //none(temp)
-				  //default is undefined
-			  },
-			  show_feedback: { 
-				  type: ['boolean'],
-				  label: 'Show Feedback', 
-				  //validation_function: function() { return true; }, 
-				  default : false
-			  },
-			  grid_spacing: { 
-				  type: ['number'],
-				  label: 'Grid Spacing'
-				  //validation_function: function() { return true; }, 
-				  default: 75
 
-			  },
-			  circle_radius: { 
-				  type: ['number'],
-				  label: 'Circle Radius', 
-				  //validation_function: function() { return true; }, 
-				  default: 20
-
-			  },
-			  square_size: { 
-				  type: ['number'],
-				  label: 'Square Size', 
-				  //validation_function: function() { return true; }, 
-				  default: 3
-			  },
-			  timing_feedback: { 
-				  type: ['number'],
-				  label: 'Timing Response', 
-				  //validation_function: function() { return true; }, 
-				  default: 1000
-			  },
-			  prompt: { 
-				  type: ['string'],
-				  label: 'Response Ends Trials', 
-				  //validation_function: function() { return true; }, 
-				  default: ' '
-			  }
-		  }
-	  return params;
-	}
   plugin.trial = function(display_element, trial) {
 
     // default parameter settings
@@ -437,3 +389,51 @@ jsPsych.plugins.palmer = (function() {
 
   return plugin;
 })();
+
+plugin_parameters = {
+    "name" : "palmer",
+    "parameters" : [
+        {
+            "name" : "configuration",
+          "type" : ["array"],
+          "label": "Configuration"
+        },
+        {
+            "name" : "show_feedback", 
+          "type": ["boolean"],
+          "label": "Show Feedback", 
+          "default" : false
+        },
+        {
+            "name" : "grid_spacing", 
+          "type": ["number"],
+          "label": "Grid Spacing",
+          "default": 75
+        },
+        {
+            "name" : "circle_radius", 
+          "type": ["number"],
+          "label": "Circle Radius", 
+          "default": 20
+
+        },
+        {
+            "name" : "square_size", 
+          "type": ["number"],
+          "label": "Square Size", 
+          "default": 3
+        },
+        {
+            "name" : "timing_feedback", 
+          "type": ["number"],
+          "label": "Timing Response", 
+          "default": 1000
+        },
+        {
+            "name" : "prompt", 
+          "type": ["string"],
+          "label": "Response Ends Trials", 
+          "default": " "
+        }
+      ]
+  }

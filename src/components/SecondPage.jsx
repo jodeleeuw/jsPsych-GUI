@@ -30,6 +30,12 @@ var SecondPage = React.createClass({
   },
 
   componentWillMount: function() {
+    console.log("In component will mount...")
+    $.get('/plugin_data',function(all_plugin_parameters){
+      console.log(all_plugin_parameters)
+    })
+
+
     this.state.AllTrialTypes = [{trialName :"animation"},
                                 {trialName :"button-response"},
                                 {trialName :"call-function"},

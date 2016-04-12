@@ -15,53 +15,6 @@ jsPsych.plugins["single-audio"] = (function() {
   var context = new AudioContext();
 
   jsPsych.pluginAPI.registerPreload('single-audio', 'stimulus', 'audio');
-  
-   plugin.parameters = function(){
-   var params = {
-    
-	stimulus:{
-     type : ['array'],
-     label: 'stimulus',
-     validation_function: function(){ return true; }, //none(temp)
-     //default is undefined
-    },
-	
-	
-	choices: { 
-     type: ['array'],
-     label: 'choices', 
-        validation_function: function() { return true; }, 
-     default: '[]'
-
-    },
-	
-	prompt: { 
-     type: ['string'],
-     label: 'prompt', 
-        validation_function: function() { return true; }, 
-     default: '""'
-
-    },
-	
-    timing_response: { 
-     type: ['number'],
-     label: 'timing_response', 
-        validation_function: function() { return true; }, 
-     default: '-1'
-
-    },
-	
-    response_ends_trial: { 
-     type: ['boolean'],
-     label: 'response_ends_trial', 
-        validation_function: function() { return true; }, 
-     default: 'true'
-
-    }
-	
-   }
-   return params;
- }
 
   plugin.trial = function(display_element, trial) {
 
@@ -116,7 +69,7 @@ jsPsych.plugins["single-audio"] = (function() {
       // gather the data to store for the trial
       var trial_data = {
         "rt": response.rt * 1000,
-        "stimulus": trial.audio_path,
+        "stimulus": trial.stimulus,
         "key_press": response.key
       };
 
@@ -162,3 +115,49 @@ jsPsych.plugins["single-audio"] = (function() {
 
   return plugin;
 })();
+
+plugin_parameters = {
+    "name" : "single-audio",
+    "parameters" : [
+    
+        {
+         "name" : "stimulus",
+           "type" : ["array"],
+           "label": "stimulus"
+          },
+        
+        
+        {
+         "name" : "choices", 
+           "type": ["array"],
+           "label": "choices", 
+           "default": "[]"
+
+          },
+        
+        {
+         "name" : "prompt", 
+           "type": ["string"],
+           "label": "prompt", 
+           "default": "\"\""
+
+          },
+        
+          {
+           "name" : "timing_response", 
+           "type": ["number"],
+           "label": "timing_response", 
+           "default": "-1"
+
+          },
+        
+          {
+           "name" : "response_ends_trial", 
+           "type": ["boolean"],
+           "label": "response_ends_trial", 
+           "default": "true"
+
+          }
+        
+    ]
+  }

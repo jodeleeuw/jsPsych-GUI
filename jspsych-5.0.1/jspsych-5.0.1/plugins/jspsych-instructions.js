@@ -12,49 +12,7 @@
 jsPsych.plugins.instructions = (function() {
 
   var plugin = {};
-  plugin.parameters = function(){
-		  var params = {
-			  pages:{
-				  type : ['array'],
-				  label: 'Pages'
-				  //validation_function: function(){ return true; }, //none(temp)
-				  //default is undefined
-			  },
-			  key_forward: { 
-				  type: ['key code'],
-				  label: 'Key Forward', 
-				  //validation_function: function() { return true; }, 
-				  default : 'rightarrow'
-			  },
-			  key_backward: { 
-				  type: ['key code'],
-				  label: 'Key Backward', 
-				  //validation_function: function() { return true; }, 
-				  default : 'leftarrow'
 
-			  },
-			  allow_backward: { 
-				  type: ['boolean'],
-				  label: 'Allow Backward', 
-				  //validation_function: function() { return true; }, 
-				  default: true
-
-			  },
-			  allow_keys: { 
-				  type: ['boolean'],
-				  label: 'Allow Keys', 
-				  //validation_function: function() { return true; }, 
-				  default: true
-			  },
-			  show_clickable_nav: { 
-				  type: ['boolean'],
-				  label: 'Show Clickable Navigation', 
-				  //validation_function: function() { return true; }, 
-				  default: false
-			  }
-		  }
-	  return params;
-	}
   plugin.trial = function(display_element, trial) {
 
     trial.key_forward = trial.key_forward || 'rightarrow';
@@ -200,3 +158,40 @@ jsPsych.plugins.instructions = (function() {
 
   return plugin;
 })();
+
+plugin_parameters = {
+    "name":"instructions",
+    "parameters" : [
+      {   "name": "pages",
+          "type" : ["array"],
+          "label": "pages"
+        },
+      {   "name": "key_forward",
+          "type": ["key code"],
+          "label": "key_forward", 
+          "default" : "rightarrow"
+        },
+      {     "name": "key_backward", 
+          "type": ["key code"],
+          "label": "key_backward", 
+          "default" : "leftarrow"
+
+        },
+      {   "name": "allow_backward", 
+          "type": ["boolean"],
+          "label": "allow_backward", 
+          "default": true
+
+        },
+      {   "name": "allow_keys", 
+          "type": ["boolean"],
+          "label": "allow_keys", 
+          "default": true
+        },
+      {     "name" : "show_clickable_nav",
+          "type": ["boolean"],
+          "label": "show_clickable_nav", 
+          "default": false
+        }
+    ]
+  }

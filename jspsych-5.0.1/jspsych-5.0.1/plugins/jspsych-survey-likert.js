@@ -12,27 +12,6 @@ jsPsych.plugins['survey-likert'] = (function() {
 
   var plugin = {};
 
-     plugin.parameters = function(){
-   var params = {
-	   
-    questions:{
-     type : ['array'],
-     label: 'questions',
-     validation_function: function(){ return true; }, //none(temp)
-     //default is undefined
-    },
-	   
-    labels:{
-     type : ['array'],
-     label: 'labels',
-     validation_function: function(){ return true; }, //none(temp)
-     //default is undefined
-    }
-	
-   }
-   return params;
- }
-  
   plugin.trial = function(display_element, trial) {
 
     // default parameters for the trial
@@ -108,3 +87,22 @@ jsPsych.plugins['survey-likert'] = (function() {
 
   return plugin;
 })();
+
+plugin_parameters = {
+    "name" : "survey-likert",
+    "parameters" : [
+     
+        {
+         "name" : "questions",
+         "type" : ["array"],
+         "label": "questions"
+        },
+         
+        {
+         "name" : "labels",
+         "type" : ["array"],
+         "label": "labels"
+        }
+      
+    ]
+  }
