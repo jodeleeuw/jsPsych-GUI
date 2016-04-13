@@ -139,9 +139,9 @@ jsPsych.plugins["single-stim"] = (function() {
 plugin_parameters = {
     "name" :"single-stim",
     "parameters" : [
-      {"name": "stimuli",
+      {"name": "stimulus",
          "type" : ["array"],
-         "label": "stimuli"
+         "label": "stimulus"
         },
       
       {"name": "is_html", 
