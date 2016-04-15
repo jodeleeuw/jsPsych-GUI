@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var ReactJson = require('react-json');
+var ReactBootstrap = require('react-bootstrap')
 var PluginParameter = require('./PluginParameter.json');
 var pluginparameter = PluginParameter;
 var SaveAs = require('./saveAs.jsx');
@@ -8,6 +9,11 @@ var Reactaddons = require('react-addons');
 var JSZip = require("jszip");
 var FileInput = require('react-file-input');
 var ReactDataGrid = require('react-data-grid/addons');
+var Input = ReactBootstrap.Input;
+var Row = ReactBootstrap.Row;
+var Col = ReactBootstrap.Col;
+var NotificationSystem = require('react-notification-system');
+var Notification = require('react-notification');
 
 var SecondPage = React.createClass({
   getInitialState: function() {
@@ -26,9 +32,12 @@ var SecondPage = React.createClass({
       showTrialData : false,
       AllTrialTypes : [],
       CheckedTrials : [],
-      TestTrialData : []
+      TestTrialData : [],
+      repetitions : 1
     }
   },
+
+   _notificationSystem: null,
 
   componentWillMount: function() {
     console.log("In component will mount...")
@@ -65,6 +74,11 @@ var SecondPage = React.createClass({
   setTimelineVariables: function(timelineData) {
     this.state.TimelineVariable = timelineData
     console.log(this.state.TimelineVariable)
+  },
+
+  setRepetition: function(repetitions) {
+    this.state.repetitions = repetitions
+    console.log(this.state.repetitions)
   },
 
   setCurrentTrial: function(trialValue, trialId) {
@@ -179,7 +193,7 @@ var SecondPage = React.createClass({
         if(index2 != -1) {
           var value_substring2 = value_substring.substring(0,index2)
           console.log(value_substring2)
-          st += "\t\t\t" + parameter_Values + ": "+"function() { return jsPsych.timelineVariable('"+ value_substring2 +"'); }"
+          st += "\t\t\t" + parameter_Values + ": "+"function() { return '"+ before +"'+ jsPsych.timelineVariable('"+ value_substring2 +"')+'"+ after +"' }"
           inc += 1
         }
       } else {
@@ -285,7 +299,7 @@ var SecondPage = React.createClass({
       st += "\t\t\ttimeline_variables: timeline_variables,\n";
       st += "\t\t\ttimeline: timeline,\n";
       st += "\t\t\trandomize_order: true,\n";
-      st += "\t\t\trepetitions: 2\n\t\t}";
+      st += "\t\t\trepetitions: "+ this.state.repetitions +"\n\t\t}";
 
 
 
@@ -309,7 +323,11 @@ var SecondPage = React.createClass({
         newWindow.document.write(st);
         console.log('Previewed')  
       } else {
-        alert("Please select a trial...")
+        this._notificationSystem.addNotification({
+          message: 'Please select a trial...',
+          level: 'info'
+        });
+        // alert("Please select a trial...")
       }
       
     },
@@ -342,6 +360,10 @@ var SecondPage = React.createClass({
       read.readAsText(file)
     },
 
+    componentDidMount: function() {
+      this._notificationSystem = this.refs.notificationSystem;
+    },
+
     render: function(){
         return (
           <div>
@@ -372,13 +394,14 @@ var SecondPage = React.createClass({
 
             <div id = "rightside">
               {this.state.showSettings ? 
-                <ShowSettings setTimelineVariables={this.setTimelineVariables}/> :
+                <ShowSettings setTimelineVariables={this.setTimelineVariables} setRepetition={this.setRepetition} timelineVariable={this.state.timelineVariable}/> :
               <Trial  CurrentTrialData={this.state.CurrentTrialData}
                       showTrialData={this.state.showTrialData} 
                       saveModifiedTrialData={this.saveModifiedTrialData} 
                       AllTrialTypes={this.state.AllTrialTypes} />
             }
             </div>
+            <NotificationSystem ref="notificationSystem" />
           </div>
         );
     }
@@ -641,7 +664,8 @@ var ShowSettings = React.createClass({
       load : false,
       columns : [],
       rows : [],
-      rowsLength : 0
+      rowsLength : 0,
+      value: ''
     }
   },
 
@@ -682,25 +706,70 @@ var ShowSettings = React.createClass({
     return this.state.rows[rowIdx]
   },
 
+  validationState: function() {
+
+    let value = Number(this.state.value);
+    
+    if(this.state.value.length > 0) {
+      if (!isNaN(value)) {
+        return 'success';
+      } else {
+        return 'error';
+      }  
+    }
+    
+    // else if (length > 5) return 'warning';
+    // else if (length > 0) return 'error';
+
+  },
+
+  handleChange: function() {
+    this.props.setRepetition(this.refs.input.getValue())
+    this.setState({
+      value: this.refs.input.getValue()
+    });
+  },
+
+  // componentWillMount: function() {
+  //     if(this.props.TimelineVariable != []) {
+  //       this.state.load = true
+  //     }
+  // },
+// <form action="/" 
+//             method="post" 
+//             encType="multipart/form-data"> 
+//         <input type="file" name="upload"/>
+//         <input type="submit"/>
+//       </form>
   render: function() {
     return(
       <div>
-      <h2>Settings</h2>
-      <form action="/" 
-            method="post" 
-            encType="multipart/form-data"> 
-        <input type="file" name="upload"/>
-        <input type="submit"/>
-      </form>
-
+      <h2>Timeline Settings</h2>
+      <Row>
+        <Col xs={6}>
+          <Input type="text" 
+                label="Repetitions" 
+                placeholder="Enter repetitions... Default value is 1" 
+                bsSize="large"
+                bsStyle={this.validationState()}
+                onChange={this.handleChange}
+                hasFeedback
+                ref="input"
+                groupClassName="group-class"
+                labelClassName="label-class"/>
+        </Col>
+      </Row>
+      
       <FileInput name="upload_timeline_variables"
                    accept=".csv"
                    placeholder="Upload Timeline Variables"
                    className="timeline-upload-btn btn btn-primary"
                    onChange={this.handleTimelineVariables} />
+      <br/>
       { this.state.load ? <ReactDataGrid  columns={this.state.columns}
                                           rowGetter={this.rowGetter}
-                                          rowsCount={this.state.rows.length} />: "" }
+                                          rowsCount={this.state.rows.length}
+                                          maxWidth={600} />: "" }
       </div>
     )
   }
