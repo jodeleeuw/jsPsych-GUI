@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var ReactJson = require('react-json');
+var ReactBootstrap = require('react-bootstrap')
 var PluginParameter = require('./PluginParameter.json');
 var pluginparameter = PluginParameter;
 var SaveAs = require('./saveAs.jsx');
@@ -8,6 +9,11 @@ var Reactaddons = require('react-addons');
 var JSZip = require("jszip");
 var FileInput = require('react-file-input');
 var ReactDataGrid = require('react-data-grid/addons');
+var Input = ReactBootstrap.Input;
+var Row = ReactBootstrap.Row;
+var Col = ReactBootstrap.Col;
+var NotificationSystem = require('react-notification-system');
+var Notification = require('react-notification');
 
 var SecondPage = React.createClass({
   getInitialState: function() {
@@ -19,15 +25,19 @@ var SecondPage = React.createClass({
           childIds: []
         },
       SettingsData : [],
+      TimelineVariable : [],
       showSettings: false,
       CurrentTrialData : [],
       notInTrialData : true,
       showTrialData : false,
       AllTrialTypes : [],
       CheckedTrials : [],
-      TestTrialData : []
+      TestTrialData : [],
+      repetitions : 1
     }
   },
+
+   _notificationSystem: null,
 
   componentWillMount: function() {
     console.log("In component will mount...")
@@ -59,6 +69,16 @@ var SecondPage = React.createClass({
                                 {trialName :"vsl-animate-occlusion"},
                                 {trialName :"vsl-grid-scene"},
                                 {trialName :"xab"}]
+  },
+
+  setTimelineVariables: function(timelineData) {
+    this.state.TimelineVariable = timelineData
+    console.log(this.state.TimelineVariable)
+  },
+
+  setRepetition: function(repetitions) {
+    this.state.repetitions = repetitions
+    console.log(this.state.repetitions)
   },
 
   setCurrentTrial: function(trialValue, trialId) {
@@ -131,22 +151,56 @@ var SecondPage = React.createClass({
   initialLines: function() {
     var st = "<!DOCTYPE html>   \n\t<head>\n\t\t<title>My experiment</title>\n\t\t<script";
     st += " src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>\n\t\t<script";
-    st += " src=\"https://rawgit.com/jodeleeuw/jsPsych/master/jspsych.js\"></script>\n\t\t<link";
-    st += " href=\"https://rawgit.com/jodeleeuw/jsPsych/master/css/jspsych.css\" rel=\"stylesheet\"";
+    st += " src=\"https://rawgit.com/jodeleeuw/jsPsych/timeline-variables/jspsych.js\"></script>\n\t\t<link";
+    st += " href=\"https://rawgit.com/jodeleeuw/jsPsych/timeline-variables/css/jspsych.css\" rel=\"stylesheet\"";
     st += " type=\"text/css\"></link>\n";
     return st;
   },
 
   generateTrial: function(trialIndex) {
+    console.log("In generate trial...")
+    var hel = this.state.TestTrialData[trialIndex];
+    var hel_keys = Object.keys(this.state.TestTrialData[trialIndex]);
 
-   var hel = this.state.TestTrialData[trialIndex];
-   var hel_keys = Object.keys(this.state.TestTrialData[trialIndex]);
+    var st = "\t\tvar " + hel[hel_keys[1]] + " = {\n";
+    st += "\t\t\ttype: '" + hel[hel_keys[2]] + "',\n";
 
-  var st = "\t\tvar " + hel[hel_keys[1]] + " = {\n";
-   st += "\t\t\ttype: '" + hel[hel_keys[2]] + "',\n";
+    var inc = 0
 
    for(var parameter_Values in this.state.TestTrialData[trialIndex].parameters) {
-    st += "\t\t\t" + parameter_Values + ": '" + this.state.TestTrialData[trialIndex].parameters[parameter_Values] + "',\n";
+    
+    var value = this.state.TestTrialData[trialIndex].parameters[parameter_Values]
+    if(parameter_Values == "choices") {
+      if(inc!= 0) {
+        st += ",\n"
+      }
+      st +="\t\t\t"+parameter_Values + ": [89,78]"
+    }
+    if(value != "") {
+      if(inc!= 0) {
+        st += ",\n"
+      }
+      console.log(value)
+      var index = value.indexOf("%")
+      var before = value.substring(0,index)
+      console.log(index)
+      if(index != -1) {
+        var value_substring = value.substring(index+1)
+        console.log(value_substring)
+        var index2 = value_substring.indexOf("%")
+        console.log(index2)
+        var after = value_substring.substring(index2+1)
+        if(index2 != -1) {
+          var value_substring2 = value_substring.substring(0,index2)
+          console.log(value_substring2)
+          st += "\t\t\t" + parameter_Values + ": "+"function() { return '"+ before +"'+ jsPsych.timelineVariable('"+ value_substring2 +"')+'"+ after +"' }"
+          inc += 1
+        }
+      } else {
+        st += "\t\t\t" + parameter_Values + ": '" + value + "'";  
+        inc += 1
+      }  
+    }
    }
    st += "\t\t}\n\n";
 
@@ -158,11 +212,34 @@ var SecondPage = React.createClass({
     var st = ""
     for(var index in this.state.TestTrialData) {
       if(this.state.TestTrialData[index].type !== ""){
-        var path = "https://rawgit.com/jodeleeuw/jsPsych/master/plugins/jspsych-"+this.state.TestTrialData[index].type+".js"
+        var path = "https://rawgit.com/jodeleeuw/jsPsych/timeline-variables/plugins/jspsych-"+this.state.TestTrialData[index].type+".js"
         st += "<script src=\""+path+"\"></script>\n"  
       }
     }
+    return st
+  },
 
+  addTimelineVariables: function() {
+    console.log("In addTimelineVariables")
+    var st= "var timeline_variables = [\n"
+    var inc1 = 0
+    for(var index in this.state.TimelineVariable) {
+      if(inc1!=0) {
+        st += ",\n"  
+      }
+      st += "\t\t{ "
+      var inc2 = 0
+      for(var index2 in this.state.TimelineVariable[index]) {
+        if(inc2!=0) {
+          st += ", "
+        }
+        st += index2 + ": '" + this.state.TimelineVariable[index][index2] + "'"
+        inc2 += 1
+      }
+      st += " }"
+      inc1 += 1
+    }
+    st += "\n];\n"
     return st
   },
 
@@ -175,8 +252,11 @@ var SecondPage = React.createClass({
       var numberOfTrials = this.state.TestTrialData.length
       var self = this
       var sopen = "\n\t<script>\n";
-      var sclose = "\n\t</script>";
+      var sclose = "\n\t</script>\n";
       st += sopen;
+
+      st += this.addTimelineVariables()
+
       st += "\tvar timeline = [];\n\n";
 
       var generateTrialOutput = function(treeData) {
@@ -215,12 +295,21 @@ var SecondPage = React.createClass({
       };
       generateTrialOutput(this.state.TreeData)
 
-      st += "\t\tjsPsych.init({\n";
+      st += "\t\tvar node = {\n";
+      st += "\t\t\ttimeline_variables: timeline_variables,\n";
       st += "\t\t\ttimeline: timeline,\n";
+      st += "\t\t\trandomize_order: true,\n";
+      st += "\t\t\trepetitions: "+ this.state.repetitions +"\n\t\t}";
+
+
+
+      st += "\n\t\tjsPsych.init({\n";
+      st += "\t\t\ttimeline: [node],\n";
       st += "\t\t\tdisplay_element: $('#jspsych-target'),\n";
       st += "\t\t\ton_finish: function(){\n";
-      st += "\t\t\t\tjsPsych.data.displayData();\n\t\t\t}\n";
-      st += "\t\t})\n"
+      st += "\t\t\t\tjsPsych.data.displayData();\n\t\t\t},\n";
+      st += "\t\t\tdefault_iti: 250\n";
+      st += "\t\t});\n";
 
       st += sclose;
       st += "\n\n\t</body>\n</html>";
@@ -234,7 +323,11 @@ var SecondPage = React.createClass({
         newWindow.document.write(st);
         console.log('Previewed')  
       } else {
-        alert("Please select a trial...")
+        this._notificationSystem.addNotification({
+          message: 'Please select a trial...',
+          level: 'info'
+        });
+        // alert("Please select a trial...")
       }
       
     },
@@ -267,6 +360,10 @@ var SecondPage = React.createClass({
       read.readAsText(file)
     },
 
+    componentDidMount: function() {
+      this._notificationSystem = this.refs.notificationSystem;
+    },
+
     render: function(){
         return (
           <div>
@@ -297,13 +394,14 @@ var SecondPage = React.createClass({
 
             <div id = "rightside">
               {this.state.showSettings ? 
-                <ShowSettings/> :
+                <ShowSettings setTimelineVariables={this.setTimelineVariables} setRepetition={this.setRepetition} timelineVariable={this.state.timelineVariable}/> :
               <Trial  CurrentTrialData={this.state.CurrentTrialData}
                       showTrialData={this.state.showTrialData} 
                       saveModifiedTrialData={this.saveModifiedTrialData} 
                       AllTrialTypes={this.state.AllTrialTypes} />
             }
             </div>
+            <NotificationSystem ref="notificationSystem" />
           </div>
         );
     }
@@ -566,8 +664,13 @@ var ShowSettings = React.createClass({
       load : false,
       columns : [],
       rows : [],
-      rowsLength : 0
+      rowsLength : 0,
+      value: ''
     }
+  },
+
+  setTimelineVariables: function(uploadedFileData) {
+    this.props.setTimelineVariables(uploadedFileData)  
   },
 
   handleTimelineVariables: function(event) {
@@ -579,9 +682,10 @@ var ShowSettings = React.createClass({
       dynamicTyping: true,
       complete: function(results) {
         fileOutput = results;
-        
+        console.log(fileOutput)
+        self.setTimelineVariables(fileOutput.data)
         for(var objIndex in fileOutput.meta.fields) {
-          self.state.columns.push({key:fileOutput.meta.fields[objIndex], name: fileOutput.meta.fields[objIndex]})
+          self.state.columns.push({key:fileOutput.meta.fields[objIndex], name: fileOutput.meta.fields[objIndex], resizable:true})
         }
         
         for(var objIndex in fileOutput.data) {
@@ -602,26 +706,70 @@ var ShowSettings = React.createClass({
     return this.state.rows[rowIdx]
   },
 
+  validationState: function() {
+
+    let value = Number(this.state.value);
+    
+    if(this.state.value.length > 0) {
+      if (!isNaN(value)) {
+        return 'success';
+      } else {
+        return 'error';
+      }  
+    }
+    
+    // else if (length > 5) return 'warning';
+    // else if (length > 0) return 'error';
+
+  },
+
+  handleChange: function() {
+    this.props.setRepetition(this.refs.input.getValue())
+    this.setState({
+      value: this.refs.input.getValue()
+    });
+  },
+
+  // componentWillMount: function() {
+  //     if(this.props.TimelineVariable != []) {
+  //       this.state.load = true
+  //     }
+  // },
+// <form action="/" 
+//             method="post" 
+//             encType="multipart/form-data"> 
+//         <input type="file" name="upload"/>
+//         <input type="submit"/>
+//       </form>
   render: function() {
     return(
       <div>
-      <h2>Settings</h2>
-      <form action="/" 
-            method="post" 
-            encType="multipart/form-data"> 
-        <input type="file" name="upload"/>
-        <input type="submit"/>
-      </form>
-
+      <h2>Timeline Settings</h2>
+      <Row>
+        <Col xs={6}>
+          <Input type="text" 
+                label="Repetitions" 
+                placeholder="Enter repetitions... Default value is 1" 
+                bsSize="large"
+                bsStyle={this.validationState()}
+                onChange={this.handleChange}
+                hasFeedback
+                ref="input"
+                groupClassName="group-class"
+                labelClassName="label-class"/>
+        </Col>
+      </Row>
+      
       <FileInput name="upload_timeline_variables"
                    accept=".csv"
                    placeholder="Upload Timeline Variables"
                    className="timeline-upload-btn btn btn-primary"
                    onChange={this.handleTimelineVariables} />
+      <br/>
       { this.state.load ? <ReactDataGrid  columns={this.state.columns}
                                           rowGetter={this.rowGetter}
                                           rowsCount={this.state.rows.length}
-                                          minHeight={500} />: "" }
+                                          maxWidth={600} />: "" }
       </div>
     )
   }

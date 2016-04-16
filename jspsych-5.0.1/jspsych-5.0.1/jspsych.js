@@ -495,16 +495,16 @@ var jsPsych = (function() {
 
     // get all the trials of a particular type
     this.trialsOfType = function(type) {
-      if (timeline.length == 0) {
-        if (trial_data.type == type) {
-          return trial_data;
+      if (typeof timeline_parameters == 'undefined'){
+        if (trial_parameters.type == type) {
+          return trial_parameters;
         } else {
           return [];
         }
       } else {
         var trials = [];
-        for (var i = 0; i < timeline.length; i++) {
-          var t = timeline[i].trialsOfType(type);
+        for (var i = 0; i < timeline_parameters.timeline.length; i++) {
+          var t = timeline_parameters.timeline[i].trialsOfType(type);
           trials = trials.concat(t);
         }
         return trials;
@@ -679,6 +679,9 @@ jsPsych.data = (function() {
   // data properties for all trials
   var dataProperties = {};
 
+  // cache the query_string
+  var query_string;
+
   module.getData = function() {
     return $.extend(true, [], allData); // deep clone
   };
@@ -831,10 +834,16 @@ jsPsych.data = (function() {
   };
 
   module.urlVariables = function() {
+    if(typeof query_string == 'undefined'){
+      query_string = getQueryString();
+    }
     return query_string;
   }
 
   module.getURLVariable = function(whichvar){
+    if(typeof query_string == 'undefined'){
+      query_string = getQueryString();
+    }
     return query_string[whichvar];
   }
   // private function to save text file on local drive
@@ -909,10 +918,11 @@ jsPsych.data = (function() {
     return result;
   }
 
-  // this function is from StackOverflow:
+  // this function is modified from StackOverflow:
   // http://stackoverflow.com/posts/3855394
 
-  var query_string = (function(a) {
+  function getQueryString() {
+    var a = window.location.search.substr(1).split('&');
     if (a == "") return {};
     var b = {};
     for (var i = 0; i < a.length; ++i)
@@ -924,7 +934,7 @@ jsPsych.data = (function() {
             b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
     }
     return b;
-})(window.location.search.substr(1).split('&'));
+  }
 
   return module;
 
@@ -1498,12 +1508,12 @@ jsPsych.pluginAPI = (function() {
   // audio //
 
   // temporary patch for Safari
-  if (window.hasOwnProperty('webkitAudioContext') && !window.hasOwnProperty('AudioContext')) {
+  if (typeof window !== 'undefined' && window.hasOwnProperty('webkitAudioContext') && !window.hasOwnProperty('AudioContext')) {
     window.AudioContext = webkitAudioContext;
   }
   // end patch
 
-  var context = (typeof window.AudioContext !== 'undefined') ? new AudioContext() : null;
+  var context = (typeof window !== 'undefined' && typeof window.AudioContext !== 'undefined') ? new AudioContext() : null;
   var audio_buffers = [];
 
   module.getAudioBuffer = function(audioID) {

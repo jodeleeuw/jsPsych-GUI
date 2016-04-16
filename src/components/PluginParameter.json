@@ -20,9 +20,9 @@
 	{
 		"name" :"single-stim",
 		"parameters" : [
-			{"name": "stimuli",
+			{"name": "stimulus",
 		     "type" : ['array'],
-		     "label": 'stimuli',
+		     "label": 'stimulus',
 		     "validation_function": function(){ return true; }, //none(temp)
 		     //"default" is undefined
 		    },

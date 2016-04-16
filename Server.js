@@ -3,7 +3,7 @@ var formidable = require('formidable');
 var app = express();
 var fs = require('fs');
 var path = require('path');
-// var jspysch = require('C:\\Users\\Uday\\Desktop\\jsPsych-old\\jsPsych-GUI\\jspsych-5.0.1\\jspsych-5.0.1\\jspsych.js');
+var jspysch = require(__dirname + '\\jspsych-5.0.1\\jspsych-5.0.1\\jspsych.js');
 
 app.use(express.static( __dirname));
 
