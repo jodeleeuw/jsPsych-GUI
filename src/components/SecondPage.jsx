@@ -12,6 +12,7 @@ var ReactDataGrid = require('react-data-grid/addons');
 var Input = ReactBootstrap.Input;
 var Row = ReactBootstrap.Row;
 var Col = ReactBootstrap.Col;
+var ButtonInput  = ReactBootstrap.ButtonInput;
 var NotificationSystem = require('react-notification-system');
 var Notification = require('react-notification');
 
@@ -33,18 +34,23 @@ var SecondPage = React.createClass({
       AllTrialTypes : [],
       CheckedTrials : [],
       TestTrialData : [],
+      AllPluginParameters : [],
       repetitions : 1
     }
   },
 
    _notificationSystem: null,
 
-  componentWillMount: function() {
-    console.log("In component will mount...")
-    $.get('/plugin_data',function(all_plugin_parameters){
-      console.log(all_plugin_parameters)
-    })
+   setAllPluginParameters: function(value) {
+      this.setState({AllPluginParameters: value})
+   },
 
+  componentWillMount: function() {
+    // console.log("In component will mount...")
+
+    $.get('/plugin_data',function(all_plugin_parameters){
+      this.setAllPluginParameters(all_plugin_parameters)
+    }.bind(this))
 
     this.state.AllTrialTypes = [{trialName :"animation"},
                                 {trialName :"button-response"},
@@ -73,12 +79,12 @@ var SecondPage = React.createClass({
 
   setTimelineVariables: function(timelineData) {
     this.state.TimelineVariable = timelineData
-    console.log(this.state.TimelineVariable)
+    // console.log(this.state.TimelineVariable)
   },
 
   setRepetition: function(repetitions) {
     this.state.repetitions = repetitions
-    console.log(this.state.repetitions)
+    // console.log(this.state.repetitions)
   },
 
   setCurrentTrial: function(trialValue, trialId) {
@@ -122,8 +128,8 @@ var SecondPage = React.createClass({
             this.state.CheckedTrials.splice(trialIndex,1)
         }
     }
-    console.log(this.state.CheckedTrials)
-    console.log(this.state.TestTrialData)
+    // console.log(this.state.CheckedTrials)
+    // console.log(this.state.TestTrialData)
   },
 
   removeDeletedCheckedNodes: function() {
@@ -146,6 +152,7 @@ var SecondPage = React.createClass({
           break;
         }
     }
+    console.log(this.state.TestTrialData)
   },
 
   initialLines: function() {
@@ -398,7 +405,7 @@ var SecondPage = React.createClass({
               <Trial  CurrentTrialData={this.state.CurrentTrialData}
                       showTrialData={this.state.showTrialData} 
                       saveModifiedTrialData={this.saveModifiedTrialData} 
-                      AllTrialTypes={this.state.AllTrialTypes} />
+                      AllPluginParameters={this.state.AllPluginParameters}/>
             }
             </div>
             <NotificationSystem ref="notificationSystem" />
@@ -572,91 +579,157 @@ var Tree = React.createClass({
 var Trial = React.createClass({
     getInitialState: function() {
       return {
-       currentTrial : "Hello",
-       TrialData : this.props.CurrentTrialData,
-       PluginData : pluginparameter,
-       PluginLabels : {},
-       setFormBuilderData : "",
-       settings : { form: true,  fields: { } },
-       propertyName: "",
-       onTrialClick : false,
-       setData : {},
-       selectedTrialType : ""
+       selectedTrialType : "Select a trial type...",
+       changeTrialType : false
        }
     },
-    handleChange : function(e) {
-      this.state.labels = new Object();
-      if(e.target.value != "Select a trial type...") {
-          if(this.props.CurrentTrialData.type === "" || this.props.CurrentTrialData.type!=e.target.value) {
-            for(var obj in this.state.PluginData) {
-            if(this.state.PluginData[obj].name === e.target.value) {
-              for(var obj2 in this.state.PluginData[obj].parameters) {
-                  this.state.labels[this.state.PluginData[obj].parameters[obj2].label] = "";
-              }
-            }
-          }
-          this.state.setData = this.state.labels;
-          this.state.selectedTrialType = e.target.value;
-          this.setState({setData : this.state.setData});
-          } else {
-            this.state.setData = this.props.CurrentTrialData.parameters;
-            this.setState({setData : this.state.setData});
-          }
-      } else {
-        this.state.setData = {};
-        this.setState({setData : this.state.setData});
-      }
 
-
-    },
-    showData : function() {
-        var trialTypes = this.props.AllTrialTypes
-        if(this.props.showTrialData) {
-          if(this.props.CurrentTrialData.type === "") {
-             return (
-              <div>
-                <span id="fields"><select onChange={this.handleChange}>
-                  <option value="Select a trial type...">Select a trial type</option>
-                    {trialTypes.map(function(type) {
-                      return <option value={type.trialName} key={type.trialName}>{type.trialName}</option>
-                    })}
-                </select></span>
-                <span><ReactJson value={ this.state.setData } settings={ this.state.settings } ref="json"/></span>
-                <button className="btn btn-primary btn-md outline" onClick={ this.onSave }>Save Data</button>
-                </div>
-          );
-          } else {
-            this.handleChange.bind(this,this.props.CurrentTrialData.type);
-             return (
-              <div>
-                <span id="fields"><select onChange={this.handleChange}>
-                  <option value="Select a trial type...">Select a trial type</option>
-                    {trialTypes.map(function(type) {
-                      return <option value={type.trialName} key={type.trialName}>{type.trialName}</option>
-                    })}
-                </select></span>
-                <span><ReactJson value={ this.state.setData } settings={ this.state.settings } ref="json"/></span>
-                <button className="btn btn-primary btn-md outline" onClick={ this.onSave }>Save Data</button>
-                </div>
-          );
-          }
-        }
-    },
-    onSave: function( e ){
-    var val = this.refs.json.getValue();
-    for(var obj in val) {
-      console.log(val[obj]);
-    }
-    this.props.saveModifiedTrialData(this.props.CurrentTrialData.label,this.state.selectedTrialType,val);
+  handleChange: function(e) {
+    this.setState({selectedTrialType : e.target.value})
   },
-    render:function(){
-      return(
-        <div>
-        {this.showData()}
-        </div>
-      );
+
+  handleSave: function(e) {
+      var newCurrentTrialData = this.refs.newCurrentTrialData.state.currentTrialValue
+      var trialName = this.props.CurrentTrialData.label
+      this.props.saveModifiedTrialData(trialName,this.state.selectedTrialType,newCurrentTrialData)
+  },
+
+  showData: function() {
+    if(this.props.showTrialData) {
+      var allTrialTypeName = []
+      for(var obj in this.props.AllPluginParameters) {
+        allTrialTypeName.push(this.props.AllPluginParameters[obj].name)
+      }
+      // console.log(allTrialName)
+
+        return (
+          <div>
+          <Input type="select" label="Trial Type:" bsSize="large" onChange={this.handleChange}>
+            <option value="Select a trial type...">Select a trial type</option>
+            {allTrialTypeName.map(function(name) {
+              return <option value={name} key={name}>{name}</option>
+            })}
+          </Input>
+          <MyForm AllPluginParameters={this.props.AllPluginParameters} 
+              selectedTrialType={this.state.selectedTrialType}
+              CurrentTrialData={this.props.CurrentTrialData}
+              changeTrialType={this.state.changeTrialType}
+              ref="newCurrentTrialData"/>
+          <ButtonInput value="Save Data" onClick={this.handleSave}/>
+          </div>
+        )
     }
+  },
+
+
+  render:function(){
+    // console.log(this.props.AllPluginParameters)
+    return(
+      <div>
+      {this.showData()}
+      </div>
+    );
+  }
 });
+
+var MyForm = React.createClass({
+  getInitialState: function() {
+    return {
+      selectedTrialParameters: [],
+      currentTrialValue : {}
+    }
+  },
+
+  handleChange: function(e) {
+    console.log(e.target.id)
+    console.log(e.target.value)
+    this.state.currentTrialValue[e.target.id] = e.target.value
+    console.log(this.state.currentTrialValue)
+  },
+
+  render: function() {
+    console.log(this.props.selectedTrialType)
+    this.state.currentTrialValue = {}
+
+    for(var obj in this.props.AllPluginParameters) {
+      if(this.props.AllPluginParameters[obj].name == this.props.selectedTrialType) {
+        this.state.selectedTrialParameters = this.props.AllPluginParameters[obj].parameters
+        break
+      }
+    }
+    console.log(this.state.selectedTrialParameters)
+    var self = this
+    return (
+      <div>
+      { 
+        this.state.selectedTrialParameters.map(function(parameter) {
+        var output = ""
+        var defaultValue = ""
+        if(parameter.default != undefined) {
+          defaultValue = parameter.default
+        }
+        if(parameter.type.includes("string") || parameter.type.includes("number") || parameter.type.includes("array") ) {
+             if(parameter.type.includes("function")) {
+              var unique_input_label = parameter.label + "_main"
+              var unique_button = parameter.name + "_button"
+              var unique_row = parameter.name +"_row"
+              var unique_col1 = parameter.name + "_col1"
+              var unique_col2 = parameter.name + "_col2"
+              var unique_div = parameter.name +"_div"
+                return (
+                  <div key={unique_div}>
+                  <Input label={parameter.label} key={unique_input_label} wrapperClassName="wrapper" bsSize="large" >
+                    <Row key={unique_row}>
+                      <Col md={6} key={unique_col1}>
+                        <input type="text" className="form-control" id={parameter.name} key={parameter.name} placeholder={defaultValue}  onChange={self.handleChange}/>
+                      </Col>
+                      <Col md={1} key={unique_col2}>
+                        <input type="button" className="form-control btn" id={unique_button} key={unique_button} value="f"/>
+                      </Col>
+                    </Row>
+                  </Input>
+                  </div>
+                )
+              } else {
+                return (
+                  <div key={unique_div}>
+                  <Input label={parameter.label} key={unique_input_label} wrapperClassName="wrapper" bsSize="large">
+                    <Row key={unique_row}>
+                      <Col md={6} key={unique_col1}>
+                        <input type="text" className="form-control" id={parameter.name} key={parameter.name} placeholder={defaultValue} onChange={self.handleChange}/>
+                      </Col>
+                    </Row>
+                  </Input>
+                  </div>
+                )
+              }
+        }
+        if(parameter.type.includes("boolean")) {
+          return (
+            <div key={unique_div}>
+            <Input label={parameter.label} key={unique_input_label} wrapperClassName="wrapper" bsSize="large">
+              <Row key={unique_row}>
+                <Col md={3} key={unique_col1}>
+                  <input type="text" className="form-control" id={parameter.name} key={parameter.name} placeholder={defaultValue} onChange={self.handleChange}/>
+                </Col>
+              </Row>
+            </Input>
+            </div>
+          )
+        }
+        if(parameter.type.includes("function")) {
+          return (
+              <div key={unique_div}>
+              <Input type="textarea" label={parameter.label} id={parameter.name} key={parameter.name} placeholder={defaultValue} bsSize="large" onChange={self.handleChange}/>
+              </div>
+          )
+        }
+      })}
+      </div>
+    )
+  }
+
+})
 
 var ShowSettings = React.createClass({
   getInitialState: function() {

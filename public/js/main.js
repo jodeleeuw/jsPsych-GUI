@@ -67938,6 +67938,7 @@ var ReactDataGrid = require('react-data-grid/addons');
 var Input = ReactBootstrap.Input;
 var Row = ReactBootstrap.Row;
 var Col = ReactBootstrap.Col;
+var ButtonInput = ReactBootstrap.ButtonInput;
 var NotificationSystem = require('react-notification-system');
 var Notification = require('react-notification');
 
@@ -67961,29 +67962,35 @@ var SecondPage = React.createClass({
       AllTrialTypes: [],
       CheckedTrials: [],
       TestTrialData: [],
+      AllPluginParameters: [],
       repetitions: 1
     };
   },
 
   _notificationSystem: null,
 
+  setAllPluginParameters: function setAllPluginParameters(value) {
+    this.setState({ AllPluginParameters: value });
+  },
+
   componentWillMount: function componentWillMount() {
-    console.log("In component will mount...");
+    // console.log("In component will mount...")
+
     $.get('/plugin_data', function (all_plugin_parameters) {
-      console.log(all_plugin_parameters);
-    });
+      this.setAllPluginParameters(all_plugin_parameters);
+    }.bind(this));
 
     this.state.AllTrialTypes = [{ trialName: "animation" }, { trialName: "button-response" }, { trialName: "call-function" }, { trialName: "categorize-animation" }, { trialName: "categorize" }, { trialName: "free-sort" }, { trialName: "html" }, { trialName: "instructions" }, { trialName: "multi-stim-multi-response" }, { trialName: "palmer" }, { trialName: "reconstruction" }, { trialName: "same-different" }, { trialName: "similarity" }, { trialName: "single-audio" }, { trialName: "single-stim" }, { trialName: "survey-likert" }, { trialName: "survey-multi-choice" }, { trialName: "survey-text" }, { trialName: "text" }, { trialName: "visual-search-circle" }, { trialName: "vsl-animate-occlusion" }, { trialName: "vsl-grid-scene" }, { trialName: "xab" }];
   },
 
   setTimelineVariables: function setTimelineVariables(timelineData) {
     this.state.TimelineVariable = timelineData;
-    console.log(this.state.TimelineVariable);
+    // console.log(this.state.TimelineVariable)
   },
 
   setRepetition: function setRepetition(repetitions) {
     this.state.repetitions = repetitions;
-    console.log(this.state.repetitions);
+    // console.log(this.state.repetitions)
   },
 
   setCurrentTrial: function setCurrentTrial(trialValue, trialId) {
@@ -68027,8 +68034,8 @@ var SecondPage = React.createClass({
         this.state.CheckedTrials.splice(trialIndex, 1);
       }
     }
-    console.log(this.state.CheckedTrials);
-    console.log(this.state.TestTrialData);
+    // console.log(this.state.CheckedTrials)
+    // console.log(this.state.TestTrialData)
   },
 
   removeDeletedCheckedNodes: function removeDeletedCheckedNodes() {
@@ -68049,6 +68056,7 @@ var SecondPage = React.createClass({
         break;
       }
     }
+    console.log(this.state.TestTrialData);
   },
 
   initialLines: function initialLines() {
@@ -68321,7 +68329,7 @@ var SecondPage = React.createClass({
         this.state.showSettings ? React.createElement(ShowSettings, { setTimelineVariables: this.setTimelineVariables, setRepetition: this.setRepetition, timelineVariable: this.state.timelineVariable }) : React.createElement(Trial, { CurrentTrialData: this.state.CurrentTrialData,
           showTrialData: this.state.showTrialData,
           saveModifiedTrialData: this.saveModifiedTrialData,
-          AllTrialTypes: this.state.AllTrialTypes })
+          AllPluginParameters: this.state.AllPluginParameters })
       ),
       React.createElement(NotificationSystem, { ref: 'notificationSystem' })
     );
@@ -68509,132 +68517,186 @@ var Trial = React.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      currentTrial: "Hello",
-      TrialData: this.props.CurrentTrialData,
-      PluginData: pluginparameter,
-      PluginLabels: {},
-      setFormBuilderData: "",
-      settings: { form: true, fields: {} },
-      propertyName: "",
-      onTrialClick: false,
-      setData: {},
-      selectedTrialType: ""
+      selectedTrialType: "Select a trial type...",
+      changeTrialType: false
     };
   },
+
   handleChange: function handleChange(e) {
-    this.state.labels = new Object();
-    if (e.target.value != "Select a trial type...") {
-      if (this.props.CurrentTrialData.type === "" || this.props.CurrentTrialData.type != e.target.value) {
-        for (var obj in this.state.PluginData) {
-          if (this.state.PluginData[obj].name === e.target.value) {
-            for (var obj2 in this.state.PluginData[obj].parameters) {
-              this.state.labels[this.state.PluginData[obj].parameters[obj2].label] = "";
-            }
-          }
-        }
-        this.state.setData = this.state.labels;
-        this.state.selectedTrialType = e.target.value;
-        this.setState({ setData: this.state.setData });
-      } else {
-        this.state.setData = this.props.CurrentTrialData.parameters;
-        this.setState({ setData: this.state.setData });
-      }
-    } else {
-      this.state.setData = {};
-      this.setState({ setData: this.state.setData });
-    }
+    this.setState({ selectedTrialType: e.target.value });
   },
+
+  handleSave: function handleSave(e) {
+    var newCurrentTrialData = this.refs.newCurrentTrialData.state.currentTrialValue;
+    var trialName = this.props.CurrentTrialData.label;
+    this.props.saveModifiedTrialData(trialName, this.state.selectedTrialType, newCurrentTrialData);
+  },
+
   showData: function showData() {
-    var trialTypes = this.props.AllTrialTypes;
     if (this.props.showTrialData) {
-      if (this.props.CurrentTrialData.type === "") {
-        return React.createElement(
-          'div',
-          null,
-          React.createElement(
-            'span',
-            { id: 'fields' },
-            React.createElement(
-              'select',
-              { onChange: this.handleChange },
-              React.createElement(
-                'option',
-                { value: 'Select a trial type...' },
-                'Select a trial type'
-              ),
-              trialTypes.map(function (type) {
-                return React.createElement(
-                  'option',
-                  { value: type.trialName, key: type.trialName },
-                  type.trialName
-                );
-              })
-            )
-          ),
-          React.createElement(
-            'span',
-            null,
-            React.createElement(ReactJson, { value: this.state.setData, settings: this.state.settings, ref: 'json' })
-          ),
-          React.createElement(
-            'button',
-            { className: 'btn btn-primary btn-md outline', onClick: this.onSave },
-            'Save Data'
-          )
-        );
-      } else {
-        this.handleChange.bind(this, this.props.CurrentTrialData.type);
-        return React.createElement(
-          'div',
-          null,
-          React.createElement(
-            'span',
-            { id: 'fields' },
-            React.createElement(
-              'select',
-              { onChange: this.handleChange },
-              React.createElement(
-                'option',
-                { value: 'Select a trial type...' },
-                'Select a trial type'
-              ),
-              trialTypes.map(function (type) {
-                return React.createElement(
-                  'option',
-                  { value: type.trialName, key: type.trialName },
-                  type.trialName
-                );
-              })
-            )
-          ),
-          React.createElement(
-            'span',
-            null,
-            React.createElement(ReactJson, { value: this.state.setData, settings: this.state.settings, ref: 'json' })
-          ),
-          React.createElement(
-            'button',
-            { className: 'btn btn-primary btn-md outline', onClick: this.onSave },
-            'Save Data'
-          )
-        );
+      var allTrialTypeName = [];
+      for (var obj in this.props.AllPluginParameters) {
+        allTrialTypeName.push(this.props.AllPluginParameters[obj].name);
       }
+      // console.log(allTrialName)
+
+      return React.createElement(
+        'div',
+        null,
+        React.createElement(
+          Input,
+          { type: 'select', label: 'Trial Type:', bsSize: 'large', onChange: this.handleChange },
+          React.createElement(
+            'option',
+            { value: 'Select a trial type...' },
+            'Select a trial type'
+          ),
+          allTrialTypeName.map(function (name) {
+            return React.createElement(
+              'option',
+              { value: name, key: name },
+              name
+            );
+          })
+        ),
+        React.createElement(MyForm, { AllPluginParameters: this.props.AllPluginParameters,
+          selectedTrialType: this.state.selectedTrialType,
+          CurrentTrialData: this.props.CurrentTrialData,
+          changeTrialType: this.state.changeTrialType,
+          ref: 'newCurrentTrialData' }),
+        React.createElement(ButtonInput, { value: 'Save Data', onClick: this.handleSave })
+      );
     }
   },
-  onSave: function onSave(e) {
-    var val = this.refs.json.getValue();
-    for (var obj in val) {
-      console.log(val[obj]);
-    }
-    this.props.saveModifiedTrialData(this.props.CurrentTrialData.label, this.state.selectedTrialType, val);
-  },
+
   render: function render() {
+    // console.log(this.props.AllPluginParameters)
     return React.createElement(
       'div',
       null,
       this.showData()
     );
   }
+});
+
+var MyForm = React.createClass({
+  displayName: 'MyForm',
+
+  getInitialState: function getInitialState() {
+    return {
+      selectedTrialParameters: [],
+      currentTrialValue: {}
+    };
+  },
+
+  handleChange: function handleChange(e) {
+    console.log(e.target.id);
+    console.log(e.target.value);
+    this.state.currentTrialValue[e.target.id] = e.target.value;
+    console.log(this.state.currentTrialValue);
+  },
+
+  render: function render() {
+    console.log(this.props.selectedTrialType);
+    this.state.currentTrialValue = {};
+
+    for (var obj in this.props.AllPluginParameters) {
+      if (this.props.AllPluginParameters[obj].name == this.props.selectedTrialType) {
+        this.state.selectedTrialParameters = this.props.AllPluginParameters[obj].parameters;
+        break;
+      }
+    }
+    console.log(this.state.selectedTrialParameters);
+    var self = this;
+    return React.createElement(
+      'div',
+      null,
+      this.state.selectedTrialParameters.map(function (parameter) {
+        var output = "";
+        var defaultValue = "";
+        if (parameter.default != undefined) {
+          defaultValue = parameter.default;
+        }
+        if (parameter.type.includes("string") || parameter.type.includes("number") || parameter.type.includes("array")) {
+          if (parameter.type.includes("function")) {
+            var unique_input_label = parameter.label + "_main";
+            var unique_button = parameter.name + "_button";
+            var unique_row = parameter.name + "_row";
+            var unique_col1 = parameter.name + "_col1";
+            var unique_col2 = parameter.name + "_col2";
+            var unique_div = parameter.name + "_div";
+            return React.createElement(
+              'div',
+              { key: unique_div },
+              React.createElement(
+                Input,
+                { label: parameter.label, key: unique_input_label, wrapperClassName: 'wrapper', bsSize: 'large' },
+                React.createElement(
+                  Row,
+                  { key: unique_row },
+                  React.createElement(
+                    Col,
+                    { md: 6, key: unique_col1 },
+                    React.createElement('input', { type: 'text', className: 'form-control', id: parameter.name, key: parameter.name, placeholder: defaultValue, onChange: self.handleChange })
+                  ),
+                  React.createElement(
+                    Col,
+                    { md: 1, key: unique_col2 },
+                    React.createElement('input', { type: 'button', className: 'form-control btn', id: unique_button, key: unique_button, value: 'f' })
+                  )
+                )
+              )
+            );
+          } else {
+            return React.createElement(
+              'div',
+              { key: unique_div },
+              React.createElement(
+                Input,
+                { label: parameter.label, key: unique_input_label, wrapperClassName: 'wrapper', bsSize: 'large' },
+                React.createElement(
+                  Row,
+                  { key: unique_row },
+                  React.createElement(
+                    Col,
+                    { md: 6, key: unique_col1 },
+                    React.createElement('input', { type: 'text', className: 'form-control', id: parameter.name, key: parameter.name, placeholder: defaultValue, onChange: self.handleChange })
+                  )
+                )
+              )
+            );
+          }
+        }
+        if (parameter.type.includes("boolean")) {
+          return React.createElement(
+            'div',
+            { key: unique_div },
+            React.createElement(
+              Input,
+              { label: parameter.label, key: unique_input_label, wrapperClassName: 'wrapper', bsSize: 'large' },
+              React.createElement(
+                Row,
+                { key: unique_row },
+                React.createElement(
+                  Col,
+                  { md: 3, key: unique_col1 },
+                  React.createElement('input', { type: 'text', className: 'form-control', id: parameter.name, key: parameter.name, placeholder: defaultValue, onChange: self.handleChange })
+                )
+              )
+            )
+          );
+        }
+        if (parameter.type.includes("function")) {
+          return React.createElement(
+            'div',
+            { key: unique_div },
+            React.createElement(Input, { type: 'textarea', label: parameter.label, id: parameter.name, key: parameter.name, placeholder: defaultValue, bsSize: 'large', onChange: self.handleChange })
+          );
+        }
+      })
+    );
+  }
+
 });
 
 var ShowSettings = React.createClass({
