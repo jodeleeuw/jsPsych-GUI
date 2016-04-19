@@ -2,24 +2,29 @@
 /* JSON Editor */
 .jsonEditor > .jsonObject {
   margin:auto;
-  width:100%;
+  width:100%; 
 }
 
 .jsonEditor * {
-	vertical-align: center;
+  vertical-align: center;
   margin:auto;
 }
-/*textbox*/
+
+/*textbox area*/
 .jsonChildren {
+  width:60%;
+
   margin:auto;
-  font-weight: normal;
-  border: 0px solid;
-  border-color: #f00;
-  color:#000;
+  
   padding-top: 2%;
   padding-bottom:5%;
-  width:60%;
+  
   display:block;
+
+  font-weight: normal;
+  border: 0px solid;
+  /*border-color: #f00;
+  color:#f00;*/
   /*background-color:#b4b0b4;*/
 
 }
@@ -28,54 +33,73 @@
   position:relative;
 }
 .jsonFieldAdder {
+
   margin:auto;
   display:inline;
+
 }
 .jsonFieldAdder select {
   margin:auto;
+
 }
 .compoundToggle:before {
   content: '▸';
-  color: #333;
+  
   line-height: 1em;
   margin:auto;
+
+  color: #333;
 }
 .open > .compoundToggle:before {
   content: '▾';
+
+  line-height: 1em;
+  margin:auto;
 }
 
 .jsonName {
-  /*font-style: italic;*/
-  text-align: left;
-  color:#131313;
+  
   width:100%;
+  
   padding-top:1%;
   padding-bottom:1%;
+
+  display:inline;
+
   border:0px solid;
   border-color:#131313;
-  display:inline;
+
+  text-align: left;
+  /*font-style: italic;*/
+  color:#00897b;
 }
 
 .jsonValue {
-  margin:auto;
+  
   width:90%;
+  
+  margin:auto;
+  display:inline;  
+
   border-left:2px solid;
   border-right:2px solid;
   border-top:8px solid;
   border-bottom: 9px solid;
-  border-color:#97c999;
-  display:inline;
+  border-color:#039be5;
+  color:#000;
 
 }
 
 .jsonValue > input,
 .jsonValue > textarea,
 .jsonValue > select {
-	margin:auto;
-  border:5px solid;
-  border-color:#131313;
-  width:90%;
   display:inline;
+
+  margin:auto;
+  
+  border:5px solid;
+  border-color:#039be5;
+  width:90%;
 }
 
 
@@ -91,11 +115,11 @@
   visibility: visible;
 }
 pre {
-  background: #eee;
   border: 1px solid #ddd;
   padding: 5px;
   width: 180px;
   margin: auto;
+  background: #eee;
 }
 
 .compoundToggle, .jsonString{
@@ -103,28 +127,28 @@ pre {
 }
 
 .booleanField * {
-	vertical-align: middle;
+  vertical-align: middle;
 }
 
 .booleanField input {
-	margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .jsonError > .jsonName,
 .jsonError .jsonErrorMsg {
-	color: #f36;
+  color: #f36;
 }
 
 .jsonError .jsonErrorMsg {
-	margin: 0 0 10px 10px;
-	font-size: 0.9em;
-	vertical-align: bottom;
-	display: block;
+  margin: 0 0 10px 10px;
+  font-size: 0.9em;
+  vertical-align: bottom;
+  display: block;
 }
 
 .jsonError > .jsonValue input,
 .jsonError > .jsonValue select,
 .jsonError > .jsonValue textarea {
-	background-color: #fff8f8;
+  background-color: #fff8f8;
 }
 
