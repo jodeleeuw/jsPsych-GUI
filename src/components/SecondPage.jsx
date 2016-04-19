@@ -377,25 +377,26 @@ var SecondPage = React.createClass({
             <div id = "leftside">
               <div id = "tree">
                 <ul>
-                  <Tree updateCheckedTrials={this.updateCheckedTrials} 
+                  <Tree className="TrialText"
+                        updateCheckedTrials={this.updateCheckedTrials} 
                         setCurrentTrial={this.setCurrentTrial} 
                         TreeData={this.state.TreeData} 
                         saveTree={this.saveTree}/>
                 </ul>
               </div>
               <div id="buttonpanel">
-              <div className="leftButtonPanel">
-                <button id="savebutton" className="btn btn-primary btn-md" onClick={this.handleSave}>Save</button>
-                <button id="previewbutton" className="btn btn-primary btn-md" onClick={this.handlePreview}>Preview</button>
-                <button id="generatebutton"  className="btn btn-primary btn-md" onClick={this.handleGenerate}>Generate</button>
-              </div>
-              <div className="righttButtonPanel">
-                <FileInput name="upload_json"
-                   accept=".json"
-                   placeholder="Upload"
-                   className="inputClass btn btn-primary btn-md uploadJson"
-                   onChange={this.handleLoad} />
-              </div>
+                
+                  <button className="btn btn-sm" onClick={this.handleSave}>Save</button>
+                  <button className="btn btn-sm" onClick={this.handlePreview}>Preview</button>
+                  <button className="btn btn-sm" onClick={this.handleGenerate}>Generate</button>
+                  
+                  <FileInput 
+                              name="upload_json"
+                              accept=".json"
+                              placeholder="Upload"
+                              className="btn btn-sm"
+                              onChange={this.handleLoad}/>
+           
               </div>
             </div>
 
@@ -501,7 +502,9 @@ var Tree = React.createClass({
   renderChild: function(child) {
     return (
       <li key={child.id}>
-        <Tree tree={child} 
+        <Tree id="tree"
+              className="TrialText"
+              tree={child} 
               setCurrentTrial={this.props.setCurrentTrial} 
               treeData={this.state.tree} 
               setTreeData={this.setTreeData} 
@@ -543,9 +546,10 @@ var Tree = React.createClass({
                 <input type="checkbox"
                        value={ !this.state.changed ? this.state.inputText = this.state.inputText+id : this.state.inputText}
                        onChange={ this.trialChecked}/>
-                <input type="text"
+                <input 
+                       type="text"
                        value={ this.state.inputText}
-                       className="TrialText"
+                       className="TrialText_text_box"
                        onChange={this.changeTrialName}
                        onClick={this.setCurrentTrial.bind(this,this.state.inputText)}/>
               </a>
@@ -553,19 +557,19 @@ var Tree = React.createClass({
               {' '}
               {id !== 0 ?
                 <a href="#" onClick={this.handleRemoveChildClick.bind(this,id)}
-                   style={{ color: 'lightgray', textDecoration: 'none' }}>
+                   style={{ color: 'black', textDecoration: 'none' }}>
                   ×
                 </a> :
                 null
               }
               <ul>
               {childIds.map(this.renderChild)}
-                <li key="add">
-                  <button onClick={this.handleAddChildClick.bind(this,id)}>
-                  +
-                  </button>
-                </li>
-              </ul>
+              <li key="add" className="TrialText_plus_button">
+                <button  onClick={this.handleAddChildClick.bind(this,id)}>
+                +
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
       );
