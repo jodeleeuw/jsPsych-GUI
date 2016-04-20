@@ -4,6 +4,7 @@ var app = express();
 var fs = require('fs');
 var path = require('path');
 var jspysch = require(__dirname + '\\jspsych-5.0.1\\jspsych-5.0.1\\jspsych.js');
+// var jspysch = require(__dirname + '/jspsych-5.0.1/jspsych-5.0.1/jspsych.js');			//for Linux and Mac
 
 app.use(express.static( __dirname));
 
@@ -38,6 +39,7 @@ addPluginParameters = function(obj) {
 app.get('/plugin_data', function (req,res) {
 
 	var path = __dirname + "\\jspsych-5.0.1\\jspsych-5.0.1\\plugins\\"
+  	// var path = __dirname + "/jspsych-5.0.1/jspsych-5.0.1/plugins/"			//for Linux and Mac
   	all_plugin_parameters = []
   	all_plugin_parameters_index = 0
 	fs.readdir(path, function(err, items) {
