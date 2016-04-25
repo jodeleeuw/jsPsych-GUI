@@ -372,8 +372,16 @@ var SecondPage = React.createClass({
     },
 
     render: function(){
+        
         return (
           <div>
+             <header className="mdl-layout__header">
+                <div className="mdl-layout__header-row">
+                  <i className="material-icons">home</i>
+                  <span className="mdl-layout-title">jsPsych</span>
+                  <div className="mdl-layout-spacer"></div>
+                </div>
+            </header>
             <div id = "leftside">
               <div id = "tree">
                 <ul>
@@ -386,16 +394,19 @@ var SecondPage = React.createClass({
               </div>
               <div id="buttonpanel">
                 
-                  <button className="btn btn-sm" onClick={this.handleSave}>Save</button>
-                  <button className="btn btn-sm" onClick={this.handlePreview}>Preview</button>
-                  <button className="btn btn-sm" onClick={this.handleGenerate}>Generate</button>
+                  <button className="mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent" onClick={this.handleSave}>Save</button>
+                  <button className="mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent" onClick={this.handlePreview}>Preview</button>
+                  <button className="mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent" onClick={this.handleGenerate}>Generate</button>
                   
-                  <FileInput 
+                  <div className="fileUpload">
+                  <span style={{fontWeight : 'normal'}}>UPLOAD</span>
+                  <input      type="file" 
                               name="upload_json"
                               accept=".json"
-                              placeholder="Upload"
-                              className="btn btn-sm"
+                              className="upload"
+                              
                               onChange={this.handleLoad}/>
+                  </div>
            
               </div>
             </div>
@@ -501,17 +512,19 @@ var Tree = React.createClass({
 
   renderChild: function(child) {
     return (
-      <li key={child.id}>
-        <Tree id="tree"
-              className="TrialText"
-              tree={child} 
+        
+        <li  key={child.id} className="listy">
+
+        <Tree tree={child} 
               setCurrentTrial={this.props.setCurrentTrial} 
               treeData={this.state.tree} 
               setTreeData={this.setTreeData} 
               TreeData={this.props.TreeData} 
               saveTree={this.props.saveTree}
               updateCheckedTrials={this.updateCheckedTrials} />
-      </li>
+        </li>
+
+      
     )
   },
 
@@ -540,36 +553,67 @@ var Tree = React.createClass({
       return(
         <div>
           <div>
+          <table className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+            <tbody>
             { id === 0 ?
-              <a href="#" onClick={this.setCurrentTrial.bind(this,"MyExperiment")}>My Experiment</a> :
-              <a href="#" >
-                <input type="checkbox"
-                       value={ !this.state.changed ? this.state.inputText = this.state.inputText+id : this.state.inputText}
-                       onChange={ this.trialChecked}/>
-                <input 
-                       type="text"
-                       value={ this.state.inputText}
-                       className="TrialText_text_box"
-                       onChange={this.changeTrialName}
-                       onClick={this.setCurrentTrial.bind(this,this.state.inputText)}/>
-              </a>
-            }
-              {' '}
+             
+                <tr>
+                  <td className="mdl-data-table__cell--non-numeric">
+                    <a href="#" onClick={this.setCurrentTrial.bind(this,"MyExperiment")}>My Experiment</a> 
+                  </td>
+                </tr> :
+              
+                <tr>
+                  <td className="mdl-data-table__cell--non-numeric">
+                    
+                      <input type="checkbox"
+                             id="list-checkbox-1" 
+                             // className="mdl-checkbox__input"
+                             value={ !this.state.changed ? this.state.inputText = this.state.inputText+id : this.state.inputText}
+                             onChange={ this.trialChecked}/>
+                  </td><td>
+                   <div className="mdl-textfield mdl-js-textfield">
+                        <input 
+                               type="text"
+                               className="mdl-textfield__input"
+                               id="sample1"
+                               value={ this.state.inputText}
+                               onChange={this.changeTrialName}
+                               onClick={this.setCurrentTrial.bind(this,this.state.inputText)}/>
+                        
+                    </div>
+                    
+                  </td> 
+                  
+              <td>
               {id !== 0 ?
                 <a href="#" onClick={this.handleRemoveChildClick.bind(this,id)}
-                   style={{ color: 'black', textDecoration: 'none' }}>
+                   // style={{ color: 'black', textDecoration: 'none' }}
+                   >
                   ×
                 </a> :
                 null
               }
-              <ul>
+            </td>
+            </tr>
+
+            }
+            
+            </tbody>
+            </table>
+
+            
+{' '}
+            <ul key="add">
               {childIds.map(this.renderChild)}
-              <li key="add" className="TrialText_plus_button">
-                <button  onClick={this.handleAddChildClick.bind(this,id)}>
-                +
+              
+                <button    onClick={this.handleAddChildClick.bind(this,id)}>
+                 +
                 </button>
-              </li>
+              
             </ul>
+
+        
           </div>
         </div>
       );
@@ -607,7 +651,7 @@ var Trial = React.createClass({
       // console.log(allTrialName)
 
         return (
-          <div>
+          <div id="right-side-form">
           <Input type="select" label="Trial Type:" bsSize="large" onChange={this.handleChange}>
             <option value="Select a trial type...">Select a trial type</option>
             {allTrialTypeName.map(function(name) {
@@ -619,7 +663,7 @@ var Trial = React.createClass({
               CurrentTrialData={this.props.CurrentTrialData}
               changeTrialType={this.state.changeTrialType}
               ref="newCurrentTrialData"/>
-          <ButtonInput value="Save Data" onClick={this.handleSave}/>
+          <ButtonInput value="Save Data" className="mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent" onClick={this.handleSave}/>
           </div>
         )
     }
@@ -835,13 +879,16 @@ var ShowSettings = React.createClass({
                 groupClassName="group-class"
                 labelClassName="label-class"/>
         </Col>
-      </Row>
+      </Row> 
+      <div className="fileUpload">
+      <span style={{fontWeight : 'normal'}}>Upload TV</span>
+        <input      type="file" 
       
-      <FileInput name="upload_timeline_variables"
+                   name="upload_timeline_variables"
                    accept=".csv"
-                   placeholder="Upload Timeline Variables"
-                   className="timeline-upload-btn btn btn-primary"
+                   className="upload"
                    onChange={this.handleTimelineVariables} />
+      </div>
       <br/>
       { this.state.load ? <ReactDataGrid  columns={this.state.columns}
                                           rowGetter={this.rowGetter}
