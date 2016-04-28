@@ -379,7 +379,27 @@ var SecondPage = React.createClass({
                 <div className="mdl-layout__header-row">
                   <i className="material-icons">home</i>
                   <span className="mdl-layout-title">jsPsych</span>
+
                   <div className="mdl-layout-spacer"></div>
+                  
+                  <div id="buttonpanel">
+                
+                    <button className="mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent" onClick={this.handleSave}>Save</button>
+                    <button className="mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent" onClick={this.handlePreview}>Preview</button>
+                    <button className="mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent" onClick={this.handleGenerate}>Generate</button>
+                    
+                    <div className="fileUpload">
+                    <span style={{fontWeight : 'normal'}}>UPLOAD</span>
+                    <input      type="file" 
+                                name="upload_json"
+                                accept=".json"
+                                className="upload"
+                                
+                                onChange={this.handleLoad}/>
+                  </div>
+           
+              </div>
+                  
                 </div>
             </header>
             <div id = "leftside">
@@ -392,23 +412,7 @@ var SecondPage = React.createClass({
                         saveTree={this.saveTree}/>
                 </ul>
               </div>
-              <div id="buttonpanel">
-                
-                  <button className="mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent" onClick={this.handleSave}>Save</button>
-                  <button className="mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent" onClick={this.handlePreview}>Preview</button>
-                  <button className="mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent" onClick={this.handleGenerate}>Generate</button>
-                  
-                  <div className="fileUpload">
-                  <span style={{fontWeight : 'normal'}}>UPLOAD</span>
-                  <input      type="file" 
-                              name="upload_json"
-                              accept=".json"
-                              className="upload"
-                              
-                              onChange={this.handleLoad}/>
-                  </div>
-           
-              </div>
+              
             </div>
 
             <div id = "rightside">
@@ -559,7 +563,7 @@ var Tree = React.createClass({
              
                 <tr>
                   <td className="mdl-data-table__cell--non-numeric">
-                    <a href="#" onClick={this.setCurrentTrial.bind(this,"MyExperiment")}>My Experiment</a> 
+                    <a href="#" onClick={this.setCurrentTrial.bind(this,"MyExperiment")}><b>My Experiment</b></a> 
                   </td>
                 </tr> :
               
@@ -651,11 +655,12 @@ var Trial = React.createClass({
       // console.log(allTrialName)
 
         return (
-          <div id="right-side-form">
-          <Input type="select" label="Trial Type:" bsSize="large" onChange={this.handleChange}>
+          <div id="right-side-form" >
+        
+          <Input type="select" className="mdl-textfield__input" label="Trial Type:" bsSize="large" onChange={this.handleChange}>
             <option value="Select a trial type...">Select a trial type</option>
             {allTrialTypeName.map(function(name) {
-              return <option value={name} key={name}>{name}</option>
+              return <option className="mdl-textfield mdl-js-textfield" value={name} key={name}>{name}</option>
             })}
           </Input>
           <MyForm AllPluginParameters={this.props.AllPluginParameters} 
@@ -663,7 +668,7 @@ var Trial = React.createClass({
               CurrentTrialData={this.props.CurrentTrialData}
               changeTrialType={this.state.changeTrialType}
               ref="newCurrentTrialData"/>
-          <ButtonInput value="Save Data" className="mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent" onClick={this.handleSave}/>
+          <ButtonInput value="Save Data" className="mdl-button mdl-js-button mdl-button-raised mdl-button-accent" onClick={this.handleSave}/>
           </div>
         )
     }
@@ -881,7 +886,7 @@ var ShowSettings = React.createClass({
         </Col>
       </Row> 
       <div className="fileUpload">
-      <span style={{fontWeight : 'normal'}}>Upload TV</span>
+      <span style={{fontWeight : 'normal'}}>Upload Timeline Variables</span>
         <input      type="file" 
       
                    name="upload_timeline_variables"
