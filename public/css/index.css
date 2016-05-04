@@ -28,20 +28,21 @@
 	color:#fff;
 }
 .mdl-layout__header{
-	background-color:#f78f1e;
+	background-color:#056839;
 	font-weight:bold;
 	font-size:22px; 
-	z-index:0;
+	z-index:5;
+	position:relative;
 }
 #leftside {
 	min-width: 30%;
-	min-height: 95%;
+	min-height: 100%;
 
 	max-width: 30%;
-	max-height: 95%;
+	max-height: 100%;
 
 	width: 30%;
-	height: 95%;
+	height: 100%;
 	
 	float: left;
 	
@@ -52,7 +53,7 @@
 	border: 0px;
 	border-style:none solid none none;	
 	/*padding-left:10px;*/
-	padding-top:0.5%;
+	padding-top:1%;
 
 	font-weight:bold;
 	font-size:20px;
@@ -125,6 +126,43 @@
 	margin: 2px 2px 0px 0px;
 	color:#056839;
 }
+/*.mdl-textfield:active{
+	background-color: #f00;
+}
+.mdl-textfield:focus{
+	background-color: #f00;
+}
+.mdl-data-table tbody tr{
+	background-color: transparent;
+
+}
+.mdl-data-table tbody tr:active{
+	background-color: #f00;
+
+}
+.mdl-data-table tbody tr:focus{
+		background-color: #f00;
+
+}*/
+/*borders for the text field areas*/
+input[type=text], textarea {
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  -ms-transition: all 0.30s ease-in-out;
+  -o-transition: all 0.30s ease-in-out;
+  outline: none;
+  padding: 3px 0px 3px 3px;
+  margin: 5px 1px 3px 0px;
+  border: 1px solid #24B24C;
+}
+ 
+input[type=text]:focus, textarea:focus {
+  box-shadow: 0 0 5px rgba(36, 178, 76, 1);
+  padding: 3px 0px 3px 3px;
+  margin: 5px 1px 3px 0px;
+  border: 1px solid rgba(36, 178, 76, 1);
+  
+}
 /*right-side select trial type drop down*/
 #fields{
 	position:fixed;
@@ -134,25 +172,26 @@
 	display: inline-block;
 
 	font-weight:bold;
-	font-size-adjust:25 px;
+	font-size:25px;
 	text-align:left;
 	
-	color:#1e88e5;;
+	color:#24B24C;
 }
 
 #buttonpanel{
-	width:100%;
-	min-width:100%;
-	max-width:500px;
+	width:20%;
+	min-width:20%;
+	max-width:20%;
 
 	overflow: none;
 	display:inline-flex;
+	z-index:+7;
 
 	position:fixed;
-	bottom:0;
-	left:0;
-	margin-bottom: 0.5%;
-	margin-left:0.1%;
+	top:0;
+	right:0;
+	margin-top: 0.5%;
+	margin-right:0.1%;
 
 	/*background-color: #f00;*/
 
@@ -171,10 +210,11 @@
 
 .mdl-button {
 		
-	margin:0.5%;
-	/*margin-right:0.5%;*/
+	margin:1%;
+	/*margin-right:1%;*/
 
-	padding:0.5%;
+	padding:1%;
+	z-index:+10;
 
 	border-radius:6px;
 
@@ -184,15 +224,16 @@
 	text-align:center;
 	line-height:20px;
 
-	background-color: #1c8;
+	background-color: #24B24C;
 	color: #fff;
 }
 .mdl-button:hover{
 
-	margin:0.5%;
-	/*margin-right:0.5%;*/
+	margin:1%;
+	/*margin-right:1%;*/
 
-	padding:0.5%;
+	padding:1%;
+	z-index:+10;
 
 	border-radius:6px;
 
@@ -202,17 +243,18 @@
 	text-align:center;
 	line-height:20px;
 
-	box-shadow: 0 6px 6px 0 rgba(117, 117, 117, 1);
+	box-shadow: 0 3px 3px 0 rgba(117, 117, 117, 1);
 
-	/*background-color: #fff;*/
+	background-color: #24B24C;
 	color: #00897B;
 } 
 
 .mdl-button:active:focus{
-	margin:0.5%;
-	/*margin-right:0.5%;*/
+	margin:1%;
+	/*margin-right:1%;*/
 
-	padding:0.5%;
+	padding:1%;
+	z-index:+8;
 
 	border-radius:6px;
 
@@ -222,14 +264,15 @@
 	text-align:center;
 	line-height:20px;
 
-	/*background-color: #fff;*/
+	background-color: transparent;
 	color: #00897B;
 }
 .mdl-button:focus{
-	margin:0.5%;
-	/*margin-right:0.5%;*/
+	margin:1%;
+	/*margin-right:1%;*/
 
-	padding:0.5%;
+	padding:1%;
+	z-index:+8;
 
 	border-radius:6px;
 
@@ -238,16 +281,20 @@
 	vertical-align:middle;
 	text-align:center;
 	line-height:20px;
+
+	background-color: transparent;
 }
 
 .fileUpload {
+
     position: absolute;
     overflow: hidden;
     
-    margin:0.5%;
-	/*margin-right:0.5%;*/
+    margin:1%;
+	/*margin-right:1%;*/
 
-	padding:0.5%;
+	padding:1%;
+	z-index:+10;
 
 	border-radius:6px;
 
@@ -255,12 +302,14 @@
 	/*font-weight:bold;*/
 	vertical-align:middle;
 	text-align:center;
-	line-height:20px;
+	line-height:30px;
 
-	background-color: #1c8;
+	background-color: #24B24C;
 	color: #fff;
 }
 .fileUpload input.upload {
+	
+
     position: absolute;
     
     margin: 0;
@@ -269,10 +318,11 @@
     /*filter: alpha(opacity=0);*/
     text-decoration:none;
 
-    margin:0.5%;
-	/*margin-right:0.5%;*/
+    margin:1%;
+	/*margin-right:1%;*/
 
-	padding:0.5%;
+	padding:1%;
+	z-index:+10;
 
 	border-radius:6px;
 
@@ -280,11 +330,130 @@
 	/*font-weight:bold;*/
 	vertical-align:middle;
 	text-align:center;
-	line-height:20px;
+	line-height:30px;
 
-	background-color: #1c8;
+	background-color: #24B24C;
 	color: #fff;
 }
+
+.fileUpload:hover {
+    position: absolute;
+    overflow: hidden;
+
+	margin:1%;
+	/*margin-right:1%;*/
+
+	padding:1%;
+	z-index:+10;
+
+	border-radius:6px;
+
+	font-size:18px;
+	font-weight:bold;
+	vertical-align:middle;
+	text-align:center;
+	line-height:30px;
+
+	box-shadow: 0 3px 3px 0 rgba(117, 117, 117, 1);
+
+	background-color: #24B24C;
+	color: #00897B;
+}
+.fileUpload input.upload:hover {
+	
+    position: absolute;
+    margin:1%;
+	/*margin-right:1%;*/
+
+	padding:1%;
+	z-index:+10;
+
+	border-radius:6px;
+
+	font-size:18px;
+	font-weight:bold;
+	vertical-align:middle;
+	text-align:center;
+	line-height:30px;
+
+	background-color: #24B24C;
+	color: #00897B;
+} 
+
+.fileUpload:active:focus{
+	margin:1%;
+	/*margin-right:1%;*/
+
+	padding:1%;
+	z-index:+8;
+
+	border-radius:6px;
+
+	font-size:18px;
+	font-weight:bold;
+	vertical-align:middle;
+	text-align:center;
+	line-height:30px;
+
+	background-color: #24B24C;
+	color: #00897B;
+}
+.fileUpload input.upload:active:focus {
+	
+    position: absolute;
+    margin:1%;
+	/*margin-right:1%;*/
+
+	padding:1%;
+	z-index:+8;
+
+	border-radius:6px;
+
+	font-size:18px;
+	font-weight:bold;
+	vertical-align:middle;
+	text-align:center;
+	line-height:30px;
+
+	background-color: #24B24C;
+	color: #00897B;
+}
+.fileUpload:focus{
+	margin:1%;
+	/*margin-right:1%;*/
+
+	padding:1%;
+	z-index:+10;
+
+	border-radius:6px;
+
+	font-size:18px;
+	font-weight:bold;
+	vertical-align:middle;
+	text-align:center;
+	line-height:30px;
+	color: #00897B;
+}
+.fileUpload input.upload:focus{
+	margin:1%;
+	/*margin-right:1%;*/
+	
+	padding:1%;
+	z-index:+8;
+
+	border-radius:6px;
+
+	font-size:18px;
+	font-weight:bold;
+	vertical-align:middle;
+	text-align:center;
+	line-height:30px;
+
+	background-color: #24B24C;
+	color: #00897B;
+}
+
+
 
 a:link,a:visited {
   
@@ -346,6 +515,28 @@ a:active {
   
   background-color: transparent;
   color:#056839;
+}
+
+a:focus{
+  
+  width:inherit;
+  display:inline-block;
+  border-radius:2px; 
+
+  border-bottom: 0px solid #1e88e5;
+  
+  
+  padding-top:2px;
+  padding-bottom:2px;
+  padding-left:5px;
+
+  font-size: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  
+  background-color: transparent;
+  color:#056839;
+
 }
 
 

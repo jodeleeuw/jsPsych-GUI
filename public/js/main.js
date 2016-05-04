@@ -68402,7 +68402,41 @@ var SecondPage = React.createClass({
             { className: 'mdl-layout-title' },
             'jsPsych'
           ),
-          React.createElement('div', { className: 'mdl-layout-spacer' })
+          React.createElement('div', { className: 'mdl-layout-spacer' }),
+          React.createElement(
+            'div',
+            { id: 'buttonpanel' },
+            React.createElement(
+              'button',
+              { className: 'mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent', onClick: this.handleSave },
+              'Save'
+            ),
+            React.createElement(
+              'button',
+              { className: 'mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent', onClick: this.handlePreview },
+              'Preview'
+            ),
+            React.createElement(
+              'button',
+              { className: 'mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent', onClick: this.handleGenerate },
+              'Generate'
+            ),
+            React.createElement(
+              'div',
+              { className: 'fileUpload' },
+              React.createElement(
+                'span',
+                { style: { fontWeight: 'normal' } },
+                'UPLOAD'
+              ),
+              React.createElement('input', { type: 'file',
+                name: 'upload_json',
+                accept: '.json',
+                className: 'upload',
+
+                onChange: this.handleLoad })
+            )
+          )
         )
       ),
       React.createElement(
@@ -68419,40 +68453,6 @@ var SecondPage = React.createClass({
               setCurrentTrial: this.setCurrentTrial,
               TreeData: this.state.TreeData,
               saveTree: this.saveTree })
-          )
-        ),
-        React.createElement(
-          'div',
-          { id: 'buttonpanel' },
-          React.createElement(
-            'button',
-            { className: 'mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent', onClick: this.handleSave },
-            'Save'
-          ),
-          React.createElement(
-            'button',
-            { className: 'mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent', onClick: this.handlePreview },
-            'Preview'
-          ),
-          React.createElement(
-            'button',
-            { className: 'mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent', onClick: this.handleGenerate },
-            'Generate'
-          ),
-          React.createElement(
-            'div',
-            { className: 'fileUpload' },
-            React.createElement(
-              'span',
-              { style: { fontWeight: 'normal' } },
-              'UPLOAD'
-            ),
-            React.createElement('input', { type: 'file',
-              name: 'upload_json',
-              accept: '.json',
-              className: 'upload',
-
-              onChange: this.handleLoad })
           )
         )
       ),
@@ -68614,7 +68614,11 @@ var Tree = React.createClass({
                 React.createElement(
                   'a',
                   { href: '#', onClick: this.setCurrentTrial.bind(this, "MyExperiment") },
-                  'My Experiment'
+                  React.createElement(
+                    'b',
+                    null,
+                    'My Experiment'
+                  )
                 )
               )
             ) : React.createElement(
@@ -68711,7 +68715,7 @@ var Trial = React.createClass({
         { id: 'right-side-form' },
         React.createElement(
           Input,
-          { type: 'select', label: 'Trial Type:', bsSize: 'large', onChange: this.handleChange },
+          { type: 'select', className: 'mdl-textfield__input', label: 'Trial Type:', bsSize: 'large', onChange: this.handleChange },
           React.createElement(
             'option',
             { value: 'Select a trial type...' },
@@ -68720,7 +68724,7 @@ var Trial = React.createClass({
           allTrialTypeName.map(function (name) {
             return React.createElement(
               'option',
-              { value: name, key: name },
+              { className: 'mdl-textfield mdl-js-textfield', value: name, key: name },
               name
             );
           })
@@ -68730,7 +68734,7 @@ var Trial = React.createClass({
           CurrentTrialData: this.props.CurrentTrialData,
           changeTrialType: this.state.changeTrialType,
           ref: 'newCurrentTrialData' }),
-        React.createElement(ButtonInput, { value: 'Save Data', className: 'mdl-button mdl-js-button mdl-button-raised mdl-js-ripple-effect mdl-button-accent', onClick: this.handleSave })
+        React.createElement(ButtonInput, { value: 'Save Data', className: 'mdl-button mdl-js-button mdl-button-raised mdl-button-accent', onClick: this.handleSave })
       );
     }
   },
@@ -68982,7 +68986,7 @@ var ShowSettings = React.createClass({
         React.createElement(
           'span',
           { style: { fontWeight: 'normal' } },
-          'Upload TV'
+          'Upload Timeline Variables'
         ),
         React.createElement('input', { type: 'file',
 
