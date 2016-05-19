@@ -1,18 +1,16 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var ReactJson = require('react-json');
 var ReactBootstrap = require('react-bootstrap')
-var PluginParameter = require('./PluginParameter.json');
-var pluginparameter = PluginParameter;
 var SaveAs = require('./saveAs.jsx');
 var Reactaddons = require('react-addons');
 var JSZip = require("jszip");
-var FileInput = require('react-file-input');
 var ReactDataGrid = require('react-data-grid/addons');
 var Input = ReactBootstrap.Input;
 var Row = ReactBootstrap.Row;
 var Col = ReactBootstrap.Col;
 var ButtonInput  = ReactBootstrap.ButtonInput;
+var OverlayTrigger = ReactBootstrap.OverlayTrigger;
+var Tooltip = ReactBootstrap.Tooltip;
 var NotificationSystem = require('react-notification-system');
 var Notification = require('react-notification');
 
@@ -689,16 +687,54 @@ var MyForm = React.createClass({
   getInitialState: function() {
     return {
       selectedTrialParameters: [],
-      currentTrialValue : {}
+      currentTrialValue : {},
+      value : ""
     }
   },
 
   handleChange: function(e) {
-    console.log(e.target.id)
-    console.log(e.target.value)
+    // console.log(e.target.id)
+    // this.state.value = e.target.value
     this.state.currentTrialValue[e.target.id] = e.target.value
-    console.log(this.state.currentTrialValue)
+    this.setState ({value : e.target.value})
+    // console.log(this.state.currentTrialValue)
   },
+
+  validationState: function(validationType) {
+
+    if(validationType == "type1") {
+      if(this.state.value.length > 0) {
+        return 'success'
+      } else {
+        return 'error'
+      }
+    } else if(validationType == "boolean") {
+      if(this.state.value.length>0) {
+        if(this.state.value == "true" || this.state.value == "false") {
+          return 'success'
+        } else {
+          return 'error'
+        }
+      }
+    } else if(validationType == "function") {
+      if(this.state.value.length > 0) {
+        return 'success'
+      } else {
+        return 'error'
+      }
+    }
+
+    let value = Number(this.state.value);
+    
+    if(this.state.value.length > 0) {
+      if (!isNaN(value)) {
+        return 'success';
+      } else {
+        return 'error';
+      }  
+    }
+  },
+
 
   render: function() {
     console.log(this.props.selectedTrialType)
@@ -729,15 +765,23 @@ var MyForm = React.createClass({
               var unique_col1 = parameter.name + "_col1"
               var unique_col2 = parameter.name + "_col2"
               var unique_div = parameter.name +"_div"
-                return (
+              var tooltip_id1 = parameter.name + "_tooltip1"
+              var tooltip_id2 = parameter.name + "_tooltip2"
+              var tooltip = ( <Tooltip id={tooltip_id1}>Enter string, number or an array</Tooltip>)
+              var tooltip2 = ( <Tooltip id={tooltip_id2}>Click to enter a function</Tooltip>)
+               return (
                   <div key={unique_div}>
-                  <Input label={parameter.label} key={unique_input_label} wrapperClassName="wrapper" bsSize="large" >
+                  <Input label={parameter.label} key={unique_input_label} wrapperClassName="wrapper" bsSize="large">
                     <Row key={unique_row}>
                       <Col md={6} key={unique_col1}>
-                        <input type="text" className="form-control" id={parameter.name} key={parameter.name} placeholder={defaultValue}  onChange={self.handleChange}/>
+                        <OverlayTrigger placement="right" overlay={tooltip}>
+                          <input type="text" className="form-control" id={parameter.name} key={parameter.name} placeholder={defaultValue}  onChange={self.handleChange}/>
+                        </OverlayTrigger>
                       </Col>
                       <Col md={1} key={unique_col2}>
-                        <input type="button" className="form-control btn" id={unique_button} key={unique_button} value="f"/>
+                        <OverlayTrigger placement="right" overlay={tooltip2}>
+                          <input type="button" className="form-control btn" id={unique_button} key={unique_button} value="f"/>
+                        </OverlayTrigger>
                       </Col>
                     </Row>
                   </Input>
@@ -773,7 +817,12 @@ var MyForm = React.createClass({
         if(parameter.type.includes("function")) {
           return (
               <div key={unique_div}>
-              <Input type="textarea" label={parameter.label} id={parameter.name} key={parameter.name} placeholder={defaultValue} bsSize="large" onChange={self.handleChange}/>
+              <Input type="textarea" label={parameter.label} 
+                                     id={parameter.name} 
+                                     key={parameter.name} 
+                                     placeholder={defaultValue} 
+                                     bsSize="large" 
+                                     onChange={self.handleChange}/>
               </div>
           )
         }
@@ -843,10 +892,6 @@ var ShowSettings = React.createClass({
         return 'error';
       }  
     }
-    
-    // else if (length > 5) return 'warning';
-    // else if (length > 0) return 'error';
-
   },
 
   handleChange: function() {
@@ -856,17 +901,6 @@ var ShowSettings = React.createClass({
     });
   },
 
-  // componentWillMount: function() {
-  //     if(this.props.TimelineVariable != []) {
-  //       this.state.load = true
-  //     }
-  // },
-// <form action="/" 
-//             method="post" 
-//             encType="multipart/form-data"> 
-//         <input type="file" name="upload"/>
-//         <input type="submit"/>
-//       </form>
   render: function() {
     return(
       <div>
@@ -875,7 +909,7 @@ var ShowSettings = React.createClass({
         <Col xs={6}>
           <Input type="text" 
                 label="Repetitions" 
-                placeholder="Enter repetitions... Default value is 1" 
+                placeholder="1" 
                 bsSize="large"
                 bsStyle={this.validationState()}
                 onChange={this.handleChange}
